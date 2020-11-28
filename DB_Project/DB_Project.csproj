@@ -7,4 +7,11 @@
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.22" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\js\" />
+    <Folder Include="wwwroot\lib\" />
+    <Folder Include="wwwroot\NewFolder\" />
+  </ItemGroup>
 </Project>
