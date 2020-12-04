@@ -6,21 +6,15 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models.Contexts
 {
-    public class RestaurantsContext
+    public class RestaurantsContext : BaseContext
     {
-        public string ConnectionString { get; set; }
 
-        public RestaurantsContext(string connectionString)
+        public RestaurantsContext(string connectionString) : base(connectionString)
         {
-            this.ConnectionString = connectionString;
+
         }
 
-        private MySqlConnection GetConnection()
-        {
-            return new MySqlConnection(ConnectionString);
-        }
-
-        public List<Restaurant> GetAllAccommodation()
+        public List<Restaurant> GetALLRestaurants()
         {
             List<Restaurant> list = new List<Restaurant>();
             try
@@ -28,8 +22,10 @@ namespace DB_Project.Models.Contexts
                 using (MySqlConnection conn = GetConnection())
                 {
                     conn.Open();
-                    MySqlCommand cmd =
-new MySqlCommand("select distinct name,places.lat,places.lon,phone,cuisine,city,country from accommodation join places on accommodation.lat = places.lat and accommodation.lon = places.lon; ", conn);
+                    string req = "select distinct name,places.lat,places.lon,phone,cuisine," +
+                        "city,country from restaurants join places on restaurants.lat =" +
+                        " places.lat and restaurants.lon = places.lon;";
+                    MySqlCommand cmd =new MySqlCommand(req, conn);
                     ReaderConversion convert = new ReaderConversion();
 
                     using (var reader = cmd.ExecuteReader())
@@ -49,7 +45,7 @@ new MySqlCommand("select distinct name,places.lat,places.lon,phone,cuisine,city,
             }
             catch (Exception e)
             {
-                return list;
+                throw e;
             }
             return list;
         }
