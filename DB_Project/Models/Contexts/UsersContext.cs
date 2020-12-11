@@ -10,14 +10,13 @@ namespace DB_Project.Models.Contexts
     {
         public UsersContext(string connectionString) : base(connectionString) { }
 
-        public Boolean IsExists(User user)
+        public Boolean IsExists(string username, string password)
         {
             Boolean result = false;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                string req = $"select 1 from users where user_name=\"{user.User_Name}\"" +
-                             $" and email=\"{user.Email}\" and password=\"{user.Password}\";";
+                string req = $"select 1 from users where user_name=\"{username}\" and password=\"{password}\";";
                 MySqlCommand cmd = new MySqlCommand(req, conn);
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -27,8 +26,12 @@ namespace DB_Project.Models.Contexts
             return result;
         }
 
+
         public void Add_User(User user)
         {
+            if (IsUsernameExists(user.User_Name) || IsEmailExists(user.Email)) {
+                throw new Exception("email or username already exists");
+            }
             using MySqlConnection conn = GetConnection();
             conn.Open();
             string req = $"insert into users(user_name,password,email) values(\"{user.User_Name}\"," +
@@ -42,6 +45,38 @@ namespace DB_Project.Models.Contexts
             {
                 throw e;
             }
+        }
+
+        public Boolean IsUsernameExists(string username)
+        {
+            Boolean result = false;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string req = $"select 1 from users where user_name=\"{username}\";";
+                MySqlCommand cmd = new MySqlCommand(req, conn);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    result = reader.HasRows;
+                }
+            }
+            return result;
+        }
+
+        public Boolean IsEmailExists(string email)
+        {
+            Boolean result = false;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string req = $"select 1 from users where email=\"{email}\";";
+                MySqlCommand cmd = new MySqlCommand(req, conn);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    result = reader.HasRows;
+                }
+            }
+            return result;
         }
 
         public void Delete_User(User user)
