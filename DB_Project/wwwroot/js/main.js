@@ -1,26 +1,13 @@
-let loginUser="";
-
-
-function sendPassFunction() {
-    // if the mail is valid, send email to user with his password
-    var status = document.getElementById("statusParagraph");
-    status.innerHTML = "good\\bad";
-}
-
 function signUpClicked() {
-    var username = document.getElementById("usernameId").value;
-    var email = document.getElementById("emailId").value;
-    var password = document.getElementById("passwordId").value;
-    var repeatPassword = document.getElementById("repeatPasswordId").value;
-    var error = isValidUserName(username);
+    let username = document.getElementById("usernameId").value;
+    let password = document.getElementById("passwordId").value;
+    let repeatPassword = document.getElementById("repeatPasswordId").value;
+    let error = isValidUserName(username);
     if (error !== "") {
         alert(error);
         return;
     }
-    if (!isValidEmail(email)) {
-        alert("invalid email");
-        return;
-    }
+
     if (!(password === repeatPassword)) {
         alert("password do not match");
         return;
@@ -30,17 +17,17 @@ function signUpClicked() {
         return;
     }
     // pass all sign up checks, open create account request from server
-    createAccountRequest(username, email, password);
+    createAccountRequest(username, password);
 }
 
-function createAccountRequest(username, email, password) {
-    let jsonMsg = createJson(username, email, password);
+function createAccountRequest(username, password) {
+    let jsonMsg = createJson(username, password);
     let xhttp = new XMLHttpRequest();
     // server respose
     xhttp.onloadend = function () {
         if (this.readyState == 4 && this.status == 200) {
             alert("Account creation succeeded");
-            window.location.replace("index.html");
+            window.location.replace("sign_in.html");
         }
         else {
             alert(this.response);
@@ -52,11 +39,10 @@ function createAccountRequest(username, email, password) {
     xhttp.send(jsonMsg);
 }
 
-function createJson(username, email, password) {
+function createJson(username, password) {
     const json = {
         "User_Name": username ,
-        "Password":  password ,
-        "Email":  email 
+        "Password":  password 
     };
     return JSON.stringify(json)
 }
@@ -66,8 +52,8 @@ function createJson(username, email, password) {
 
 
 function isValidUserName(username) {
-    var error = "";
-    var illegalChars = /\W/; // allow letters, numbers, and underscores
+    let error = "";
+    let illegalChars = /\W/; // allow letters, numbers, and underscores
 
     if (username === "") {
         error = "Please enter Username";
@@ -81,10 +67,6 @@ function isValidUserName(username) {
     return error;
 }
 
-function isValidEmail(email) {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-}
 
 function isValidPassword(password) {
     return password.length >= 6;
@@ -93,9 +75,9 @@ function isValidPassword(password) {
 
 
 function signInClicked() {
-    var username = document.getElementById("usernameId").value;
-    var password = document.getElementById("passwordId").value;
-    var error = isValidUserName(username);
+    let username = document.getElementById("usernameId").value;
+    let password = document.getElementById("passwordId").value;
+    let error = isValidUserName(username);
     if (error !== "") {
         alert("Invalid user name");
         return;
@@ -115,7 +97,7 @@ function tryToLogin(username, password) {
         if (this.readyState == 4 && this.status == 200) {
             if (this.response === "true") {
                 loginUser = username;
-                window.location.replace("main_page.html");
+                window.location.replace("choose_target.html");
             } else {
                 alert("username or password is incorrect");
             }
@@ -125,7 +107,63 @@ function tryToLogin(username, password) {
         }
     };
     // generate and send the request to the server of register new account
-    var url = "/api/Users?" + "username=" + username + "&password=" + password;
+    let url = "/api/Users?" + "{\"User_Name\": \"" + username + "\" , \"Password\":\"" + password +"\"}";
     xhttp.open("GET", url);
     xhttp.send();
 }
+
+function loadCountriesAndCities() {
+    let xhttp = new XMLHttpRequest();
+    // server respose
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            jsonResponse = JSON.parse(this.response);
+            // find all countries
+            for (i in jsonResponse) {
+                let country = jsonResponse[i].country;
+                let city = jsonResponse[i].city;
+                countriesCitiesSet.add([city, country])
+                countriesSet.add(country);   
+            }
+            initCountriesComboBox();
+            initCitiesComboBox();
+        }
+        else {
+            alert('Error occure while getting regions from server');
+        }
+    };
+    // ask the server for countries & cities list
+    xhttp.open("GET", "/api/Region");
+    xhttp.send();
+}
+
+function initCountriesComboBox() {
+    // init the countries combo box
+    let countriesArr = Array.from(countriesSet)
+    for (let i = 0; i < countriesArr.length; i++) {
+        let country = countriesArr[i];
+        countriesComboBox.options[countriesComboBox.options.length] = new Option(country, 0);
+    }
+}
+
+function initCitiesComboBox() {
+    $("#citiesId").empty();
+    let selectedCountry = countriesComboBox.options[countriesComboBox.selectedIndex].text;
+    let countriesCitiesArr = Array.from(countriesCitiesSet)
+    for (let i = 0; i < countriesCitiesArr.length; i++) {
+        let currCity = countriesCitiesArr[i][0];
+        let currCountry = countriesCitiesArr[i][1];
+        if (currCountry === selectedCountry) {
+            citiesComboBox.options[citiesComboBox.options.length] = new Option(currCity, 0);
+        }
+    }
+}
+
+
+let loginUser = "";
+let countriesComboBox = document.getElementById('countriesId');
+let citiesComboBox = document.getElementById('citiesId');
+
+let countriesSet = new Set();
+let countriesCitiesSet = new Set();
+loadCountriesAndCities();
