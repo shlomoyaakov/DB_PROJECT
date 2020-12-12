@@ -20,9 +20,18 @@ namespace DB_Project.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public List<Region> Get()
+        public ActionResult<List<Region>> Get()
         {
-            return context.GetAllRegions();
+            List<Region> region_list;
+            try
+            {
+                region_list = context.GetAllRegions();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return region_list;
         }
 
     }

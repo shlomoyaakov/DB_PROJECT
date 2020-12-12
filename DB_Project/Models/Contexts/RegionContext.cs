@@ -1,32 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using DB_Project.Models.Contexts;
 using MySql.Data.MySqlClient;
 
 namespace DB_Project.Models
 {
-    public class RegionContext
+    public class RegionContext : BaseContext
     {
-        public string ConnectionString { get; set; }
 
-        public RegionContext(string connectionString)
+        public RegionContext(string connectionString) : base(connectionString)
         {
-            this.ConnectionString = connectionString;
         }
 
-        private MySqlConnection GetConnection()
-        {
-            return new MySqlConnection(ConnectionString);
-        }
 
         public List<Region> GetAllRegions()
         {
             List<Region> list = new List<Region>();
-
-            using (MySqlConnection conn = GetConnection())
+            try
             {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select DISTINCT * from region", conn);
-                using (var reader = cmd.ExecuteReader())
+                using (MySqlConnection conn = GetConnection())
                 {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand("select DISTINCT * from region", conn);
+                    using var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
                         list.Add(new Region()
@@ -36,6 +32,10 @@ namespace DB_Project.Models
                         });
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
             return list;
         }

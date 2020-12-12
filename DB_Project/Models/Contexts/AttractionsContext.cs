@@ -6,37 +6,35 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models.Contexts
 {
-    public class RestaurantsContext : BaseContext
+    public class AttractionsContext : BaseContext
     {
 
-        public RestaurantsContext(string connectionString) : base(connectionString)
+        public AttractionsContext(string connectionString) : base(connectionString)
         {
-
         }
 
-        public List<Restaurant> GetALLRestaurants()
+        public List<Attraction> GetAllAttractions()
         {
-            List<Restaurant> list = new List<Restaurant>();
+            List<Attraction> list = new List<Attraction>();
             try
             {
                 using (MySqlConnection conn = GetConnection())
                 {
                     conn.Open();
-                    string req = "select distinct name,places.lat,places.lon,phone,cuisine," +
-                        "city,country from restaurants join places on restaurants.lat =" +
-                        " places.lat and restaurants.lon = places.lon;";
-                    MySqlCommand cmd =new MySqlCommand(req, conn);
+                    string req = "select distinct name,places.lat,places.lon,phone" +
+                        ",city,country from attractions join places on attractions.lat = " +
+                        "places.lat and attractions.lon = places.lon;";
+                    MySqlCommand cmd = new MySqlCommand(req, conn);
                     ReaderConversion convert = new ReaderConversion();
 
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            list.Add(new Restaurant()
+                            list.Add(new Attraction()
                             {
                                 Name = reader["name"].ToString(),
                                 Phone = reader["phone"].ToString(),
-                                Cuisine = reader["cuisine"].ToString(),
                                 Location = convert.Location_from_reader(reader)
                             });
                         }

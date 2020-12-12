@@ -21,9 +21,17 @@ namespace DB_Project.Controllers
 
 
         [HttpGet]
-        public List<Accommodation> Get()
+        public ActionResult<List<Accommodation>> Get()
         {
-            return context.GetAllAccommodation();
+            List<Accommodation> acc_list;
+            try {
+                acc_list = context.GetAllAccommodation();
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok(acc_list);
         }
     }
 }
