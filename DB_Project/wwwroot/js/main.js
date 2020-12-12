@@ -26,7 +26,7 @@ function createAccountRequest(username, password) {
     // server respose
     xhttp.onloadend = function () {
         if (this.readyState == 4 && this.status == 200) {
-            alert("Account creation succeeded");
+            alert("account created successfully");
             window.location.replace("sign_in.html");
         }
         else {
@@ -41,8 +41,8 @@ function createAccountRequest(username, password) {
 
 function createJson(username, password) {
     const json = {
-        "User_Name": username ,
-        "Password":  password 
+        "User_Name": username,
+        "Password": password
     };
     return JSON.stringify(json)
 }
@@ -107,7 +107,7 @@ function tryToLogin(username, password) {
         }
     };
     // generate and send the request to the server of register new account
-    let url = "/api/Users?" + "{\"User_Name\": \"" + username + "\" , \"Password\":\"" + password +"\"}";
+    let url = "/api/Users?" + "username=" + username + "&password=" + password;
     xhttp.open("GET", url);
     xhttp.send();
 }
@@ -123,7 +123,7 @@ function loadCountriesAndCities() {
                 let country = jsonResponse[i].country;
                 let city = jsonResponse[i].city;
                 countriesCitiesSet.add([city, country])
-                countriesSet.add(country);   
+                countriesSet.add(country);
             }
             initCountriesComboBox();
             initCitiesComboBox();

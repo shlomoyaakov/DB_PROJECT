@@ -10,7 +10,7 @@ namespace DB_Project.Models.Contexts
     {
         public UsersContext(string connectionString) : base(connectionString) { }
 
-        public Boolean IsExists(string username, string password)
+        public Boolean IsExists(User user)
         {
             try
             {
@@ -34,7 +34,6 @@ namespace DB_Project.Models.Contexts
             }
         }
 
-
         public void Add_User(User user)
         {
             try
@@ -50,38 +49,6 @@ namespace DB_Project.Models.Contexts
             {
                 throw e;
             }
-        }
-
-        public Boolean IsUsernameExists(string username)
-        {
-            Boolean result = false;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                string req = $"select 1 from users where user_name=\"{username}\";";
-                MySqlCommand cmd = new MySqlCommand(req, conn);
-                using (var reader = cmd.ExecuteReader())
-                {
-                    result = reader.HasRows;
-                }
-            }
-            return result;
-        }
-
-        public Boolean IsEmailExists(string email)
-        {
-            Boolean result = false;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                string req = $"select 1 from users where email=\"{email}\";";
-                MySqlCommand cmd = new MySqlCommand(req, conn);
-                using (var reader = cmd.ExecuteReader())
-                {
-                    result = reader.HasRows;
-                }
-            }
-            return result;
         }
 
         public void Delete_User(User user)
