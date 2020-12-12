@@ -16,13 +16,12 @@ namespace DB_Project.Models
         public List<Region> GetAllRegions()
         {
             List<Region> list = new List<Region>();
-
-            using (MySqlConnection conn = GetConnection())
+            try
             {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select DISTINCT * from region", conn);
-                try
+                using (MySqlConnection conn = GetConnection())
                 {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand("select DISTINCT * from region", conn);
                     using var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -33,11 +32,10 @@ namespace DB_Project.Models
                         });
                     }
                 }
-                catch (Exception e)
-                {
-                    throw e;
-                }
-
+            }
+            catch (Exception e)
+            {
+                throw e;
             }
             return list;
         }
