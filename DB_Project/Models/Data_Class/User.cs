@@ -10,7 +10,5 @@ namespace DB_Project.Models
         public string User_Name { get; set; }
 
         public string Password { get; set; }
-
-        public string Email { get; set; }
     }
 }

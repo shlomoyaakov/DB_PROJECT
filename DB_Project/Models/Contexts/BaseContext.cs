@@ -17,7 +17,15 @@ namespace DB_Project.Models.Contexts
 
         protected MySqlConnection GetConnection()
         {
-            return new MySqlConnection(ConnectionString);
+            try
+            {
+                return new MySqlConnection(ConnectionString);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
         }
     }
 }
