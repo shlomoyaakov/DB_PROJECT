@@ -14,15 +14,8 @@ namespace DB_Project.Models.Contexts
         {
             try
             {
-<<<<<<< HEAD
                 Boolean result = false;
                 using (MySqlConnection conn = GetConnection())
-=======
-                conn.Open();
-                string req = $"select 1 from users where user_name=\"{username}\" and password=\"{password}\";";
-                MySqlCommand cmd = new MySqlCommand(req, conn);
-                using (var reader = cmd.ExecuteReader())
->>>>>>> b2973b27ceffdaf816b767cd50dff4bd754ed943
                 {
                     conn.Open();
                     string req = $"select 1 from users where user_name=\"{user.User_Name}\"" +
@@ -44,17 +37,6 @@ namespace DB_Project.Models.Contexts
 
         public void Add_User(User user)
         {
-<<<<<<< HEAD
-=======
-            if (IsUsernameExists(user.User_Name) || IsEmailExists(user.Email)) {
-                throw new Exception("email or username already exists");
-            }
-            using MySqlConnection conn = GetConnection();
-            conn.Open();
-            string req = $"insert into users(user_name,password,email) values(\"{user.User_Name}\"," +
-                $"\"{user.Password}\",\"{user.Email}\");";
-            MySqlCommand cmd = new MySqlCommand(req, conn);
->>>>>>> b2973b27ceffdaf816b767cd50dff4bd754ed943
             try
             {
                 using MySqlConnection conn = GetConnection();
