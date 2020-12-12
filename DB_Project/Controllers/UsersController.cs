@@ -22,8 +22,11 @@ namespace DB_Project.Controllers
 
 
         [HttpGet]
-        public IActionResult IsExists(User user)
+        public IActionResult IsExists([FromQuery]string username, [FromQuery]string password)
         {
+            User user = new User();
+            user.User_Name = username;
+            user.Password = password;
             Boolean isExists;
             try
             {
