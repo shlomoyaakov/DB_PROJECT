@@ -13,7 +13,7 @@ namespace DB_Project.Models.Contexts
         {
         }
 
-        public List<Accommodation> GetAllAccommodation()
+        private List<Accommodation> Get_Accommodation_By_Req(string request)
         {
             List<Accommodation> list = new List<Accommodation>();
             try
@@ -21,10 +21,7 @@ namespace DB_Project.Models.Contexts
                 using (MySqlConnection conn = GetConnection())
                 {
                     conn.Open();
-                    string req = "select distinct name,places.lat,places.lon,phone,internet" +
-                        ",city,country from accommodation join places on accommodation.lat = " +
-                        "places.lat and accommodation.lon = places.lon;";
-                    MySqlCommand cmd = new MySqlCommand(req, conn);
+                    MySqlCommand cmd = new MySqlCommand(request, conn);
                     ReaderConversion convert = new ReaderConversion();
 
                     using (var reader = cmd.ExecuteReader())
@@ -47,6 +44,37 @@ namespace DB_Project.Models.Contexts
                 throw e;
             }
             return list;
+        }
+
+        public List<Accommodation> GetAllAccommodation()
+        {
+            string req = "select distinct name,places.lat,places.lon,phone,internet" +
+                        ",city,country from accommodation join places on accommodation.lat = " +
+                        "places.lat and accommodation.lon = places.lon;";
+            try
+            {
+                return Get_Accommodation_By_Req(req);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public List<Accommodation> Get_Accommodation_By_Region(string country, string city)
+        {
+            string req = "select distinct name,places.lat,places.lon,phone,internet" +
+                        ",city,country from accommodation join places on accommodation.lat = " +
+                         "places.lat and accommodation.lon = places.lon" +
+                         $"where city=\"{city}\" and country = \"{country}\";";
+            try
+            {
+                return Get_Accommodation_By_Req(req);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }
