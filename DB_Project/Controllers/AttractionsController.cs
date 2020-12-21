@@ -36,7 +36,7 @@ namespace DB_Project.Controllers
             return Ok(att_list);
         }
 
-        [HttpGet]
+        [HttpGet("location")]
         public ActionResult<List<Attraction>> Get_Attractions_By_Region([FromQuery] string country, [FromQuery] string city)
         {
             List<Attraction> att_list;

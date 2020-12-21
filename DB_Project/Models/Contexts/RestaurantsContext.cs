@@ -65,7 +65,7 @@ namespace DB_Project.Models.Contexts
         {
             string req = "select distinct name,places.lat,places.lon,phone,cuisine," +
                         "city,country from restaurants join places on restaurants.lat =" +
-                         " places.lat and restaurants.lon = places.lon" +
+                         " places.lat and restaurants.lon = places.lon " +
                          $"where city=\"{city}\" and country=\"{country}\";";
             try
             {

@@ -69,7 +69,7 @@ namespace DB_Project.Models
 
         public List<Region> Get_All_Cities_In_Country(string country)
         {
-            string req = "select DISTINCT country,city from region" +
+            string req = "select DISTINCT country,city from region " +
                          $"where country=\"{country}\";";
             try
             {

@@ -35,7 +35,7 @@ namespace DB_Project.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("location")]
         public ActionResult<List<Accommodation>> Get_Accommodation_By_Region([FromQuery] string country, [FromQuery] string city)
         {
             List<Accommodation> acc_list;

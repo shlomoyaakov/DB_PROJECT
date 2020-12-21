@@ -25,7 +25,7 @@ namespace DB_Project.Controllers
             List<Region> region_list;
             try
             {
-                region_list = context.Get_All_Countries();
+                region_list = context.GetAllRegions();
             }
             catch (Exception e)
             {
@@ -34,8 +34,8 @@ namespace DB_Project.Controllers
             return region_list;
         }
 
-        [HttpGet]
-        public ActionResult<List<Region>> Get_Cities_In_Country([FromQuery] string country)
+        [HttpGet("{country}")]
+        public ActionResult<List<Region>> Get_Cities_In_Country(string country)
         {
             List<Region> region_list;
             try
