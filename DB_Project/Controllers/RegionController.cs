@@ -34,5 +34,20 @@ namespace DB_Project.Controllers
             return region_list;
         }
 
+        [HttpGet("{country}")]
+        public ActionResult<List<Region>> Get_Cities_In_Country(string country)
+        {
+            List<Region> region_list;
+            try
+            {
+                region_list = context.Get_All_Cities_In_Country(country);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return region_list;
+        }
+
     }
 }

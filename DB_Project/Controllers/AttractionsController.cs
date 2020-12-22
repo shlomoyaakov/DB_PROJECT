@@ -24,16 +24,31 @@ namespace DB_Project.Controllers
         [HttpGet]
         public ActionResult<List<Attraction>> Get()
         {
-            List<Attraction> acc_list;
+            List<Attraction> att_list;
             try
             {
-                acc_list = context.GetAllAttractions();
+                att_list = context.GetAllAttractions();
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-            return Ok(acc_list);
+            return Ok(att_list);
+        }
+
+        [HttpGet("location")]
+        public ActionResult<List<Attraction>> Get_Attractions_By_Region([FromQuery] string country, [FromQuery] string city)
+        {
+            List<Attraction> att_list;
+            try
+            {
+                att_list = context.Get_Attractions_By_Region(country, city);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok(att_list);
         }
     }
 }
