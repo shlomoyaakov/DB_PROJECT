@@ -243,6 +243,17 @@ iframe {
 	padding: 100px;
 }
 
+.trip_plan {
+    width: 90%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 303px 65px 40px 65px;
+}
+
 .login100-form-title {
   font-family: Poppins-Regular;
   font-size: 20px;

@@ -36,5 +36,20 @@ namespace DB_Project.Controllers
             }
             return Ok(res_list);
         }
+
+        [HttpGet("location")]
+        public ActionResult<List<Restaurant>> Get_Restaurants_By_Region([FromQuery] string country, [FromQuery] string city)
+        {
+            List<Restaurant> res_list;
+            try
+            {
+                res_list = context.Get_Restaurants_By_Region(country, city);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok(res_list);
+        }
     }
 }

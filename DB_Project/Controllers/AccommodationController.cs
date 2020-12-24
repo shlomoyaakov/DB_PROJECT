@@ -20,14 +20,31 @@ namespace DB_Project.Controllers
         }
 
 
+
+        [HttpGet("location")]
+        public ActionResult<List<Accommodation>> Get_Accommodation_By_Region([FromQuery] string country, [FromQuery] string city)
+        {
+            List<Accommodation> acc_list;
+            try
+            {
+                acc_list = context.Get_Accommodation_By_Region(country, city);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok(acc_list);
+        }
+
         [HttpGet]
         public ActionResult<List<Accommodation>> Get()
         {
             List<Accommodation> acc_list;
-            try {
+            try
+            {
                 acc_list = context.GetAllAccommodation();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
