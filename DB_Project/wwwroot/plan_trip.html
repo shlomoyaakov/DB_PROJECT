@@ -1,16 +1,5 @@
 ﻿<html lang="en">
 <head>
-    <style>
-        nav ul {
-            height: 200px;
-            width: 58%;
-        }
-
-        nav ul {
-            overflow: auto;
-
-        }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -92,45 +81,88 @@
         <h3 style="position:absolute;top:45%">fetching data from database...</h3>
         <div style="position:absolute;top:50%" class="loader"></div>
     </div>
-    <div class="d-none" id="main" style="margin:50px;vertical-align:central">
+    <!-- Showed after the page as finished loading -->
+    <div class="d-none" id="main" style="margin:3% 5% 0; vertical-align:central;">
         <div class="row">
             <h1 class="col-sm" style="text-align:right">You choose to travel to: </h1>
             <h1 class="col-sm" id="travelId"></h1>
         </div>
-        <div class="row">
-            <div class="col-sm" style="margin:100px">
+        <div class="row" style="margin-top: 50px;">
+            <div class="col-sm">
 
-                <h3 style="margin-top:70px">Where would you like to sleep?</h3>
-                <h3 class="d-none" style="margin-bottom:50px;margin-top:50px;color:red" id="emptyAccommodations">Sorry, no sleeping place was found in Database</h3>
-                <nav id="accoNav" style="margin-top:100px">
-                    <ul id="accommodationsList">
-                    </ul>
-                </nav>
+                <div style="height: 23vh;">
+                    <h3>Where would you like to sleep?</h3>
+                    <h3 class="d-none" style="margin-bottom:50px; color:red;" id="emptyAccommodations">Sorry, no sleeping place was found in Database</h3>
+                    <div id="accoNav">
+                        <select id="accommodationsList" multiple="multiple">
+                            <option value="asdasdasdasdasd">HTML</option>
+                            <option value="CSS">CSS</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="PHP">PHP</option>
+                            <option value="MySQL">MySQL</option>
+                            <option value="Java">Java</option>
+                            <option value="VB.NET">VB.NET</option>
+                            <option value="Python">Python</option>
+                            <option value="Flash">Flash</option>
+                            <option value="Perl">perl</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="height: 23vh;">
+                    <h3>Where would you like to eat?</h3>
+                    <h3 class="d-none" style="margin-bottom:50px; color:red;" id="emptyRestaurants">Sorry, no restaurants was found in Database</h3>
+                    <div id="restNav">
+                        <select id="restaurantsList" multiple="multiple">
+                            <option value="asdasdasdasdasd">HTML</option>
+                            <option value="CSS">CSS</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="PHP">PHP</option>
+                            <option value="MySQL">MySQL</option>
+                            <option value="Java">Java</option>
+                            <option value="VB.NET">VB.NET</option>
+                            <option value="Python">Python</option>
+                            <option value="Flash">Flash</option>
+                            <option value="Perl">perl</option>
+                        </select>
+                    </div>
+                </div>
 
-
-
-                <h3 style="margin-top:70px">Where would you like to eat?</h3>
-                <h3 class="d-none" style="margin-bottom:50px;margin-top:50px;color:red" id="emptyRestaurants">Sorry, no restaurants was found in Database</h3>
-                <nav id="restNav" style="margin-top:40px">
-                    <ul id="restaurantsList">
-                    </ul>
-                </nav>
-
-
-                <h3 style="margin-top:70px">What attractions do you want to do?</h3>
-                <h3 class="d-none" style="margin-bottom:50px;margin-top:50px;color:red" id="emptyAttractions">Sorry, no attractions was found in Database</h3>
-                <nav id="AttracNav" style="margin-top:40px">
-                    <ul id="attractionsList">
-                    </ul>
-                </nav>
-
+                <div style="height: 23vh;">
+                    <h3>What attractions do you want to do?</h3>
+                    <h3 class="d-none" style="margin-bottom:50px; color:red;" id="emptyAttractions">Sorry, no attractions was found in Database</h3>
+                    <div id="AttracNav">
+                        <select id="attractionsList" multiple="multiple">
+                            <option value="asdasdasdasdasd">HTML</option>
+                            <option value="CSS">CSS</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="PHP">PHP</option>
+                            <option value="MySQL">MySQL</option>
+                            <option value="Java">Java</option>
+                            <option value="VB.NET">VB.NET</option>
+                            <option value="Python">Python</option>
+                            <option value="Flash">Flash</option>
+                            <option value="Perl">perl</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm" style="margin:100px">
-                <h2>Prev Trips</h2>
-                <nav style="margin-top:40px" id="historyNav">
-                    <ul style="height:80%" id="historyList">
-                    </ul>
-                </nav>
+
+            <div class="col-sm">
+                <div style="height: 34vh;">
+                    <h2>Details</h2>
+                    <div id="historyNav" style="left: 4px;">
+                        <h3 id="hoverlabel"></h3>
+                        <h4 id="hovervalue" style="left: 4px;"></h4>
+                    </div>
+                </div>
+                <div style="height: 34vh;">
+                    <h2>Prev Trips</h2>
+                    <div id="historyNav" style="left: 4px;">
+                        <ul id="historyList">
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         <button style ="margin-bottom:20px;font-size:30px;margin-left:40%;padding-left:100px;padding-right:100px;padding-bottom:10px;padding-top:10px" class ="btn-success"type="button" onclick="alert('Hello world!')">Save Trip</button>
@@ -151,6 +183,26 @@
         $(".selection-2").select2({
             minimumResultsForSearch: 20,
             dropdownParent: $('#dropDownSelect1')
+        });
+
+        $('option').mousedown(function (e) {
+            e.preventDefault();
+            $(this).prop('selected', !$(this).prop('selected'));
+            return false;
+        });
+
+        $('option').mouseover(function (e) {
+            e.preventDefault();
+            $('#hoverlabel').text($(this).prop('label'))
+            $('#hovervalue').text($(this).prop('value'))
+            return false;
+        });
+
+        $('select').mouseleave(function (e) {
+            e.preventDefault();
+            $('#hoverlabel').text("")
+            $('#hovervalue').text("")
+            return false;
         });
     </script>
 
