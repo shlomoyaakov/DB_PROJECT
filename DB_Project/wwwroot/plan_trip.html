@@ -79,38 +79,27 @@
         <div style="position:absolute;top:45%" class="loader"></div>
     </div>
     <!-- Showed after the page as finished loading -->
-    <div class="d-none" id="main" style="margin:3% 5% 0; vertical-align:central;">
-        <div class="row">
-            <h1 class="col-sm" style="text-align:right">You choose to travel to: </h1>
-            <h1 class="col-sm" id="travelId"></h1>
+    <div class="d-none" id="main" style="margin:3% 0 0; vertical-align:central;">
+        
+        <div class="fixedElement" style="background-color:lightgray">
+            <div class="row">
+                <h1 id="travelId" class="col-sm" style="text-align:center">You choose to travel to: </h1>
+            </div>
+
+            <div style="align-content:center" class="row">
+                <div style="margin-top:20px;align-items:center" class="col-sm">
+                    <button onclick="goBack()" style="color:green;display: block;margin-left: auto;margin-right: auto;">change</button>
+                </div>
+            </div>
         </div>
-        <div class="row" style="margin-top: 50px;">
+        <div class="row" style="margin: 105px 5%;">
             <div class="col-sm">
 
-                <div style="height: 23vh;">
+                <div style="height: 22vh;">
                     <h3>Where would you like to sleep?</h3>
                     <h3 class="d-none" style="margin-bottom:50px; color:red;" id="emptyAccommodations">Sorry, no sleeping place was found in Database</h3>
                     <div id="accoNav">
-                        <select id="accommodationsList" multiple="multiple">
-                            <option value="asdasdasdasdasd">HTML</option>
-                            <option value="CSS">CSS</option>
-                            <option value="JavaScript">JavaScript</option>
-                            <option value="PHP">PHP</option>
-                            <option value="MySQL">MySQL</option>
-                            <option value="Java">Java</option>
-                            <option value="VB.NET">VB.NET</option>
-                            <option value="Python">Python</option>
-                            <option value="Flash">Flash</option>
-                            <option value="Perl">perl</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div style="height: 23vh;">
-                    <h3>Where would you like to eat?</h3>
-                    <h3 class="d-none" style="margin-bottom:50px; color:red;" id="emptyRestaurants">Sorry, no restaurants was found in Database</h3>
-                    <div id="restNav">
-                        <select id="restaurantsList" multiple="multiple">
+                        <select id="accommodationsList" multiple="multiple" style="height: 80%; width: 70%;">
                             <option value="asdasdasdasdasd">HTML</option>
                             <option value="CSS">CSS</option>
                             <option value="JavaScript">JavaScript</option>
@@ -125,11 +114,30 @@
                     </div>
                 </div>
 
-                <div style="height: 23vh;">
+                <div style="height: 22vh;">
+                    <h3>Where would you like to eat?</h3>
+                    <h3 class="d-none" style="margin-bottom:50px; color:red;" id="emptyRestaurants">Sorry, no restaurants was found in Database</h3>
+                    <div id="restNav">
+                        <select id="restaurantsList" multiple="multiple" style="height: 80%; width: 70%;">
+                            <option value="asdasdasdasdasd">HTML</option>
+                            <option value="CSS">CSS</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="PHP">PHP</option>
+                            <option value="MySQL">MySQL</option>
+                            <option value="Java">Java</option>
+                            <option value="VB.NET">VB.NET</option>
+                            <option value="Python">Python</option>
+                            <option value="Flash">Flash</option>
+                            <option value="Perl">perl</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="height: 22vh;">
                     <h3>What attractions do you want to do?</h3>
                     <h3 class="d-none" style="margin-bottom:50px; color:red;" id="emptyAttractions">Sorry, no attractions was found in Database</h3>
                     <div id="AttracNav">
-                        <select id="attractionsList" multiple="multiple">
+                        <select id="attractionsList" multiple="multiple" style="height: 80%; width: 70%;">
                             <option value="asdasdasdasdasd">HTML</option>
                             <option value="CSS">CSS</option>
                             <option value="JavaScript">JavaScript</option>
@@ -169,7 +177,9 @@
         padding-right: 100px;
         padding-bottom: 10px;
         padding-top: 10px
-    " class="btn-success" type="button" onclick="alert('Hello world!')">Save Trip</button>
+    " class="btn-success" type="button" onclick="alert('Hello world!')">
+            Save Trip
+        </button>
     </div>
 
 
