@@ -53,7 +53,7 @@ function tryToLogin(username, password) {
             if (this.response === "true") {
                 localStorage.setItem("user", username); 
 
-                window.location.replace("choose_target.html");
+                window.location.assign("choose_target.html");
             } else {
                 alert("username or password is incorrect");
             }
