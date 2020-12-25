@@ -190,6 +190,7 @@ iframe {
 
 .wrap-login100 {
   width: 1170px;
+  height: 850px;
   background: #fff;
   overflow: hidden;
   display: -webkit-box;
@@ -232,14 +233,14 @@ iframe {
 [ Form ]*/
 
 .login100-form {
-  width: 50%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 303px 65px 40px 65px;
+	width: 50%;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: flex;
+	flex-wrap: wrap;
+	padding: 100px;
 }
 
 .trip_plan {
@@ -280,6 +281,7 @@ iframe {
 .rs1-wrap-input100,
 .rs2-wrap-input100 {
   width: 100%;
+  height: fit-content;
 }
 
 .rs2-wrap-input100 {
@@ -287,15 +289,15 @@ iframe {
 }
 
 
-.input100 {
-  display: block;
-  width: 100%;
-  background: transparent;
-  font-family: Poppins-Regular;
-  font-size: 18px;
-  color: #666666;
-  line-height: 1.2;
-  padding: 0 25px;
+.input100, .input100::placeholder {
+	display: block;
+	width: 100%;
+	background: transparent;
+	font-family: Poppins-Regular;
+	font-size: 18px;
+	color: #666666;
+	line-height: 1.2;
+	padding: 0 25px;
 }
 
 input.input100 {
