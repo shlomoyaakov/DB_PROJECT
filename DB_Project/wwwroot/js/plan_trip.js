@@ -1,5 +1,8 @@
 
 
+function goBack() {
+    window.history.back();
+}
 
 function showAccommodations() {
     let xhttp = new XMLHttpRequest();
@@ -84,7 +87,7 @@ function showAttractions() {
         if (this.readyState == 4 && this.status == 200) {
             jsonResponse = JSON.parse(this.response);
             if (jsonResponse.length == 0) {
-                document.getElementById("emptyAttractions").textContent = "Sorry, no attractions was found in Database";
+                document.getElementById("emptyAttractions").classList.remove("d-none")
                 document.getElementById("AttracNav").remove();
             }
             else {
@@ -118,7 +121,7 @@ var loadDiv = document.getElementById("loader")
 var username = localStorage.getItem("user");
 var country = localStorage.getItem("country");
 var city = localStorage.getItem("city");
-document.getElementById("travelId").textContent = city + " , " + country;
+document.getElementById("travelId").textContent += city + ", " + country;
 var accommodationsList = document.getElementById("accommodationsList");
 var restaurantsList = document.getElementById("restaurantsList");
 var attractionsList = document.getElementById("attractionsList");

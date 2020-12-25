@@ -28,7 +28,7 @@
         xhttp.onloadend = function () {
             if (this.readyState == 4 && this.status == 200) {
                 alert("account created successfully");
-                window.location.replace("sign_in.html");
+                window.location.assign("sign_in.html");
             }
             else {
                 alert(this.response);

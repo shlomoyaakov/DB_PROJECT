@@ -16,6 +16,8 @@ function loadCountriesAndCities() {
             }
             initCountriesComboBox();
             initCitiesComboBox();
+            document.getElementById("mainDiv").classList.remove("d-none")
+            document.getElementById("loader").remove()
         }
         else {
             alert('Error occure while getting regions from server');
@@ -57,7 +59,7 @@ function initCitiesComboBox() {
 function planTripClicked() {
     localStorage.setItem("country", countriesComboBox.options[countriesComboBox.selectedIndex].text);
     localStorage.setItem("city", citiesComboBox.options[citiesComboBox.selectedIndex].text);
-    window.location.replace("plan_trip.html");
+    window.location.assign("plan_trip.html");
 }
 
 
