@@ -7,8 +7,8 @@
         }
 
         nav ul {
-            overflow: hidden;
-            overflow-y: scroll;
+            overflow: auto;
+
         }
     </style>
     <meta charset="UTF-8">
@@ -34,7 +34,22 @@
 
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Raleway'>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
+
     <style>
+        .btn {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
         .loader {
             border: 16px solid #f3f3f3;
             border-radius: 50%;
@@ -74,38 +89,54 @@
 </head>
 <body>
     <div id="loader" style="align-content:center; justify-content: center; display: flex;width:100%;height:100%">
-        <h3 style="position:absolute;top:45%">fetch data from database...</h3>
+        <h3 style="position:absolute;top:45%">fetching data from database...</h3>
         <div style="position:absolute;top:50%" class="loader"></div>
     </div>
-    <div class="d-none" id="main" style="margin:50px">
+    <div class="d-none" id="main" style="margin:50px;vertical-align:central">
         <div class="row">
             <h1 class="col-sm" style="text-align:right">You choose to travel to: </h1>
             <h1 class="col-sm" id="travelId"></h1>
         </div>
-        <div style="margin:100px">
-            <h3>Where would you like to sleep?</h3>
-            <h3 style="margin-bottom:50px;margin-top:50px;color:red" id="emptyAccommodations"></h3>
-            <nav id="accoNav" style="margin-top:100px">
-                <ul id="accommodationsList">
-                </ul>
-            </nav>
-            <h3>Where would you like to eat?</h3>
-            <h3 style="margin-bottom:50px;margin-top:50px;color:red" id="emptyRestaurants"></h3>
-            <nav id="restNav" style="margin-top:100px">
-                <ul id="restaurantsList">
-                </ul>
-            </nav>
-            <h3>What attractions do you want to do?</h3>
-            <h3 style="margin-bottom:50px;margin-top:50px;color:red" id="emptyAttractions"></h3>
-            <nav id="AttracNav" style="margin-top:100px">
-                <ul id="attractionsList">
-                </ul>
-            </nav>
+        <div class="row">
+            <div class="col-sm" style="margin:100px">
+
+                <h3 style="margin-top:70px">Where would you like to sleep?</h3>
+                <h3 class="d-none" style="margin-bottom:50px;margin-top:50px;color:red" id="emptyAccommodations">Sorry, no sleeping place was found in Database</h3>
+                <nav id="accoNav" style="margin-top:100px">
+                    <ul id="accommodationsList">
+                    </ul>
+                </nav>
+
+
+
+                <h3 style="margin-top:70px">Where would you like to eat?</h3>
+                <h3 class="d-none" style="margin-bottom:50px;margin-top:50px;color:red" id="emptyRestaurants">Sorry, no restaurants was found in Database</h3>
+                <nav id="restNav" style="margin-top:40px">
+                    <ul id="restaurantsList">
+                    </ul>
+                </nav>
+
+
+                <h3 style="margin-top:70px">What attractions do you want to do?</h3>
+                <h3 class="d-none" style="margin-bottom:50px;margin-top:50px;color:red" id="emptyAttractions">Sorry, no attractions was found in Database</h3>
+                <nav id="AttracNav" style="margin-top:40px">
+                    <ul id="attractionsList">
+                    </ul>
+                </nav>
+
+            </div>
+            <div class="col-sm" style="margin:100px">
+                <h2>Prev Trips</h2>
+                <nav style="margin-top:40px" id="historyNav">
+                    <ul style="height:80%" id="historyList">
+                    </ul>
+                </nav>
+            </div>
         </div>
+        <button style ="margin-bottom:20px;font-size:30px;margin-left:40%;padding-left:100px;padding-right:100px;padding-bottom:10px;padding-top:10px" class ="btn-success"type="button" onclick="alert('Hello world!')">Save Trip</button>
     </div>
 
 
-    <div id="dropDownSelect1"></div>
 
 
     <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
