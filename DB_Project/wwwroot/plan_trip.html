@@ -29,16 +29,6 @@
     <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
 
     <style>
-        .btn {
-            background-color: #4CAF50; /* Green */
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-        }
         .loader {
             border: 16px solid #f3f3f3;
             border-radius: 50%;
@@ -69,6 +59,13 @@
                 transform: rotate(360deg);
             }
         }
+        .fixedElement {
+            background-color: #c0c0c0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+        }
     </style>
 
     <title>
@@ -78,8 +75,8 @@
 </head>
 <body>
     <div id="loader" style="align-content:center; justify-content: center; display: flex;width:100%;height:100%">
-        <h3 style="position:absolute;top:45%">fetching data from database...</h3>
-        <div style="position:absolute;top:50%" class="loader"></div>
+        <h3 style="position:absolute;top:35%">fetching data from database...</h3>
+        <div style="position:absolute;top:45%" class="loader"></div>
     </div>
     <!-- Showed after the page as finished loading -->
     <div class="d-none" id="main" style="margin:3% 5% 0; vertical-align:central;">
@@ -165,7 +162,14 @@
                 </div>
             </div>
         </div>
-        <button style ="margin-bottom:20px;font-size:30px;margin-left:40%;padding-left:100px;padding-right:100px;padding-bottom:10px;padding-top:10px" class ="btn-success"type="button" onclick="alert('Hello world!')">Save Trip</button>
+        <button style="margin-bottom: 20px;
+        font-size: 30px;
+        margin-left: 40%;
+        padding-left: 100px;
+        padding-right: 100px;
+        padding-bottom: 10px;
+        padding-top: 10px
+    " class="btn-success" type="button" onclick="alert('Hello world!')">Save Trip</button>
     </div>
 
 

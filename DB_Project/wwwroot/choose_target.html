@@ -28,42 +28,78 @@
     <title>
         TriPlan
     </title>
+    <style>
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+        }
 
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 <body>
+    <div id="loader" style="align-content:center; justify-content: center; display: flex;width:100%;height:100%">
+        <h3 style="position:absolute;top:45%">fetching data from database...</h3>
+        <div style="position:absolute;top:50%" class="loader"></div>
+    </div>
+    <div id="mainDiv"class="d-none">
+        <div class="limiter">
+            <div class="container-login100">
+                <div class="wrap-login100">
+                    <div class="login100-form validate-form">
+                        <span class="login100-form-title p-b-34" id="helloId">
+                            Hello
+                        </span>
+                        <span class="login100-form-title p-b-34">
+                            please Select Country & City
+                        </span>
 
-    <div class="limiter">
-        <div class="container-login100">
-            <div class="wrap-login100">
-                <div class="login100-form validate-form">
-                    <span class="login100-form-title p-b-34" id="helloId">
-                        Hello
-                    </span>
-                    <span class="login100-form-title p-b-34">
-                        please Select Country & City
-                    </span>
+                        <div class="wrap-input100 rs1-wrap-input100  m-b-20">
+                            <select id="countriesId" onchange="initCitiesComboBox()" style="height:50px" class="input100" placeholder="User name">
+                            </select>
+                        </div>
 
-                    <div class="wrap-input100 rs1-wrap-input100  m-b-20">
-                        <select id="countriesId" onchange="initCitiesComboBox()" style="height:50px" class="input100" placeholder="User name">
-                        </select>
+
+                        <div class="wrap-input100 rs1-wrap-input100  m-b-20">
+                            <select id="citiesId" style="height:50px" class="input100" placeholder="User name">
+                            </select>
+                        </div>
+
+
+                        <div class="container-login100-form-btn">
+                            <button style="margin-bottom :250px" onclick="planTripClicked()" class="login100-form-btn">
+                                Plan Trip!
+                            </button>
+                        </div>
+
                     </div>
 
-
-                    <div class="wrap-input100 rs1-wrap-input100  m-b-20">
-                        <select id="citiesId" style="height:50px" class="input100" placeholder="User name">
-                        </select>
-                    </div>
-
-
-                    <div class="container-login100-form-btn">
-                        <button style="margin-bottom :250px" onclick="planTripClicked()" class="login100-form-btn">
-                            Plan Trip!
-                        </button>
-                    </div>
-
+                    <div class="login100-more" style="background-image: url('images/bg-01.jpg');"></div>
                 </div>
-
-                <div class="login100-more" style="background-image: url('images/bg-01.jpg');"></div>
             </div>
         </div>
     </div>
