@@ -30,5 +30,11 @@ namespace DB_Project.Models
             get;
             set;
         }
+
+        public string Type
+        {
+            get;
+            set;
+        }
     }
 }

@@ -33,7 +33,8 @@ namespace DB_Project.Models.Contexts
                                 Name = reader["name"].ToString(),
                                 Phone = reader["phone"].ToString(),
                                 Internet = reader["internet"].ToString(),
-                                Location = convert.Location_from_reader(reader)
+                                Location = convert.Location_from_reader(reader),
+                                Type = reader["type"].ToString()
                             });
                         }
                     }
@@ -48,7 +49,7 @@ namespace DB_Project.Models.Contexts
 
         public List<Accommodation> GetAllAccommodation()
         {
-            string req = "select distinct name,places.lat,places.lon,phone,internet" +
+            string req = "select distinct name,places.lat,places.lon,phone,internet,type" +
                         ",city,country from accommodation join places on accommodation.lat = " +
                         "places.lat and accommodation.lon = places.lon;";
             try
@@ -63,7 +64,7 @@ namespace DB_Project.Models.Contexts
 
         public List<Accommodation> Get_Accommodation_By_Region(string country, string city)
         {
-            string req = "select distinct name,places.lat,places.lon,phone,internet" +
+            string req = "select distinct name,places.lat,places.lon,phone,internet,type" +
                         ",city,country from accommodation join places on accommodation.lat = " +
                          "places.lat and accommodation.lon = places.lon " +
                          $"where city=\"{city}\" and country = \"{country}\";";
