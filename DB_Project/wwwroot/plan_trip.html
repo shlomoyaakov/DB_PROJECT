@@ -59,6 +59,7 @@
                 transform: rotate(360deg);
             }
         }
+
         .fixedElement {
             background-color: #c0c0c0;
             position: fixed;
@@ -80,94 +81,65 @@
     </div>
     <!-- Showed after the page as finished loading -->
     <div class="d-none" id="main" style="margin:3% 0 0; vertical-align:central;">
-        
+
         <div class="fixedElement" style="background-color:lightgray">
             <div class="row">
                 <h1 id="travelId" class="col-sm" style="text-align:center">You choose to travel to: </h1>
             </div>
 
-            <div style="align-content:center" class="row">
-                <div style="margin-top:20px;align-items:center" class="col-sm">
-                    <button onclick="goBack()" style="color:green;display: block;margin-left: auto;margin-right: auto;">change</button>
+            <div class="row">
+                <div style=" margin-top:10px;" class="col-sm">
+                    <button onclick="goBack()" style="float:right;color:green;display: block;">change</button>
+                </div>
+                <div style="margin-top:10px;" class="col-sm">
+                    <button onclick="alert('not yet')" style="color:green;display: block;">load trip history</button>
                 </div>
             </div>
         </div>
-        <div class="row" style="margin: 105px 5%;">
+        <div class="row" style="margin: 7% 5%;">
             <div class="col-sm">
 
                 <div style="height: 22vh;">
-                    <h3>Where would you like to sleep?</h3>
-                    <h3 class="d-none" style="margin-bottom:50px; color:red;" id="emptyAccommodations">Sorry, no sleeping place was found in Database</h3>
-                    <div id="accoNav">
-                        <select id="accommodationsList" multiple="multiple" style="height: 80%; width: 70%;">
-                            <option value="asdasdasdasdasd">HTML</option>
-                            <option value="CSS">CSS</option>
-                            <option value="JavaScript">JavaScript</option>
-                            <option value="PHP">PHP</option>
-                            <option value="MySQL">MySQL</option>
-                            <option value="Java">Java</option>
-                            <option value="VB.NET">VB.NET</option>
-                            <option value="Python">Python</option>
-                            <option value="Flash">Flash</option>
-                            <option value="Perl">perl</option>
-                        </select>
-                    </div>
+                    <h3 style="margin-bottom:10px">Where would you like to sleep?</h3>
+                    <h3 class="d-none" style="margin-bottom:50px; color:red;" id="emptyAccommodations">Sorry, no sleeping places was found in Database</h3>
+                    <select id="accommodationsList" multiple="multiple" style="height: 80%; width: 70%;">
+                    </select>
                 </div>
 
-                <div style="height: 22vh;">
-                    <h3>Where would you like to eat?</h3>
+                <div style="margin-top:70px;height: 22vh;">
+                    <h3 style="margin-bottom:10px">Where would you like to eat?</h3>
                     <h3 class="d-none" style="margin-bottom:50px; color:red;" id="emptyRestaurants">Sorry, no restaurants was found in Database</h3>
-                    <div id="restNav">
-                        <select id="restaurantsList" multiple="multiple" style="height: 80%; width: 70%;">
-                            <option value="asdasdasdasdasd">HTML</option>
-                            <option value="CSS">CSS</option>
-                            <option value="JavaScript">JavaScript</option>
-                            <option value="PHP">PHP</option>
-                            <option value="MySQL">MySQL</option>
-                            <option value="Java">Java</option>
-                            <option value="VB.NET">VB.NET</option>
-                            <option value="Python">Python</option>
-                            <option value="Flash">Flash</option>
-                            <option value="Perl">perl</option>
-                        </select>
-                    </div>
+                    <select id="restaurantsList" multiple="multiple" style="height: 80%; width: 70%;">
+                    </select>
                 </div>
 
-                <div style="height: 22vh;">
-                    <h3>What attractions do you want to do?</h3>
-                    <h3 class="d-none" style="margin-bottom:50px; color:red;" id="emptyAttractions">Sorry, no attractions was found in Database</h3>
-                    <div id="AttracNav">
-                        <select id="attractionsList" multiple="multiple" style="height: 80%; width: 70%;">
-                            <option value="asdasdasdasdasd">HTML</option>
-                            <option value="CSS">CSS</option>
-                            <option value="JavaScript">JavaScript</option>
-                            <option value="PHP">PHP</option>
-                            <option value="MySQL">MySQL</option>
-                            <option value="Java">Java</option>
-                            <option value="VB.NET">VB.NET</option>
-                            <option value="Python">Python</option>
-                            <option value="Flash">Flash</option>
-                            <option value="Perl">perl</option>
-                        </select>
-                    </div>
+                <div style="margin-top:70px;height: 22vh;">
+                    <h3 style="margin-bottom:10px">What attractions do you want to do?</h3>
+                    <h3 class="d-none" style="        margin-bottom: 50px;
+        color: red;
+" id="emptyAttractions">
+                        Sorry, no attractions was found in Database
+                    </h3>
+                    <select id="attractionsList" multiple="multiple" style="height: 80%; width: 70%;">
+                    </select>
                 </div>
             </div>
 
             <div class="col-sm">
-                <div style="height: 34vh;">
-                    <h2>Details</h2>
-                    <div id="historyNav" style="left: 4px;">
-                        <h3 id="hoverlabel"></h3>
-                        <h4 id="hovervalue" style="left: 4px;"></h4>
+                <div style="height: 25vh;">
+                    <h3>Details</h3>
+                    <div style="left: 4px;">
+                        <h4 style="margin-top:20px" id="hoverlabel"></h4>
+                        <p id="hovervalue" style="left: 4px;"></p>
                     </div>
                 </div>
-                <div style="height: 34vh;">
-                    <h2>Prev Trips</h2>
-                    <div id="historyNav" style="left: 4px;">
-                        <ul id="historyList">
-                        </ul>
-                    </div>
+
+                <div style="height: 25vh; background:white;">
+                    <div id="map" style="height: 450px; width: 100%;"></div>
                 </div>
+
+
+              
             </div>
         </div>
         <button style="margin-bottom: 20px;
@@ -176,7 +148,6 @@
         padding-left: 100px;
         padding-right: 100px;
         padding-bottom: 10px;
-        padding-top: 10px
     " class="btn-success" type="button" onclick="alert('Hello world!')">
             Save Trip
         </button>
@@ -186,6 +157,7 @@
 
 
     <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7LGGyMsh5vdJJ8r8qpVzd0e5iANV4N4Q&callback=initMap"></script>
 
     <script src="vendor/animsition/js/animsition.min.js"></script>
 
@@ -193,32 +165,7 @@
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 
     <script src="vendor/select2/select2.min.js"></script>
-    <script>
-        $(".selection-2").select2({
-            minimumResultsForSearch: 20,
-            dropdownParent: $('#dropDownSelect1')
-        });
 
-        $('option').mousedown(function (e) {
-            e.preventDefault();
-            $(this).prop('selected', !$(this).prop('selected'));
-            return false;
-        });
-
-        $('option').mouseover(function (e) {
-            e.preventDefault();
-            $('#hoverlabel').text($(this).prop('label'))
-            $('#hovervalue').text($(this).prop('value'))
-            return false;
-        });
-
-        $('select').mouseleave(function (e) {
-            e.preventDefault();
-            $('#hoverlabel').text("")
-            $('#hovervalue').text("")
-            return false;
-        });
-    </script>
 
     <script src="vendor/daterangepicker/moment.min.js"></script>
     <script src="vendor/daterangepicker/daterangepicker.js"></script>
