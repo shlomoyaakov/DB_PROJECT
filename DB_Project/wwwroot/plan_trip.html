@@ -67,6 +67,117 @@
             width: 100%;
             z-index: 100;
         }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            -webkit-animation-name: fadeIn; /* Fade in the background */
+            -webkit-animation-duration: 0.4s;
+            animation-name: fadeIn;
+            animation-duration: 0.4s
+        }
+
+        /* Modal Content */
+        .modal-content {
+            position: fixed;
+            bottom: 0;
+            background-color: #fefefe;
+            width: 100%;
+            -webkit-animation-name: slideIn;
+            -webkit-animation-duration: 0.4s;
+            animation-name: slideIn;
+            animation-duration: 0.4s
+        }
+
+        /* The Close Button */
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        .modal-header {
+            padding: 2px 16px;
+            background-color: #5cb85c;
+            color: white;
+        }
+
+        .modal-body {
+            padding: 2px 16px;
+        }
+
+        .modal-footer {
+            padding: 2px 16px;
+            background-color: snow;
+            color: white;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Add Animation */
+        @-webkit-keyframes slideIn {
+            from {
+                bottom: -300px;
+                opacity: 0
+            }
+
+            to {
+                bottom: 0;
+                opacity: 1
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                bottom: -300px;
+                opacity: 0
+            }
+
+            to {
+                bottom: 0;
+                opacity: 1
+            }
+        }
+
+        @-webkit-keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
     </style>
 
     <title>
@@ -74,10 +185,12 @@
     </title>
 
 </head>
-<body>
+<body style="background-color:snow">
     <div id="loader" style="align-content:center; justify-content: center; display: flex;width:100%;height:100%">
         <h3 style="position:absolute;top:35%">fetching data from database...</h3>
-        <div style="position:absolute;top:45%" class="loader"></div>
+        <div style="        position: absolute;
+        top: 45%
+" class="loader"></div>
     </div>
     <!-- Showed after the page as finished loading -->
     <div class="d-none" id="main" style="margin:3% 0 0; vertical-align:central;">
@@ -139,19 +252,47 @@
                 </div>
 
 
-              
+
             </div>
         </div>
         <button style="margin-bottom: 20px;
         font-size: 30px;
         margin-left: 40%;
-        padding-left: 100px;
-        padding-right: 100px;
+        padding-left: 40px;
+        padding-right: 40px;
         padding-bottom: 10px;
-    " class="btn-success" type="button" onclick="alert('Hello world!')">
+         padding-top: 10px;
+    " class="btn-success" type="button" id= "saveBtn">
             Save Trip
         </button>
     </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Save Trip</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>You choose to save the following trip:</p>
+                <p id="tripDetails"></p>
+                <br />
+                <p>Would you like to continue?</p>
+            </div>
+            <div class="modal-footer">
+                <button style="  padding: 5px 10px 5px 10px;" class="btn-success" type="button">
+                    YES
+                </button>
+                <button style="padding: 5px 10px 5px 10px;" class="btn-danger" type="button" onclick="closeModal()">
+                    NO
+                </button>
+            </div>
+        </div>
+    </div>
+
 
 
 
