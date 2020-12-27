@@ -50,5 +50,19 @@ namespace DB_Project.Controllers
             }
             return Ok(att_list);
         }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] Attraction attraction)
+        {
+            try
+            {
+                context.Add_Attraction(attraction);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
     }
 }

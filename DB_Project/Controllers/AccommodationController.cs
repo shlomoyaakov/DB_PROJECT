@@ -50,5 +50,19 @@ namespace DB_Project.Controllers
             }
             return Ok(acc_list);
         }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] Accommodation accommodation)
+        {
+            try
+            {
+                context.Add_Accomodation(accommodation);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
     }
 }

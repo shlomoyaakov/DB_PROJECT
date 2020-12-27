@@ -76,5 +76,47 @@ namespace DB_Project.Models.Contexts
                 throw e;
             }
         }
+
+        public void Add_Restaurant(Restaurant restaurant)
+        {
+            string country = restaurant.Location.General_Location.Country;
+            string city = restaurant.Location.General_Location.City;
+            double lat = restaurant.Location.Coordinates.Latitude;
+            double lon = restaurant.Location.Coordinates.Longitude;
+            try
+            {
+                using (MySqlConnection myConnection = GetConnection())
+                {
+                    myConnection.Open();
+                    MySqlCommand myCommand = myConnection.CreateCommand();
+                    MySqlTransaction myTrans;
+                    myTrans = myConnection.BeginTransaction();
+                    myCommand.Connection = myConnection;
+                    myCommand.Transaction = myTrans;
+                    try
+                    {
+                        myCommand.CommandText = $"Insert into region (country, city) VALUES (\"{country}\", \"{city}\")" +
+                            $" ON DUPLICAT" +
+                            $"E KEY UPDATE city=city,country=country;";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = $"Insert into places (lat, lon, country, city) VALUES ({lat}, {lon}, \"{country}\", \"{city}\")" +
+                            $"ON DUPLICATE KEY UPDATE city=city,country=country;";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = $"Insert into attractions (name, lat, lon, phone, cuisine) VALUES (\"{restaurant.Name}\", {lat}, {lon}, \"{restaurant.Phone}\", \"{restaurant.Cuisine}\");";
+                        myCommand.ExecuteNonQuery();
+                        myTrans.Commit();
+                    }
+                    catch (MySqlException ex)
+                    {
+                        myTrans.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

@@ -51,5 +51,19 @@ namespace DB_Project.Controllers
             }
             return Ok(res_list);
         }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] Restaurant restaurant)
+        {
+            try
+            {
+                context.Add_Restaurant(restaurant);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
     }
 }

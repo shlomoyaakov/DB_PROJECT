@@ -76,5 +76,47 @@ namespace DB_Project.Models.Contexts
             
         }
 
+        public void Add_Attraction(Attraction attraction)
+        {
+            string country = attraction.Location.General_Location.Country;
+            string city = attraction.Location.General_Location.City;
+            double lat = attraction.Location.Coordinates.Latitude;
+            double lon = attraction.Location.Coordinates.Longitude;
+            try
+            {
+                using (MySqlConnection myConnection = GetConnection())
+                {
+                    myConnection.Open();
+                    MySqlCommand myCommand = myConnection.CreateCommand();
+                    MySqlTransaction myTrans;
+                    myTrans = myConnection.BeginTransaction();
+                    myCommand.Connection = myConnection;
+                    myCommand.Transaction = myTrans;
+                    try
+                    {
+                        myCommand.CommandText = $"Insert into region (country, city) VALUES (\"{country}\", \"{city}\")" +
+                            $" ON DUPLICAT" +
+                            $"E KEY UPDATE city=city,country=country;";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = $"Insert into places (lat, lon, country, city) VALUES ({lat}, {lon}, \"{country}\", \"{city}\")" +
+                            $"ON DUPLICATE KEY UPDATE city=city,country=country;";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = $"Insert into attractions (name, lat, lon, phone) VALUES (\"{attraction.Name}\", {lat}, {lon}, \"{attraction.Phone}\");";
+                        myCommand.ExecuteNonQuery();
+                        myTrans.Commit();
+                    }
+                    catch (MySqlException ex)
+                    {
+                        myTrans.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }
