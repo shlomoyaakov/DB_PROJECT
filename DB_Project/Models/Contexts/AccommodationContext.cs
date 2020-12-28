@@ -78,6 +78,27 @@ namespace DB_Project.Models.Contexts
             }
         }
 
+        public List<Accommodation> Get_Accommodation_By_Region_And_User(string country, string city, string user_name)
+        {
+            string request = "select distinct t4.name, t4.lat, t4.lon, country, city, t4.phone, t4.internet, t4.type " +
+                "from Accommodation as t4 join places as t5 " +
+                "on t4.lat = t5.lat and t4.lon = t5.lon " +
+                $"where country=\"{country}\" and city=\"{city}\" and NOT EXISTS (select distinct t1.name, t1.lat, t1.lon, country, city, t1.phone, t1.internet, t4.type " +
+                "from users_trips as t3 join trip_Accommodation as t2 " +
+                "on t2.trip_id = t3.trip_id " +
+                "join Accommodation as t1 " +
+                "on t2.Accommodation_id = t1.id join places as t0 " +
+                "on t0.lat = t1.lat and t0.lon = t1.lon " +
+                $"where user_name=\"{user_name}\");";
+            try
+            {
+                return Get_Accommodation_By_Req(request);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
         public void Add_Accomodation(Accommodation accommodation)
         {

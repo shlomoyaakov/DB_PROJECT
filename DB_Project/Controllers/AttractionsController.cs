@@ -51,6 +51,21 @@ namespace DB_Project.Controllers
             return Ok(att_list);
         }
 
+        [HttpGet("details")]
+        public ActionResult<List<Attraction>> Get_Attractions_By_Region_And_User([FromQuery] string country, [FromQuery] string city, [FromQuery] string user_name)
+        {
+            List<Attraction> att_list;
+            try
+            {
+                att_list = context.Get_Attractions_By_Region_And_User(country, city, user_name);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok(att_list);
+        }
+
         [HttpPost]
         public IActionResult Post([FromBody] Attraction attraction)
         {

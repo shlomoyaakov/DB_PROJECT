@@ -36,6 +36,21 @@ namespace DB_Project.Controllers
             return Ok(acc_list);
         }
 
+        [HttpGet("details")]
+        public ActionResult<List<Accommodation>> Get_Accommodation_By_Region_And_User([FromQuery] string country, [FromQuery] string city, [FromQuery] string user_name)
+        {
+            List<Accommodation> acc_list;
+            try
+            {
+                acc_list = context.Get_Accommodation_By_Region_And_User(country, city, user_name);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok(acc_list);
+        }
+
         [HttpGet]
         public ActionResult<List<Accommodation>> Get()
         {
