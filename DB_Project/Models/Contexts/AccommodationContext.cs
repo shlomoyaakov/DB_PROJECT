@@ -142,5 +142,36 @@ namespace DB_Project.Models.Contexts
                 throw e;
             }
         }
+
+        public List<KeyValuePair<int, int>> Get_Amount_By_Region(string country, string city)
+        {
+            List<KeyValuePair<int, int>> list = new List<KeyValuePair<int, int>>();
+            string req = "select accommodation_id, count(accommodation_id) as amount from trip_region " +
+                        "join trip_accommodation " +
+                        "on trip_accommodation.trip_id = trip_region.trip_id " +
+                        $"where country = \"{country}\" and city = \"{city}\" " +
+                        "group by accommodation_id " +
+                        "ORDER by amount DESC; ";
+            try
+            {
+                using (MySqlConnection conn = GetConnection())
+                {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand(req, conn);
+                    using var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        KeyValuePair<int, int> kv = new KeyValuePair<int, int>((int)reader["accommodation_id"]
+                            , (int)reader["amount"]);
+                        list.Add(kv);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return list;
+        }
     }
 }

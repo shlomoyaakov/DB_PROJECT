@@ -49,5 +49,20 @@ namespace DB_Project.Controllers
             return region_list;
         }
 
+        [HttpGet("(amount)")]
+        public ActionResult<List<KeyValuePair<string, int>>> Get_Travelers_Amount_By_Region(string country=null)
+        {
+            try
+            {
+                if (country!=null)
+                    return Ok(context.Get_Amount_By_City(country));
+                return Ok(context.Get_Amount_By_Country());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
     }
 }

@@ -80,5 +80,62 @@ namespace DB_Project.Models
                 throw e;
             }
         }
+
+        public List<KeyValuePair<string, int>> Get_Amount_By_Country()
+        {
+            List<KeyValuePair<string, int>> list = new List<KeyValuePair<string, int>>();
+            string req = "select country, count(country) as amount from trip_region " +
+                        "group by country " +
+                        $"ORDER  by amount DESC;";
+            try
+            {
+                using (MySqlConnection conn = GetConnection())
+                {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand(req, conn);
+                    using var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        KeyValuePair<string, int> kv = new KeyValuePair<string, int>(reader["country"].ToString()
+                            , (int)reader["amount"]);
+                        list.Add(kv);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return list;
+        }
+
+        public List<KeyValuePair<string, int>> Get_Amount_By_City(string country)
+        {
+            List<KeyValuePair<string, int>> list = new List<KeyValuePair<string, int>>();
+            string req = "select city, count(city) as amount from trip_region " +
+                        $"where country = \"{country}\"" +
+                        "group by city " +
+                        $"ORDER  by amount DESC;";
+            try
+            {
+                using (MySqlConnection conn = GetConnection())
+                {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand(req, conn);
+                    using var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        KeyValuePair<string, int> kv = new KeyValuePair<string, int>(reader["city"].ToString()
+                            , (int)reader["amount"]);
+                        list.Add(kv);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return list;
+        }
     }
 }
