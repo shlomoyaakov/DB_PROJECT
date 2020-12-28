@@ -83,5 +83,31 @@ namespace DB_Project.Models.Contexts
                 throw e;
             }
         }
+
+        public Boolean IsAdmin(User user)
+        {
+            try
+            {
+                Boolean result = false;
+                using (MySqlConnection conn = GetConnection())
+                {
+                    conn.Open();
+                    string req = $"select from users where user_name=\"{user.User_Name}\"" +
+                                 $" and password=\"{user.Password}\";";
+                    MySqlCommand cmd = new MySqlCommand(req, conn);
+                    using (var reader = cmd.ExecuteReader())
+                    {   if (!reader.HasRows)
+                            return false;
+                        reader.Read();
+                        result = (Boolean)reader["admin"];
+                    }
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

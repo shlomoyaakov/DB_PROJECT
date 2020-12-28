@@ -11,5 +11,7 @@ namespace DB_Project.Models
       
         public string Password { get; set; }
 
+        public Boolean Admin { get; set; }
+
     }
 }

@@ -39,6 +39,26 @@ namespace DB_Project.Controllers
             return Ok(isExists);
         }
 
+        [HttpGet("admin")]
+        public IActionResult IsAdmin([FromQuery] string username, [FromQuery] string password)
+        {
+            User user = new User
+            {
+                User_Name = username,
+                Password = password
+            };
+            Boolean isExists;
+            try
+            {
+                isExists = context.IsExists(user);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok(isExists);
+        }
+
         [HttpPost]
         public IActionResult Post([FromBody] User user)
         {
