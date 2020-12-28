@@ -13,7 +13,7 @@ namespace DB_Project.Models.Contexts
         {
         }
 
-        private List<Accommodation> Get_Accommodation_By_Req(string request)
+        public List<Accommodation> Get_Accommodation_By_Req(string request)
         {
             List<Accommodation> list = new List<Accommodation>();
             try
@@ -30,6 +30,7 @@ namespace DB_Project.Models.Contexts
                         {
                             list.Add(new Accommodation()
                             {
+                                ID = (int)reader["id"],
                                 Name = reader["name"].ToString(),
                                 Phone = reader["phone"].ToString(),
                                 Internet = reader["internet"].ToString(),
@@ -49,7 +50,7 @@ namespace DB_Project.Models.Contexts
 
         public List<Accommodation> GetAllAccommodation()
         {
-            string req = "select distinct name,places.lat,places.lon,phone,internet,type" +
+            string req = "select distinct id,name,places.lat,places.lon,phone,internet,type" +
                         ",city,country from accommodation join places on accommodation.lat = " +
                         "places.lat and accommodation.lon = places.lon;";
             try
@@ -64,7 +65,7 @@ namespace DB_Project.Models.Contexts
 
         public List<Accommodation> Get_Accommodation_By_Region(string country, string city)
         {
-            string req = "select distinct name,places.lat,places.lon,phone,internet,type" +
+            string req = "select distinct id,name,places.lat,places.lon,phone,internet,type" +
                         ",city,country from accommodation join places on accommodation.lat = " +
                          "places.lat and accommodation.lon = places.lon " +
                          $"where city=\"{city}\" and country = \"{country}\";";
@@ -80,10 +81,10 @@ namespace DB_Project.Models.Contexts
 
         public List<Accommodation> Get_Accommodation_By_Region_And_User(string country, string city, string user_name)
         {
-            string request = "select distinct t4.name, t4.lat, t4.lon, country, city, t4.phone, t4.internet, t4.type " +
+            string request = "select distinct t4.id,t4.name, t4.lat, t4.lon, country, city, t4.phone, t4.internet, t4.type " +
                 "from Accommodation as t4 join places as t5 " +
                 "on t4.lat = t5.lat and t4.lon = t5.lon " +
-                $"where country=\"{country}\" and city=\"{city}\" and NOT EXISTS (select distinct t1.name, t1.lat, t1.lon, country, city, t1.phone, t1.internet, t4.type " +
+                $"where country=\"{country}\" and city=\"{city}\" and NOT EXISTS (select distinct t1.id,t1.name, t1.lat, t1.lon, country, city, t1.phone, t1.internet, t4.type " +
                 "from users_trips as t3 join trip_Accommodation as t2 " +
                 "on t2.trip_id = t3.trip_id " +
                 "join Accommodation as t1 " +
@@ -125,7 +126,7 @@ namespace DB_Project.Models.Contexts
                         myCommand.CommandText = $"Insert into places (lat, lon, country, city) VALUES ({lat}, {lon}, \"{country}\", \"{city}\")" +
                             $"ON DUPLICATE KEY UPDATE city=city,country=country;";
                         myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"Insert into attractions (name, lat, lon, phone, internet, type) VALUES (\"{accommodation.Name}\", {lat}, {lon}, \"{accommodation.Phone}\", \"{accommodation.Internet}\", \"{accommodation.Type}\");";
+                        myCommand.CommandText = $"Insert into accomodation (name, lat, lon, phone, internet, type) VALUES (\"{accommodation.Name}\", {lat}, {lon}, \"{accommodation.Phone}\", \"{accommodation.Internet}\", \"{accommodation.Type}\");";
                         myCommand.ExecuteNonQuery();
                         myTrans.Commit();
                     }

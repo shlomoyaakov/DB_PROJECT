@@ -36,5 +36,11 @@ namespace DB_Project.Models
             get;
             set;
         }
+
+        public int ID
+        {
+            get;
+            set;
+        }
     }
 }

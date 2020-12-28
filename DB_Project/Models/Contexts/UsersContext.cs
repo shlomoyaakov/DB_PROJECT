@@ -55,11 +55,28 @@ namespace DB_Project.Models.Contexts
         {
             try
             {
-                using MySqlConnection conn = GetConnection();
-                conn.Open();
-                string req = $"delete from users where user_name=\"{user.User_Name}\";";
-                MySqlCommand cmd = new MySqlCommand(req, conn);
-                using var reader = cmd.ExecuteReader();
+                using (MySqlConnection myConnection = GetConnection())
+                {
+                    myConnection.Open();
+                    MySqlCommand myCommand = myConnection.CreateCommand();
+                    MySqlTransaction myTrans;
+                    myTrans = myConnection.BeginTransaction();
+                    myCommand.Connection = myConnection;
+                    myCommand.Transaction = myTrans;
+                    try
+                    {
+                        myCommand.CommandText = $"delete from users_trip where user_name=\"{user.User_Name}\";";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = $"delete from users where user_name=\"{user.User_Name}\";";
+                        myCommand.ExecuteNonQuery();
+                        myTrans.Commit();
+                    }
+                    catch (MySqlException ex)
+                    {
+                        myTrans.Rollback();
+                        throw ex;
+                    }
+                }
             }
             catch (Exception e)
             {

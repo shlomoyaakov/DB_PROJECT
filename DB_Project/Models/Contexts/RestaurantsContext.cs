@@ -14,7 +14,7 @@ namespace DB_Project.Models.Contexts
 
         }
 
-        private List<Restaurant> Get_Restaurants_By_Req(string req)
+        public List<Restaurant> Get_Restaurants_By_Req(string req)
         {
             List<Restaurant> list = new List<Restaurant>();
             try
@@ -31,6 +31,7 @@ namespace DB_Project.Models.Contexts
                         {
                             list.Add(new Restaurant()
                             {
+                                ID = (int)reader["id"],
                                 Name = reader["name"].ToString(),
                                 Phone = reader["phone"].ToString(),
                                 Cuisine = reader["cuisine"].ToString(),
@@ -48,7 +49,7 @@ namespace DB_Project.Models.Contexts
         }
         public List<Restaurant> GetALLRestaurants()
         {
-            string req = "select distinct name,places.lat,places.lon,phone,cuisine," +
+            string req = "select distinct id,name,places.lat,places.lon,phone,cuisine," +
                         "city,country from restaurants join places on restaurants.lat =" +
                          " places.lat and restaurants.lon = places.lon;";
             try
@@ -63,7 +64,7 @@ namespace DB_Project.Models.Contexts
 
         public List<Restaurant> Get_Restaurants_By_Region(string country, string city)
         {
-            string req = "select distinct t1.name,t1.lat,t1.lon, country, city, t1.phone, t1.cuisine" +
+            string req = "select distinct t1.id,t1.name,t1.lat,t1.lon, country, city, t1.phone, t1.cuisine" +
                         " from restaurants as t1 join places as t2 on t1.lat =" +
                          " t2.lat and t1.lon = t2.lon " +
                          $"where city=\"{city}\" and country=\"{country}\";";
@@ -79,10 +80,10 @@ namespace DB_Project.Models.Contexts
 
         public List<Restaurant> Get_Restaurants_By_Region_And_User(string country, string city, string user_name)
         {
-            string request = "select distinct t4.name, t4.lat, t4.lon, country, city, t4.phone, t4.cuisine " +
+            string request = "select distinct t4.id,t4.name, t4.lat, t4.lon, country, city, t4.phone, t4.cuisine " +
                 "from Restaurants as t4 join places as t5 " +
                 "on t4.lat = t5.lat and t4.lon = t5.lon " +
-                $"where country=\"{country}\" and city=\"{city}\" and NOT EXISTS (select distinct t1.name, t1.lat, t1.lon, country, city, t1.phone, t1.cuisine " +
+                $"where country=\"{country}\" and city=\"{city}\" and NOT EXISTS (select distinct t1.id,t1.name, t1.lat, t1.lon, country, city, t1.phone, t1.cuisine " +
                 "from users_trips as t3 join trip_Restaurants as t2 " +
                 "on t2.trip_id = t3.trip_id " +
                 "join Restaurants as t1 " +
@@ -124,7 +125,7 @@ namespace DB_Project.Models.Contexts
                         myCommand.CommandText = $"Insert into places (lat, lon, country, city) VALUES ({lat}, {lon}, \"{country}\", \"{city}\")" +
                             $"ON DUPLICATE KEY UPDATE city=city,country=country;";
                         myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"Insert into attractions (name, lat, lon, phone, cuisine) VALUES (\"{restaurant.Name}\", {lat}, {lon}, \"{restaurant.Phone}\", \"{restaurant.Cuisine}\");";
+                        myCommand.CommandText = $"Insert into restaurants (name, lat, lon, phone, cuisine) VALUES (\"{restaurant.Name}\", {lat}, {lon}, \"{restaurant.Phone}\", \"{restaurant.Cuisine}\");";
                         myCommand.ExecuteNonQuery();
                         myTrans.Commit();
                     }

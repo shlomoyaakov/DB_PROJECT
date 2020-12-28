@@ -7,7 +7,13 @@ namespace DB_Project.Models.Data_Class
 {
     public class Trip
     {
-        public User Traveler
+        public Trip()
+        {
+            this.Accommodation = new List<Accommodation>();
+            this.Attractions = new List<Attraction>();
+            this.Restaurants = new List<Restaurant>();
+        }
+        public string User_Name
         {
             get;
             set;
@@ -18,19 +24,25 @@ namespace DB_Project.Models.Data_Class
             set;
         }
 
-        public Attraction[] Attractions
+        public List<Attraction> Attractions
         {
             get;
             set;
         }
 
-        public Restaurant[] Restaurants
+        public List<Restaurant> Restaurants
         {
             get;
             set;
         }
 
-        public Accommodation[] Accommodation
+        public List<Accommodation> Accommodation
+        {
+            get;
+            set;
+        }
+        
+        public int ID
         {
             get;
             set;
