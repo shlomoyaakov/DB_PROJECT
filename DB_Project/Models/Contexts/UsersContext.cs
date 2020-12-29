@@ -8,7 +8,7 @@ namespace DB_Project.Models.Contexts
 {
     public class UsersContext : BaseContext
     {
-        public UsersContext(string connectionString) : base(connectionString) { }
+        public UsersContext(string connectionString) : base(connectionString) {}
 
         public Boolean IsExists(User user)
         {
@@ -43,7 +43,7 @@ namespace DB_Project.Models.Contexts
                 string req = $"insert into users(user_name,password,admin) values(\"{user.User_Name}\"," +
                 $"\"{user.Password}\",0);";
                 MySqlCommand cmd = new MySqlCommand(req, conn);
-                using var reader = cmd.ExecuteReader();
+                cmd.ExecuteNonQuery();
             }
             catch (Exception e)
             {
@@ -55,48 +55,12 @@ namespace DB_Project.Models.Contexts
         {
             try
             {
-                using (MySqlConnection myConnection = GetConnection())
-                {
-                    myConnection.Open();
-                    MySqlCommand myCommand = myConnection.CreateCommand();
-                    MySqlTransaction myTrans;
-                    myTrans = myConnection.BeginTransaction();
-                    myCommand.Connection = myConnection;
-                    myCommand.Transaction = myTrans;
-                    try
-                    {
-                        myCommand.CommandText = "DELETE FROM trip_restaurants as t0 " +
-                                                "WHERE t0.trip_id IN ( " +
-                                                 "SELECT DISTINCT t1.trip_id " +
-                                                $"FROM users_trips as t1 where user_name=\"{user.User_Name}\");";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = "DELETE FROM trip_attractions as t0 " +
-                                                "WHERE t0.trip_id IN ( " +
-                                                 "SELECT DISTINCT t1.trip_id " +
-                                                $"FROM users_trips as t1 where user_name=\"{user.User_Name}\");";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = "DELETE FROM trip_accommodation as t0 " +
-                                                "WHERE t0.trip_id IN ( " +
-                                                 "SELECT DISTINCT t1.trip_id " +
-                                                $"FROM users_trips as t1 where user_name=\"{user.User_Name}\");";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = "DELETE FROM trip_region as t0 " +
-                                                "WHERE t0.trip_id IN ( " +
-                                                 "SELECT DISTINCT t1.trip_id " +
-                                                $"FROM users_trips as t1 where user_name=\"{user.User_Name}\");";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"delete from users_trips where user_name=\"{user.User_Name}\";";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"delete from users where user_name=\"{user.User_Name}\";";
-                        myCommand.ExecuteNonQuery();
-                        myTrans.Commit();
-                    }
-                    catch (MySqlException ex)
-                    {
-                        myTrans.Rollback();
-                        throw ex;
-                    }
-                }
+                using MySqlConnection conn = GetConnection();
+                conn.Open();
+                string request = $"delete from users where user_name=\"{user.User_Name}\";";
+                MySqlCommand cmd = new MySqlCommand(request, conn);
+                cmd.ExecuteNonQuery();
+
             }
             catch (Exception e)
             {

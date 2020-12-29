@@ -31,7 +31,7 @@ namespace DB_Project.Models.Contexts
                         trip_map[id] = new Trip()
                         {
                             ID = id,
-                            Time = DateTime.Parse(reader["date"].ToString()),
+                            Time = (reader["date"].ToString()),
                             User_Name = reader["user_name"].ToString()
                         };
                     }
@@ -66,7 +66,7 @@ namespace DB_Project.Models.Contexts
                         trip_map[id] = new Trip()
                         {
                             ID = id,
-                            Time = DateTime.Parse(reader["date"].ToString()),
+                            Time = (reader["date"].ToString()),
                             User_Name = reader["user_name"].ToString()
                         };
                     }
@@ -98,7 +98,7 @@ namespace DB_Project.Models.Contexts
                     {
                         trip_map[id] = new Trip()
                         {   ID = id,
-                            Time = DateTime.Parse(reader["date"].ToString()),
+                            Time =(reader["date"].ToString()),
                             User_Name = reader["user_name"].ToString()
                         };
                     }
@@ -128,8 +128,8 @@ namespace DB_Project.Models.Contexts
                 {
                     conn.Open();
                     Restaurants_In_Trip(rest_req, trip_map, conn);
-                    Attractions_In_Trip(att_req, trip_map, conn);
                     Accommodation_In_Trip(acc_req, trip_map, conn);
+                    Attractions_In_Trip(att_req, trip_map, conn);   
                 }
                 foreach (KeyValuePair<int, Trip> entry in trip_map)
                 {
@@ -148,15 +148,15 @@ namespace DB_Project.Models.Contexts
             try
             {
                 string rest_req = this.base_rest_req +
-                  $"where t3.user_name = {user_name};";
+                  $"where t3.user_name = \"{user_name}\";";
 
                 string acc_req = this.base_acc_req +
-                                  $"where t3.user_name = {user_name};";
+                                  $"where t3.user_name = \"{user_name}\";";
 
                 string att_req = this.base_att_req +
-                                  $"where t3.user_name = {user_name};";
+                                  $"where t3.user_name = \"{user_name}\";";
 
-                return Get_Trips_By_Requests(rest_req, att_req, acc_req);
+                return Get_Trips_By_Requests(rest_req, acc_req, att_req);
             }
             catch (Exception e)
             {
@@ -176,7 +176,7 @@ namespace DB_Project.Models.Contexts
                 string att_req = this.base_att_req +
                                   $"where t3.trip_id = {id};";
 
-                List<Trip> trips = Get_Trips_By_Requests(rest_req, att_req, acc_req);
+                List<Trip> trips = Get_Trips_By_Requests(rest_req, acc_req, att_req);
                 if (trips.Count == 0)
                 {
                     throw new Exception("There is no such trip_id");
@@ -185,7 +185,7 @@ namespace DB_Project.Models.Contexts
             }
             catch(Exception e)
             {
-                throw e;
+                throw new Exception(e.Message);
             }
         }
 
@@ -203,12 +203,13 @@ namespace DB_Project.Models.Contexts
                     myCommand.Transaction = myTrans;
                     try
                     {
-                        myCommand.CommandText = "SHOW TABLE STATUS LIKE \"users_trips\";";
+                        myCommand.CommandText = $"Insert into users_trips (user_name,date) VALUes (\"{trip.User_Name}\", \"{trip.Time}\")";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = $"select trip_id from users_trips where user_name=\"{trip.User_Name}\" and date = \"{trip.Time}\";";
                         using var reader = myCommand.ExecuteReader();
                         reader.Read();
                         int id = (int)reader["trip_id"];
-                        myCommand.CommandText = $"Insert into users_trips (user_name,date) VALUes (\"{trip.User_Name}\", \"{trip.Time}\")";
-                        myCommand.ExecuteNonQuery();
+                        reader.Close();
                         foreach (Attraction att in trip.Attractions)
                         {
                             myCommand.CommandText = $"Insert into trip_region (trip_id,country,city) VALUes ({id}" +
@@ -257,7 +258,7 @@ namespace DB_Project.Models.Contexts
             }
         }
 
-        public void Delete_Trip(Trip trip)
+        public void Delete_Users_Trips(string user_name)
         {
             try
             {
@@ -271,15 +272,65 @@ namespace DB_Project.Models.Contexts
                     myCommand.Transaction = myTrans;
                     try
                     {
-                        myCommand.CommandText = $"delete from trip_restaurants where trip_id={trip.ID};";
+                        myCommand.CommandText = "DELETE FROM trip_restaurants as t0 " +
+                                                "WHERE t0.trip_id IN ( " +
+                                                 "SELECT DISTINCT t1.trip_id " +
+                                                $"FROM users_trips as t1 where user_name=\"{user_name}\");";
                         myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"delete from trip_attractions where trip_id={trip.ID};";
+                        myCommand.CommandText = "DELETE FROM trip_attractions as t0 " +
+                                                "WHERE t0.trip_id IN ( " +
+                                                 "SELECT DISTINCT t1.trip_id " +
+                                                $"FROM users_trips as t1 where user_name=\"{user_name}\");";
                         myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"delete from trip_accommodation where trip_id={trip.ID};";
+                        myCommand.CommandText = "DELETE FROM trip_accommodation as t0 " +
+                                                "WHERE t0.trip_id IN ( " +
+                                                 "SELECT DISTINCT t1.trip_id " +
+                                                $"FROM users_trips as t1 where user_name=\"{user_name}\");";
                         myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"delete from trip_region where trip_id={trip.ID};";
+                        myCommand.CommandText = "DELETE FROM trip_region as t0 " +
+                                                "WHERE t0.trip_id IN ( " +
+                                                 "SELECT DISTINCT t1.trip_id " +
+                                                $"FROM users_trips as t1 where user_name=\"{user_name}\");";
                         myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"delete from users_trips where trip_id={trip.ID};";
+                        myCommand.CommandText = $"delete from users_trips where user_name=\"{user_name}\";";
+                        myCommand.ExecuteNonQuery();
+                        myTrans.Commit();
+                    }
+                    catch (MySqlException ex)
+                    {
+                        myTrans.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public void Delete_Trip(int trip_id)
+        {
+            try
+            {
+                using (MySqlConnection myConnection = GetConnection())
+                {
+                    myConnection.Open();
+                    MySqlCommand myCommand = myConnection.CreateCommand();
+                    MySqlTransaction myTrans;
+                    myTrans = myConnection.BeginTransaction();
+                    myCommand.Connection = myConnection;
+                    myCommand.Transaction = myTrans;
+                    try
+                    {
+                        myCommand.CommandText = $"delete from trip_restaurants where trip_id={trip_id};";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = $"delete from trip_attractions where trip_id={trip_id};";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = $"delete from trip_accommodation where trip_id={trip_id};";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = $"delete from trip_region where trip_id={trip_id};";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = $"delete from users_trips where trip_id={trip_id};";
                         myCommand.ExecuteNonQuery();
                         myTrans.Commit();
                     }
@@ -296,9 +347,10 @@ namespace DB_Project.Models.Contexts
             }
         }
 
+
         private void Initialize_Base_Request()
         {
-            this.base_rest_req = "select distinct t3.user_name,t3.trip_id,t1.name, t1.lat, t1.lon, country, city, t1.phone, t1.cuisine " +
+            this.base_rest_req = "select distinct t3.user_name,t3.trip_id,t3.date,t1.name, t1.lat, t1.lon, country, city, t1.phone, t1.cuisine " +
                  "from users_trips as t3 " +
                  "join trip_restaurants as t2 " +
                  "on t2.trip_id = t3.trip_id " +
@@ -307,7 +359,7 @@ namespace DB_Project.Models.Contexts
                  "join places as t0 " +
                  "on t0.lat = t1.lat and t0.lon = t1.lon ";
 
-            this.base_acc_req = "select distinct t3.user_name,t3.trip_id,t1.name, t1.lat, t1.lon, country, city, t1.phone, t1.internet, t1.type " +
+            this.base_acc_req = "select distinct t3.user_name,t3.trip_id,t3.date,t1.name, t1.lat, t1.lon, country, city, t1.phone, t1.internet, t1.type " +
                              "from users_trips as t3 " +
                              "join trip_accommodation as t2 " +
                              "on t2.trip_id = t3.trip_id " +
@@ -316,7 +368,7 @@ namespace DB_Project.Models.Contexts
                              "join places as t0 " +
                              "on t0.lat = t1.lat and t0.lon = t1.lon ";
 
-            this.base_att_req = "select distinct t3.user_name,t3.trip_id,t1.name, t1.lat, t1.lon, country, city, t1.phone " +
+            this.base_att_req = "select distinct t3.user_name,t3.trip_id,t3.date,t1.name, t1.lat, t1.lon, country, city, t1.phone " +
                              "from users_trips as t3 " +
                              "join trip_attractions as t2 " +
                              "on t2.trip_id = t3.trip_id " +

@@ -15,9 +15,11 @@ namespace DB_Project.Controllers
     public class UsersController : ControllerBase
     {
         private UsersContext context;
-        public UsersController(UsersContext usr_context)
+        private TripContext t_context;
+        public UsersController(UsersContext usr_context, TripContext trip_context)
         {
             this.context = usr_context;
+            this.t_context = trip_context;
         }
 
 
@@ -78,6 +80,11 @@ namespace DB_Project.Controllers
         {
             try
             {
+                if (!context.IsExists(user))
+                {
+                    throw new Exception("The user_name or password isn't correct");
+                }
+                t_context.Delete_Users_Trips(user.User_Name);
                 context.Delete_User(user);
             }
             catch (Exception e)

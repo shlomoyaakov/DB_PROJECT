@@ -18,7 +18,7 @@ namespace DB_Project.Models.Data_Class
             get;
             set;
         }
-        public DateTime Time
+        public string Time
         {
             get;
             set;
