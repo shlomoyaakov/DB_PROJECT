@@ -47,16 +47,16 @@ namespace DB_Project.Controllers
                 User_Name = username,
                 Password = password
             };
-            Boolean isExists;
+            Boolean IsAdmin;
             try
             {
-                isExists = context.IsExists(user);
+                IsAdmin = context.IsAdmin(user);
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
-            return Ok(isExists);
+            return Ok(IsAdmin);
         }
 
         [HttpPost]
