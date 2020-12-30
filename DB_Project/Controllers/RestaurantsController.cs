@@ -82,11 +82,11 @@ namespace DB_Project.Controllers
         }
 
         [HttpGet("(amount)")]
-        public ActionResult<List<KeyValuePair<int, int>>> Get_Travelers_Amount_By_Region(string country, string city)
+        public ActionResult<List<KeyValuePair<int, Int64>>> Get_Travelers_Amount_By_Region(string country, string city)
         {
             try
             {
-                return Ok(context.Get_Amount_By_Region(city, country));
+                return Ok(context.Get_Amount_By_Region(country, city));
             }
             catch (Exception e)
             {

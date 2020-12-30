@@ -81,9 +81,9 @@ namespace DB_Project.Models
             }
         }
 
-        public List<KeyValuePair<string, int>> Get_Amount_By_Country()
+        public List<KeyValuePair<string, Int64>> Get_Amount_By_Country()
         {
-            List<KeyValuePair<string, int>> list = new List<KeyValuePair<string, int>>();
+            List<KeyValuePair<string, Int64>> list = new List<KeyValuePair<string, Int64>>();
             string req = "select country, count(country) as amount from trip_region " +
                         "group by country " +
                         $"ORDER  by amount DESC;";
@@ -96,8 +96,8 @@ namespace DB_Project.Models
                     using var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        KeyValuePair<string, int> kv = new KeyValuePair<string, int>(reader["country"].ToString()
-                            , (int)reader["amount"]);
+                        KeyValuePair<string, Int64> kv = new KeyValuePair<string, Int64>(reader["country"].ToString()
+                            , (Int64)reader["amount"]);
                         list.Add(kv);
                     }
                 }

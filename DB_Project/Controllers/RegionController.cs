@@ -50,7 +50,7 @@ namespace DB_Project.Controllers
         }
 
         [HttpGet("(amount)")]
-        public ActionResult<List<KeyValuePair<string, int>>> Get_Travelers_Amount_By_Region(string country=null)
+        public ActionResult<List<KeyValuePair<string, Int64>>> Get_Travelers_Amount_By_Region(string country=null)
         {
             try
             {

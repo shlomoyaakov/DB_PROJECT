@@ -84,12 +84,9 @@ namespace DB_Project.Models.Contexts
             string request = "select distinct t4.id,t4.name, t4.lat, t4.lon, country, city, t4.phone, t4.internet, t4.type " +
                 "from Accommodation as t4 join places as t5 " +
                 "on t4.lat = t5.lat and t4.lon = t5.lon " +
-                $"where country=\"{country}\" and city=\"{city}\" and NOT EXISTS (select distinct t1.id,t1.name, t1.lat, t1.lon, country, city, t1.phone, t1.internet, t4.type " +
-                "from users_trips as t3 join trip_Accommodation as t2 " +
-                "on t2.trip_id = t3.trip_id " +
-                "join Accommodation as t1 " +
-                "on t2.Accommodation_id = t1.id join places as t0 " +
-                "on t0.lat = t1.lat and t0.lon = t1.lon " +
+                $"where country=\"{country}\" and city=\"{city}\" and t4.id NOT in " +
+               "(select distinct t2.accommodation_id " +
+               "from users_trips as t3 join trip_accommodation as t2 " +
                 $"where user_name=\"{user_name}\");";
             try
             {
@@ -143,9 +140,9 @@ namespace DB_Project.Models.Contexts
             }
         }
 
-        public List<KeyValuePair<int, int>> Get_Amount_By_Region(string country, string city)
+        public List<KeyValuePair<int, Int64>> Get_Amount_By_Region(string country, string city)
         {
-            List<KeyValuePair<int, int>> list = new List<KeyValuePair<int, int>>();
+            List<KeyValuePair<int, Int64>> list = new List<KeyValuePair<int, Int64>>();
             string req = "select accommodation_id, count(accommodation_id) as amount from trip_region " +
                         "join trip_accommodation " +
                         "on trip_accommodation.trip_id = trip_region.trip_id " +
@@ -161,8 +158,8 @@ namespace DB_Project.Models.Contexts
                     using var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        KeyValuePair<int, int> kv = new KeyValuePair<int, int>((int)reader["accommodation_id"]
-                            , (int)reader["amount"]);
+                        KeyValuePair<int, Int64> kv = new KeyValuePair<int, Int64>((int)reader["accommodation_id"]
+                            , (Int64)reader["amount"]);
                         list.Add(kv);
                     }
                 }
