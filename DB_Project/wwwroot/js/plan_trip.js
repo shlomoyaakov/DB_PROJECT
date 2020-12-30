@@ -17,14 +17,9 @@ function showAccommodations() {
             else {
                 for (i in jsonResponse) {
                     let name = jsonResponse[i].name
-                    let internet = jsonResponse[i].internet
-                    let location = jsonResponse[i].location.coordinates
-                    let phone = jsonResponse[i].phone
-                    let type = jsonResponse[i].type
-
                     var option = document.createElement("option");
                     option.text = name
-                    option.value = "Internet: " + internet + "<br>Location: lat " + location.latitude + ", lng " + location.longitude + "<br>Phone: " + phone + "<br>Type: " + type
+                    option.value = JSON.stringify(jsonResponse[i])
                     accommodationsList.add(option, accommodationsList[0]);
                 }
             }
@@ -58,13 +53,9 @@ function showRestaurants() {
             else {
                 for (i in jsonResponse) {
                     let name = jsonResponse[i].name.replaceAll("\"", "")
-                    let cuisine = jsonResponse[i].cuisine.replaceAll(";",", ")
-                    let location = jsonResponse[i].location.coordinates
-                    let phone = jsonResponse[i].phone
-      
                     var option = document.createElement("option");
                     option.text = name
-                    option.value = "Cuisine: " + cuisine + "<br>Location: lat " + location.latitude + ", lng " + location.longitude  + "<br>Phone: " + phone 
+                    option.value = JSON.stringify(jsonResponse[i])
                     restaurantsList.add(option, restaurantsList[0]);
                 }
             }
@@ -98,13 +89,9 @@ function showAttractions() {
             else {
                 for (i in jsonResponse) {
                     let name = jsonResponse[i].name.replaceAll("\"", "")
-                    let location = jsonResponse[i].location.coordinates
-                    let phone = jsonResponse[i].phone
-
-
                     var option = document.createElement("option");
                     option.text = name
-                    option.value = "Location: lat " + location.latitude + ", lng " + location.longitude  + "<br>Phone: " + phone
+                    option.value = JSON.stringify(jsonResponse[i])
                     attractionsList.add(option, attractionsList[0]);
                 }
             }
@@ -156,11 +143,30 @@ let pageLoaded = function () {
 
     $('option').mousedown(function (e) {
         e.preventDefault();
+        valueJSON = JSON.parse(this.value)
+        let location = valueJSON.location.coordinates
+        let phone = valueJSON.phone
+        switch (this.parentElement.id) {
+            case 'accommodationsList':
+                let internet = valueJSON.internet
+                let type = valueJSON.type
+                detailsString = "Internet: " + internet + "<br>Location: lat " + location.latitude + ", lng " + location.longitude + "<br>Phone: " + phone + "<br>Type: " + type
+                break;
+            case 'restaurantsList':
+                let cuisine = valueJSON.cuisine.replaceAll(";", ", ")
+                detailsString = "Cuisine: " + cuisine + "<br>Location: lat " + location.latitude + ", lng " + location.longitude + "<br>Phone: " + phone 
+                break;
+            case 'attractionsList':
+                detailsString = "Location: lat " + location.latitude + ", lng " + location.longitude + "<br>Phone: " + phone
+                break;
+            default:
+                break;
+        }
         $(this).prop('selected', !$(this).prop('selected'));
-        var location = getConstLocation($(this).prop('value'))
-        setMarker(location)
+        var coordinets = getConstLocation(detailsString)
+        setMarker(coordinets)
         $('#hoverlabel').text($(this).prop('label'))
-        document.getElementById("hovervalue").innerHTML = $(this).prop('value')
+        document.getElementById("hovervalue").innerHTML = detailsString
         return false;
     });
 
@@ -253,4 +259,53 @@ window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
     }
+}
+
+var saveTrip = function () {
+    time = new Date,
+        dformat = [time.getFullYear(),
+        time.getMonth()+1,
+        time.getDate()].join('-') + ' ' +
+        [time.getHours(),
+        time.getMinutes(),
+        time.getSeconds()].join(':');
+    var trip = { User_Name: localStorage.getItem("user"), Time: dformat, Attractions: [], Restaurants: [], Accommodation: [] }
+    Array.from(document.querySelector("#attractionsList").options).forEach(function (option_element) {
+        if (option_element.selected === true) {
+            optionJSON = JSON.parse(option_element.value)
+            trip.Attractions.push(optionJSON)
+        }
+    })
+    Array.from(document.querySelector("#restaurantsList").options).forEach(function (option_element) {
+        if (option_element.selected === true) {
+            optionJSON = JSON.parse(option_element.value)
+            trip.Restaurants.push(optionJSON)
+        }
+    })
+    Array.from(document.querySelector("#accommodationsList").options).forEach(function (option_element) {
+        if (option_element.selected === true) {
+            optionJSON = JSON.parse(option_element.value)
+            trip.Accommodation.push(optionJSON)
+        }
+    })
+    sendtrip(JSON.stringify(trip))
+    closeModal()
+}
+
+function sendtrip(trip) {
+    console.log(trip)
+    let xhttp = new XMLHttpRequest();
+    // server respose
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            alert("Trip saved");
+        }
+        else {
+            alert(this.response);
+        }
+    };
+    // generate and send the request to the server of register new account
+    xhttp.open("POST", "/api/Trips");
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send(trip);
 }
