@@ -59,6 +59,11 @@ function initCitiesComboBox() {
 function planTripClicked() {
     localStorage.setItem("country", countriesComboBox.options[countriesComboBox.selectedIndex].text);
     localStorage.setItem("city", citiesComboBox.options[citiesComboBox.selectedIndex].text);
+    if (document.getElementById('newPlacesID').checked == true) {
+        localStorage.setItem("newPlaces", true)
+    } else {
+        localStorage.setItem("newPlaces", false)
+    }
     window.location.assign("plan_trip.html");
 }
 

@@ -293,12 +293,11 @@ var saveTrip = function () {
 }
 
 function sendtrip(trip) {
-    console.log(trip)
     let xhttp = new XMLHttpRequest();
     // server respose
     xhttp.onloadend = function () {
         if (this.readyState == 4 && this.status == 200) {
-            alert("Trip saved");
+            alert("Trip successfully saved");
         }
         else {
             alert(this.response);
