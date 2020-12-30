@@ -228,7 +228,7 @@ namespace DB_Project.Models.Contexts
                                 $"ON DUPLICATE KEY UPDATE trip_id=trip_id;";
                             myCommand.ExecuteNonQuery();
 
-                            myCommand.CommandText = $"Insert into trip_restaurants (trip_id, restaurants_id) VALUes ({id}" +
+                            myCommand.CommandText = $"Insert into trip_restaurants (trip_id, restaurant_id) VALUes ({id}" +
                                $", {rest.ID}) ON DUPLICATE KEY UPDATE trip_id=trip_id;";
                             myCommand.ExecuteNonQuery();
                         }
