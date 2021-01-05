@@ -30,7 +30,7 @@ namespace DB_Project.Controllers
         /*
          * This function return all of the accommodation in certain city and country.
          * The controller activate the right function in accommodationcontext objcet and return the
-         * answer in case there are no exception.
+         * answer. In case there are no exception.
          */
         [HttpGet("region")]
         public ActionResult<List<Accommodation>> Get_Accommodation_By_Region([FromQuery] string country, [FromQuery] string city)
@@ -63,6 +63,7 @@ namespace DB_Project.Controllers
             }
             return Ok(acc_list);
         }
+
         /* This function reuturn all accommodation that we have in database.
          */
         [HttpGet]

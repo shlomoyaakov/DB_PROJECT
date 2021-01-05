@@ -13,6 +13,11 @@ namespace DB_Project.Models.Contexts
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public List<Accommodation> Get_Accommodation_By_Req(string request)
         {
             List<Accommodation> list = new List<Accommodation>();
@@ -48,6 +53,11 @@ namespace DB_Project.Models.Contexts
             return list;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public List<Accommodation> GetAllAccommodation()
         {
             string req = "select distinct id,name,places.lat,places.lon,phone,internet,type" +
@@ -63,6 +73,13 @@ namespace DB_Project.Models.Contexts
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="country"></param>
+        /// <param name="city"></param>
+        /// <returns></returns>
         public List<Accommodation> Get_Accommodation_By_Region(string country, string city)
         {
             string req = "select distinct id,name,places.lat,places.lon,phone,internet,type" +
@@ -79,6 +96,14 @@ namespace DB_Project.Models.Contexts
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="country"></param>
+        /// <param name="city"></param>
+        /// <param name="user_name"></param>
+        /// <returns></returns>
         public List<Accommodation> Get_Accommodation_By_Region_And_User(string country, string city, string user_name)
         {
             string request = "select distinct t4.id,t4.name, t4.lat, t4.lon, country, city, t4.phone, t4.internet, t4.type " +
@@ -98,6 +123,11 @@ namespace DB_Project.Models.Contexts
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accommodation"></param>
         public void Add_Accomodation(Accommodation accommodation)
         {
             string country = accommodation.Location.General_Location.Country;
@@ -140,6 +170,13 @@ namespace DB_Project.Models.Contexts
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="country"></param>
+        /// <param name="city"></param>
+        /// <returns></returns>
         public List<KeyValuePair<int, Int64>> Get_Amount_By_Region(string country, string city)
         {
             List<KeyValuePair<int, Int64>> list = new List<KeyValuePair<int, Int64>>();

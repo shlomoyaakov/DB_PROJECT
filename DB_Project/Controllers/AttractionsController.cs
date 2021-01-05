@@ -26,7 +26,8 @@ namespace DB_Project.Controllers
             this.context = att_context;
         }
 
-
+        /* This function reuturn all Attractions that we have in database.
+        */
         [HttpGet]
         public ActionResult<List<Attraction>> Get()
         {
@@ -42,7 +43,12 @@ namespace DB_Project.Controllers
             return Ok(att_list);
         }
 
-        [HttpGet("location")]
+        /*
+        * This function return all of the attractions in certain city and country.
+        * The controller activate the right function in attractionscontext objcet and return the
+        * answer. In case there are no exception.
+        */
+        [HttpGet("region")]
         public ActionResult<List<Attraction>> Get_Attractions_By_Region([FromQuery] string country, [FromQuery] string city)
         {
             List<Attraction> att_list;
@@ -57,7 +63,10 @@ namespace DB_Project.Controllers
             return Ok(att_list);
         }
 
-        [HttpGet("details")]
+        /*This function returns all Attractions from certain city and country that the user has not
+        * visited yet.
+        */
+        [HttpGet("region_and_user")]
         public ActionResult<List<Attraction>> Get_Attractions_By_Region_And_User([FromQuery] string country, [FromQuery] string city, [FromQuery] string user_name)
         {
             List<Attraction> att_list;
@@ -72,6 +81,10 @@ namespace DB_Project.Controllers
             return Ok(att_list);
         }
 
+        /*
+        * With this function we can insert new Attractions to our database,
+        * using the AttractionsnContex.
+        */
         [HttpPost]
         public IActionResult Post([FromBody] Attraction attraction)
         {
@@ -85,8 +98,13 @@ namespace DB_Project.Controllers
             }
             return Ok();
         }
-
-        [HttpGet("(amount)")]
+        /* This function gets us the the amount of visitior in each attractions in certain city and country,
+        * sorted by the amount of visitor in each attractions.
+        * we identify the attractions by its attractions id.
+        * The function return a sorted list of KeyValuePair<int, Int64> where int is the attractions id
+        * and int64 is the amount of visitors.
+        */
+        [HttpGet("travelers_by_region")]
         public ActionResult<List<KeyValuePair<int, Int64>>> Get_Travelers_Amount_By_Region(string country, string city)
         {
             try

@@ -28,7 +28,7 @@ namespace DB_Project.Controllers
             return null;
         }
 
-        // GET api/<TripsController>/5
+       
         [HttpGet("{id}")]
         public ActionResult<Trip> Get(int id)
         {
@@ -55,7 +55,6 @@ namespace DB_Project.Controllers
             }
         }
 
-        // POST api/<TripsController>
         [HttpPost]
         public IActionResult Post([FromBody] Trip trip)
         {
