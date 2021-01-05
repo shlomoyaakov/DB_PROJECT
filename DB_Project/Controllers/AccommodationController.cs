@@ -5,9 +5,16 @@ using System.Threading.Tasks;
 using DB_Project.Models;
 using DB_Project.Models.Contexts;
 using Microsoft.AspNetCore.Mvc;
-//test
+
 namespace DB_Project.Controllers
 {
+    /*
+     * Accommodation controller is the controller that activate
+     * the different classes in the model that related to accommodation
+     * table in the database.
+     * This controllers provides us api for getting and inserting accommodation,
+     * and some details about the number of accommodation depending on the region.
+     */
     [Route("api/[controller]")]
     [ApiController]
     public class AccommodationController : ControllerBase
@@ -20,8 +27,12 @@ namespace DB_Project.Controllers
         }
 
 
-
-        [HttpGet("location")]
+        /*
+         * This function return all of the accommodation in certain city and country.
+         * The controller activate the right function in accommodationcontext objcet and return the
+         * answer in case there are no exception.
+         */
+        [HttpGet("region")]
         public ActionResult<List<Accommodation>> Get_Accommodation_By_Region([FromQuery] string country, [FromQuery] string city)
         {
             List<Accommodation> acc_list;
@@ -35,8 +46,10 @@ namespace DB_Project.Controllers
             }
             return Ok(acc_list);
         }
-
-        [HttpGet("details")]
+        /*This function returns all accommodation from certain city and country that the user has not
+         * visited yet.
+         */
+        [HttpGet("region_and_user")]
         public ActionResult<List<Accommodation>> Get_Accommodation_By_Region_And_User([FromQuery] string country, [FromQuery] string city, [FromQuery] string user_name)
         {
             List<Accommodation> acc_list;
@@ -50,7 +63,8 @@ namespace DB_Project.Controllers
             }
             return Ok(acc_list);
         }
-
+        /* This function reuturn all accommodation that we have in database.
+         */
         [HttpGet]
         public ActionResult<List<Accommodation>> Get()
         {
@@ -66,6 +80,10 @@ namespace DB_Project.Controllers
             return Ok(acc_list);
         }
 
+        /*
+         * With this function we can insert new accommodation to our database,
+         * using the accommodationcontex.
+         */
         [HttpPost]
         public IActionResult Post([FromBody] Accommodation accommodation)
         {
@@ -80,7 +98,14 @@ namespace DB_Project.Controllers
             return Ok();
         }
 
-        [HttpGet("amount")]
+        /* This function gets us the the amount of visitior in each accommodation in certain city and country,
+         * sorted by the amount of visitor in each accommodation.
+         * we identify the accommodation by its accommdation id.
+         * The function return a sorted list of KeyValuePair<int, Int64> where int is the accommodation id
+         * and int64 is the amount of visitors.
+         */
+
+        [HttpGet("travelers_by_region")]
         public ActionResult<List<KeyValuePair<int, Int64>>> Get_Travelers_Amount_By_Region([FromQuery] string country, [FromQuery] string city)
         {
             try

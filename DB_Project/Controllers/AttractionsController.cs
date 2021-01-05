@@ -6,7 +6,13 @@ using DB_Project.Models;
 using DB_Project.Models.Contexts;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+/*
+ * Attractions controller is the controller that activate
+ * the different classes in the model that related to Attractions
+ * table in the database.
+ * This controllers provides us api for getting and inserting Attractions,
+ * and some details about the number of Attractions depending on the region.
+ */
 
 namespace DB_Project.Controllers
 {
