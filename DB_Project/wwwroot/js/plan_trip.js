@@ -1,5 +1,3 @@
-
-
 function goBack() {
     window.history.back();
 }
@@ -35,8 +33,11 @@ function showAccommodations() {
         }
     };
     // ask the server for countries & cities list
-    let request = "/api/Accommodation/location?country=" + country + "&city=" + city
-    xhttp.open("GET", request);
+    if (showNewPlacesOnly === "true") {
+        xhttp.open("GET", "/api/Accommodation/region_and_user?country=" + country + "&city=" + city + "&user_name=" + username);
+    } else {
+        xhttp.open("GET", "/api/Accommodation/region?country=" + country + "&city=" + city);
+    }
     xhttp.send();
 }
 
@@ -71,7 +72,12 @@ function showRestaurants() {
         }
     };
     // ask the server for countries & cities list
-      xhttp.open("GET", "/api/Restaurants/location?country=" + country + "&city=" + city);
+    if (showNewPlacesOnly === "true") {
+        xhttp.open("GET", "/api/Restaurants/region_and_user?country=" + country + "&city=" + city + "&user_name=" + username);
+
+    } else {
+        xhttp.open("GET", "/api/Restaurants/region?country=" + country + "&city=" + city);
+    }
     xhttp.send();
 
 }
@@ -106,31 +112,14 @@ function showAttractions() {
             pageLoaded()
         }
     };
-    // ask the server for countries & cities list
-    xhttp.open("GET", "/api/Attractions/location?country=" + country + "&city=" + city);
+    if (showNewPlacesOnly === "true") {
+        xhttp.open("GET", "/api/Attractions/region_and_user?country=" + country + "&city=" + city + "&user_name=" + username);
+    } else {
+        xhttp.open("GET", "/api/Attractions/region?country=" + country + "&city=" + city);
+    }
     xhttp.send();
 }
 
-
-var responses = 0
-var mainDiv = document.getElementById("main")
-var loadDiv = document.getElementById("loader")
-var username = localStorage.getItem("user");
-var country = localStorage.getItem("country");
-var city = localStorage.getItem("city");
-document.getElementById("travelId").textContent += city + ", " + country;
-var accommodationsList = document.getElementById("accommodationsList");
-var restaurantsList = document.getElementById("restaurantsList");
-var attractionsList = document.getElementById("attractionsList");
-var map
-var marker = ""
-
-window.onload = function () {
-    showAccommodations();
-    showRestaurants();
-    showAttractions();
-    initMap()
-}
 
 let pageLoaded = function () {
     loadDiv.remove()
@@ -169,8 +158,6 @@ let pageLoaded = function () {
         document.getElementById("hovervalue").innerHTML = detailsString
         return false;
     });
-
-
 }
 
 
@@ -270,24 +257,30 @@ var saveTrip = function () {
         time.getMinutes(),
         time.getSeconds()].join(':');
     var trip = { User_Name: localStorage.getItem("user"), Time: dformat, Attractions: [], Restaurants: [], Accommodation: [] }
-    Array.from(document.querySelector("#attractionsList").options).forEach(function (option_element) {
-        if (option_element.selected === true) {
-            optionJSON = JSON.parse(option_element.value)
-            trip.Attractions.push(optionJSON)
-        }
-    })
-    Array.from(document.querySelector("#restaurantsList").options).forEach(function (option_element) {
-        if (option_element.selected === true) {
-            optionJSON = JSON.parse(option_element.value)
-            trip.Restaurants.push(optionJSON)
-        }
-    })
-    Array.from(document.querySelector("#accommodationsList").options).forEach(function (option_element) {
-        if (option_element.selected === true) {
-            optionJSON = JSON.parse(option_element.value)
-            trip.Accommodation.push(optionJSON)
-        }
-    })
+    if (document.querySelector("#attractionsList") != null) {
+        Array.from(document.querySelector("#attractionsList").options).forEach(function (option_element) {
+            if (option_element.selected === true) {
+                optionJSON = JSON.parse(option_element.value)
+                trip.Attractions.push(optionJSON)
+            }
+        })
+    }
+    if (document.querySelector("#restaurantsList") != null) {
+        Array.from(document.querySelector("#restaurantsList").options).forEach(function (option_element) {
+            if (option_element.selected === true) {
+                optionJSON = JSON.parse(option_element.value)
+                trip.Restaurants.push(optionJSON)
+            }
+        })
+    }
+    if (document.querySelector("#accommodationsList") != null) {
+        Array.from(document.querySelector("#accommodationsList").options).forEach(function (option_element) {
+            if (option_element.selected === true) {
+                optionJSON = JSON.parse(option_element.value)
+                trip.Accommodation.push(optionJSON)
+            }
+        })
+    }
     sendtrip(JSON.stringify(trip))
     closeModal()
 }
@@ -307,4 +300,25 @@ function sendtrip(trip) {
     xhttp.open("POST", "/api/Trips");
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(trip);
+}
+
+var responses = 0
+var mainDiv = document.getElementById("main")
+var loadDiv = document.getElementById("loader")
+var username = localStorage.getItem("user");
+var country = localStorage.getItem("country");
+var city = localStorage.getItem("city");
+var showNewPlacesOnly = localStorage.getItem("newPlaces");
+var accommodationsList = document.getElementById("accommodationsList");
+var restaurantsList = document.getElementById("restaurantsList");
+var attractionsList = document.getElementById("attractionsList");
+var map
+var marker = ""
+document.getElementById("travelId").textContent += city + ", " + country;
+
+window.onload = function () {
+    showAccommodations();
+    showRestaurants();
+    showAttractions();
+    initMap()
 }
