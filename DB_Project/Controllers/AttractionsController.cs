@@ -64,7 +64,7 @@ namespace DB_Project.Controllers
         }
 
         /*This function returns all Attractions from certain city and country that the user has not
-        * visited yet.
+        * visited yet
         */
         [HttpGet("region_and_user")]
         public ActionResult<List<Attraction>> Get_Attractions_By_Region_And_User([FromQuery] string country, [FromQuery] string city, [FromQuery] string user_name)
