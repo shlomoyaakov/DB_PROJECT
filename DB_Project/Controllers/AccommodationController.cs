@@ -118,5 +118,33 @@ namespace DB_Project.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost("update")]
+        public IActionResult Update([FromBody] Accommodation prev_acc, [FromBody] Accommodation new_acc)
+        {
+            try
+            {
+                context.Update(prev_acc, new_acc);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IActionResult Delete([FromBody] Accommodation acc)
+        {
+            try
+            {
+                context.Delete(acc);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
     }
 }

@@ -169,5 +169,127 @@ namespace DB_Project.Models.Contexts
             }
             return list;
         }
+
+        public void Delete(int id)
+        {
+            try
+            {
+                using MySqlConnection conn = GetConnection();
+                conn.Open();
+                string request = $"delete from restaurants where restaurant_id={id};";
+                MySqlCommand cmd = new MySqlCommand(request, conn);
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public void Delete(Restaurant ret)
+        {
+            try
+            {
+                using (MySqlConnection myConnection = GetConnection())
+                {
+                    myConnection.Open();
+                    MySqlCommand myCommand = myConnection.CreateCommand();
+                    MySqlTransaction myTrans;
+                    myTrans = myConnection.BeginTransaction();
+                    myCommand.Connection = myConnection;
+                    myCommand.Transaction = myTrans;
+                    try
+                    {
+                        myCommand.CommandText = $"delete from Restaurants where Restaurant_id={ret.ID};";
+                        myCommand.ExecuteNonQuery();
+                        // in case we updated the location we try to remove the previous location
+                        // if there is no use of the previous location it will be deleted.
+                        myCommand.CommandText = "delete ignore from places where exists (select lat,lon,country,city " +
+                                $"from Restaurants as t1 join places as t2" +
+                                $"on t1.lat = t2.lat and t2.lon=t1.lon " +
+                                $"where Restaurant_id={ret.ID};";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = "delete ignore from region where exists (select country,city " +
+                                    $"from Restaurants as t1 join places as t2" +
+                                    $"on t1.lat = t2.lat and t2.lon=t1.lon " +
+                                    $"where Restaurant_id={ret.ID};";
+                        myCommand.ExecuteNonQuery();
+
+                    }
+                    catch (Exception e)
+                    {
+                        myTrans.Rollback();
+                        throw e;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public void Update(Restaurant prev_ret, Restaurant new_ret)
+        {
+            int id = prev_ret.ID;
+            try
+            {
+                using (MySqlConnection myConnection = GetConnection())
+                {
+                    myConnection.Open();
+                    MySqlCommand myCommand = myConnection.CreateCommand();
+                    MySqlTransaction myTrans;
+                    myTrans = myConnection.BeginTransaction();
+                    myCommand.Connection = myConnection;
+                    myCommand.Transaction = myTrans;
+                    try
+                    {
+                        // in case the update includes new city and country
+                        myCommand.CommandText = $"Insert into region (country, city) VALUES " +
+                            $"(\"{new_ret.Location.General_Location.Country}\", " +
+                            $"\"{new_ret.Location.General_Location.City}\")" +
+                            $" ON DUPLICATE " +
+                            $" KEY UPDATE city=city,country=country;";
+                        myCommand.ExecuteNonQuery();
+                        // in case the update include new latitude and longiutde
+                        myCommand.CommandText = $"Insert into places (lat, lon, country, city) VALUES" +
+                                    $" ({new_ret.Location.Coordinates.Latitude}, {new_ret.Location.Coordinates.Longitude}" +
+                                    $", \"{new_ret.Location.General_Location.Country}\"," +
+                                    $" \"{new_ret.Location.General_Location.City}\")" +
+                                    $"ON DUPLICATE KEY UPDATE city=city,country=country;";
+                        myCommand.ExecuteNonQuery();
+                        //updating the values
+                        myCommand.CommandText = $"UPDATE users_trips SET name = \"{new_ret.Name}\"," +
+                                     $"lat = {new_ret.Location.Coordinates.Latitude}, lon = {new_ret.Location.Coordinates.Longitude}," +
+                                     $"phone = \"{new_ret.Phone}\", cuisine =\"{new_ret.Cuisine}\" " +
+                                     $"WHERE Restaurant_id = {id};";
+                        myCommand.ExecuteNonQuery();
+                        // in case we updated the location we try to remove the previous location
+                        // if there is no use of the previous location it will be deleted.
+                        myCommand.CommandText = "delete ignore from places where exists (select lat,lon,country,city " +
+                                $"from Restaurants as t1 join places as t2" +
+                                $"on t1.lat = t2.lat and t2.lon=t1.lon " +
+                                $"where Restaurant_id={id};";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = "delete ignore from region where exists (select country,city " +
+                                    $"from Restaurants as t1 join places as t2" +
+                                    $"on t1.lat = t2.lat and t2.lon=t1.lon " +
+                                    $"where Restaurant_id={id};";
+                        myCommand.ExecuteNonQuery();
+                        myTrans.Commit();
+                    }
+                    catch (MySqlException ex)
+                    {
+                        myTrans.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

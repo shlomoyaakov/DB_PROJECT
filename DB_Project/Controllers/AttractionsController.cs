@@ -116,5 +116,33 @@ namespace DB_Project.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost("update")]
+        public IActionResult Update([FromBody] Attraction prev_att, [FromBody] Attraction new_att)
+        {
+            try
+            {
+                context.Update(prev_att, new_att);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IActionResult Delete([FromBody] Attraction att)
+        {
+            try
+            {
+                context.Delete(att);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
     }
 }
