@@ -40,7 +40,44 @@
 //    xhttp.send();
 //}
 
+function tripHistoryClicked() {
+    if (!historyLoaded) {
+        let userTrips = askForTripHistory(user_name)
+        historyLoaded = true;
+    }
 
+
+}
+function askForTripHistory(username) {
+    let xhttp = new XMLHttpRequest();
+    // server respose
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            jsonResponse = JSON.parse(this.response);
+            // find all countries
+            for (i in jsonResponse) {
+                //let country = jsonResponse[i].country;
+                //let city = jsonResponse[i].city;
+                //countriesCitiesSet.add([city, country])
+                //countriesSet.add(country);
+            }
+            //initCountriesComboBox();
+            //initCitiesComboBox();
+            //document.getElementById("mainDiv").classList.remove("d-none")
+            //document.getElementById("loader").remove()
+        }
+        else {
+            alert(this.response);
+        }
+    };
+    // ask the server for countries & cities list
+    xhttp.open("GET", "/api/Trips/user?user_name=" + username);
+    xhttp.send();
+}
+
+function hideModal(){
+    modal.style.display = "none";
+}
 function loadCountriesAndCities() {
     countriesComboBox = document.getElementById('countriesId');
     citiesComboBox = document.getElementById('citiesId');
@@ -110,7 +147,7 @@ function planTripClicked() {
 }
 
 
-
+var historyLoaded = false
 var loginUser = "";
 var countriesComboBox;
 var citiesComboBox;
@@ -118,8 +155,34 @@ var citiesComboBox;
 var countriesSet = new Set();
 var countriesCitiesSet = new Set();
 var user_name = localStorage.getItem("user");
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("historyBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function () {
+    modal.style.display = "block";
+    tripHistoryClicked()
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function () {
+    hideModal()
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
 window.onload = function () {
     document.getElementById('helloId').innerHTML = "Hello " + user_name;
-    //loadPrevTrips();
     loadCountriesAndCities();
+
 }
