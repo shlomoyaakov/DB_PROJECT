@@ -69,7 +69,7 @@ function showRestaurants() {
             responses++
         } else {
             pageLoaded()
-        }
+        } 
     };
     // ask the server for countries & cities list
     if (showNewPlacesOnly === "true") {
