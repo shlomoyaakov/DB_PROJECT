@@ -151,13 +151,20 @@ let pageLoaded = function () {
             default:
                 break;
         }
+        var st = this.parentElement.scrollTop
         $(this).prop('selected', !$(this).prop('selected'));
+        setTimeout(() => this.parentElement.scrollTop = st, 0);
         var coordinets = getConstLocation(detailsString)
         setMarker(coordinets)
         $('#hoverlabel').text($(this).prop('label'))
         document.getElementById("hovervalue").innerHTML = detailsString
         return false;
     });
+
+    $('select').mousedown(function (e) {
+        this.blur();
+        e.preventDefault();
+    })
 }
 
 
