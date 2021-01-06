@@ -5,7 +5,6 @@ function loadChosenTrip() {
     }
     localStorage.setItem("country", selectedCountry);
     localStorage.setItem("city", selectedCity);
-    localStorage.setItem("loadedTrip", loadedTrip);
     window.location.assign("plan_trip.html");
 }
 
@@ -35,18 +34,18 @@ function tripHistoryLoaded() {
 }
 
 function showDetails(valueJSON) {
-    loadedTrip = valueJSON
+    localStorage.setItem("loadedTrip", JSON.stringify(valueJSON));
     selectedCountry = valueJSON.country
     selectedCity = valueJSON.city
-    tripDetails = "<b>country:</b> " + selectedCountry + ", <b>city:</b> " + selectedCity + ", <b>time:</b> " + valueJSON.time 
+    tripDetails = "<b>country:</b> " + selectedCountry + ", <b>city:</b> " + selectedCity + ", <b>time:</b> " + valueJSON.time
     tripDetails += "<br><br><b>Accommodations: </b>"
     acco = valueJSON.accommodation
     accos = ""
     for (i in acco) {
-        accos += acco[i].name+", "
+        accos += acco[i].name + ", "
     }
     if (accos.length !== 0) {
-        accos= accos.slice(0, -2)
+        accos = accos.slice(0, -2)
     }
     tripDetails += accos
     tripDetails += "<br><br><b>Restaurants: </b>"
@@ -70,7 +69,6 @@ function showDetails(valueJSON) {
     }
     tripDetails += atts
     document.getElementById("tripDetails").innerHTML = tripDetails
-
 }
 
 function askForTripHistory(username) {
@@ -167,10 +165,10 @@ function planTripClicked() {
     localStorage.setItem("country", countriesComboBox.options[countriesComboBox.selectedIndex].text);
     localStorage.setItem("city", citiesComboBox.options[citiesComboBox.selectedIndex].text);
     localStorage.setItem("newPlaces", document.getElementById('newPlacesID').checked)
+    localStorage.setItem("loadedTrip", "");
     window.location.assign("plan_trip.html");
 }
 
-var loadedTrip 
 var userTrips = new Set()
 var historyLoaded = false
 var loginUser = "";

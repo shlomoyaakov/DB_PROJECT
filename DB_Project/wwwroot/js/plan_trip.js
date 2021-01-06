@@ -17,6 +17,7 @@ function showAccommodations() {
                     let name = jsonResponse[i].name
                     var option = document.createElement("option");
                     option.text = name
+                    option.setAttribute("id", name)
                     option.value = JSON.stringify(jsonResponse[i])
                     accommodationsList.add(option, accommodationsList[0]);
                 }
@@ -56,6 +57,7 @@ function showRestaurants() {
                     let name = jsonResponse[i].name.replaceAll("\"", "")
                     var option = document.createElement("option");
                     option.text = name
+                    option.setAttribute("id", name)
                     option.value = JSON.stringify(jsonResponse[i])
                     restaurantsList.add(option, restaurantsList[0]);
                 }
@@ -97,6 +99,7 @@ function showAttractions() {
                     let name = jsonResponse[i].name.replaceAll("\"", "")
                     var option = document.createElement("option");
                     option.text = name
+                    option.setAttribute("id", name)
                     option.value = JSON.stringify(jsonResponse[i])
                     attractionsList.add(option, attractionsList[0]);
                 }
@@ -122,6 +125,9 @@ function showAttractions() {
 
 
 let pageLoaded = function () {
+    if (loadedTrip !== "") { // new
+        selectLoaded()
+    } 
     checkIfAdmin(localStorage.getItem("user"), localStorage.getItem("pass"))
     loadDiv.remove()
     mainDiv.classList.remove("d-none")
@@ -293,6 +299,29 @@ var saveTrip = function () {
     closeModal()
 }
 
+function selectLoaded() { 
+    acco = loadedTrip.accommodation
+    for (i in acco) {
+        let element = document.getElementById(acco[i].name);
+        if (element !== null) {
+            element.setAttribute('selected', 'selected');
+        }
+    }
+    rest = loadedTrip.restaurants
+    for (i in rest) {
+        let element = document.getElementById(rest[i].name);
+        if (element !== null) {
+            element.setAttribute('selected', 'selected');
+        }
+    }
+    att = loadedTrip.attractions
+    for (i in att) {
+        let element = document.getElementById(att[i].name);
+        if (element !== null) {
+            element.setAttribute('selected', 'selected');
+        }
+    }
+}
 function sendtrip(trip) {
     let xhttp = new XMLHttpRequest();
     // server respose
@@ -323,6 +352,11 @@ var attractionsList = document.getElementById("attractionsList");
 var map
 var marker = ""
 document.getElementById("travelId").textContent += city + ", " + country;
+var loadedTrip = localStorage.getItem("loadedTrip")
+if (loadedTrip !== "") {
+    loadedTrip = JSON.parse(loadedTrip) 
+}
+
 
 window.onload = function () {
     showAccommodations();
