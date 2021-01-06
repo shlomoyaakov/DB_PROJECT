@@ -192,6 +192,55 @@
         top: 45%
 " class="loader"></div>
     </div>
+    <div id="screen-disabler" class="d-none" style="position:fixed; top:0; left:0; height: 100%; width: 100%; background: black; opacity: 0.7; z-index: 999;" onclick="closeNewTripModal()"></div>
+    <div id="new-place-form" class="d-none" style="position:fixed; top:15%; left:25%; height: auto; width: 50%; background: white; z-index: 1000; border-radius: 5px;">
+        <form style="margin: 5%">
+            <div class="form-group">
+                <label for="newPlaceName">Place Name</label>
+                <input class="form-control" id="newPlaceName" placeholder="Place Name">
+            </div>
+            <div class="form-check">
+                <label style="width: 100%;">Coordinates</label>
+                <input style="width: 49%; display: inline-block;" class="form-control" id="newPlaceLatitude" placeholder="Latitude">
+                <input style="width: 49%; display: inline-block; margin-left: 1%;" class="form-control" id="newPlaceLongitude" placeholder="Longitude">
+            </div>
+            <div class="form-group">
+                <label for="newPlaceType">Place Type</label>
+                <select class="form-control" id="newPlaceType">
+                    <option value="" selected disabled hidden>Please Select Place Type</option>
+                    <option value="accommodation">Accommodation</option>
+                    <option value="restaurant">Restaurant</option>
+                    <option value="attraction">Attraction</option>
+                </select>
+            </div>
+            <div class="form-group form-phone d-none">
+                <label for="newPlacePhone">Phone Number</label>
+                <input class="form-control" id="newPlacePhone" placeholder="Phone Number">
+            </div>
+            <div class="form-group form-accommodation d-none">
+                <label for="newAccommodationInternet">Internet</label>
+                <select class="form-control" id="newAccommodationInternet">
+                    <option value="N/A">N/A</option>
+                    <option value="yes">Yes</option>
+                    <option value="wlan">Wlan</option>
+                </select>
+            </div>
+            <div class="form-group form-accommodation d-none">
+                <label for="newAccommodationType">Accommodation Type</label>
+                <select class="form-control" id="newAccommodationType">
+                    <option value="hotel">Hotel</option>
+                    <option value="hostel">Hostel</option>
+                    <option value="guest_house">Guest House</option>
+                    <option value="N/A">N/A</option>
+                </select>
+            </div>
+            <div class="form-group form-restaurant d-none">
+                <label for="newRestaurantCuisine">Restaurant Cuisine</label>
+                <input class="form-control" id="newRestaurantCuisine" placeholder="Restaurant Cuisine">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addNewPlace()">Submit</button>
+        </form>
+    </div>
     <!-- Showed after the page as finished loading -->
     <div class="d-none" id="main" style="margin:3% 0 0; vertical-align:central;">
 
@@ -199,13 +248,9 @@
             <div class="row">
                 <h1 id="travelId" class="col-sm" style="text-align:center">You choose to travel to: </h1>
             </div>
-            <div class="row">
-                <button onclick="goBack()" style="font-size:30px;margin-left: 48%;color:green;display: block;">change</button>
-            </div>
-            <div class="row">
-                <div style="margin-top:10px;" class="col-sm d-none admin-only">
-                    <button onclick="alert('not yet')" style="font-size:30px;margin-left: 46%;color:blue;display: block;">add a new place</button>
-                </div>
+            <div class="row" style="justify-content: center;">
+                <button onclick="goBack()" style="font-size:30px;color:green;display: inline-block;">change</button>
+                <button class="admin-only d-none" onclick="openNewTripModal()" style="font-size:30px;color:blue;display: inline-block; margin-left: 1rem;">add a new place</button>
             </div>
 
         </div>
@@ -262,7 +307,7 @@
         padding-right: 40px;
         padding-bottom: 10px;
          padding-top: 10px;
-    " class="btn-success" type="button" id= "saveBtn">
+    " class="btn-success" type="button" id="saveBtn">
             Save Trip
         </button>
     </div>
