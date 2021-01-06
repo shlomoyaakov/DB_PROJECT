@@ -51,8 +51,8 @@ function tryToLogin(username, password) {
     xhttp.onloadend = function () {
         if (this.readyState == 4 && this.status == 200) {
             if (this.response === "true") {
-                localStorage.setItem("user", username); 
-
+                localStorage.setItem("user", username);
+                localStorage.setItem("pass", password);
                 window.location.assign("choose_target.html");
             } else {
                 alert("username or password is incorrect");
@@ -67,8 +67,6 @@ function tryToLogin(username, password) {
     xhttp.open("GET", url);
     xhttp.send();
 }
-
-
 
 
 

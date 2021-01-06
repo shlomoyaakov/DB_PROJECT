@@ -122,6 +122,7 @@ function showAttractions() {
 
 
 let pageLoaded = function () {
+    checkIfAdmin(localStorage.getItem("user"), localStorage.getItem("pass"))
     loadDiv.remove()
     mainDiv.classList.remove("d-none")
     $(".selection-2").select2({
@@ -328,4 +329,28 @@ window.onload = function () {
     showRestaurants();
     showAttractions();
     initMap()
+}
+
+function checkIfAdmin(username, password) {
+    let xhttp = new XMLHttpRequest();
+    // server respose
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            if (this.response === "true") {
+                admin()
+            }
+        }
+        else {
+            alert(this.response);
+        }
+    };
+    // generate and send the request to the server of register new account
+    let url = "/api/Users/admin?" + "username=" + username + "&password=" + password;
+    xhttp.open("GET", url);
+    xhttp.send();
+}
+
+function admin() {
+    $(".admin-only").removeClass("d-none");
+    document.getElementById("load-trip-button").parentElement.style.textAlign = "-webkit-center"
 }
