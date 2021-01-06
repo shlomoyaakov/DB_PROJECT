@@ -119,7 +119,7 @@
                         </span>
 
                         <div class="wrap-input100 rs1-wrap-input100 m-b-20">
-                            <select id="countriesId" onchange="initCitiesComboBox()" style="height: 50px
+                            <select id="countriesId" onchange="askForCities()" style="height: 50px
 " class="input100" placeholder="User name">
                             </select>
                         </div>
@@ -191,22 +191,25 @@
                 <div class="row" style="width:100%;height:91%">
                     <div class="col-6">
                         <h1 style="margin-top:10px;font-family:'Agency FB';margin-bottom:20px">Trips you have planned:</h1>
-                        <select id="restaurantsList" multiple style="width:100%;height:80%">
-                            <option>b</option>
-                            <option>a</option>
+                        <select id="historyTrips" multiple style="width:100%;height:80%">
                         </select>   
                     </div>
                     <div class="col-6">
                         <h1 style="margin-top:10px;margin-bottom:20px;font-family:'Agency FB'">Details:</h1>
+                        <div>
+                            <p id="tripDetails" style="font-size:20px; overflow: auto">
+                               Please choose a trip to view its details
+                            </p>
+                        </div>
                     </div>
                 </div>
 
                 <div style="margin-top:20px;width:100%;height:7%; display: flex;justify-content:center;position: absolute; bottom: 15px;">
-                    <button style="margin-right: 30px" onclick="loadChosenTrip()" class="login100-form-btn">
-                        Load Trip
-                    </button>
                     <button style="margin-right: 30px;" onclick="hideModal()" class="login100-form-btn2">
                         Plan new trip
+                    </button>
+                    <button style="margin-right: 30px" onclick="loadChosenTrip()" class="login100-form-btn">
+                        Load Trip
                     </button>
                 </div>
         </div>

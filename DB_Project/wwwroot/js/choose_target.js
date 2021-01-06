@@ -1,70 +1,88 @@
-//function newPlacesClicked() {
-//    if (document.getElementById('newPlacesID').checked) {
-//        var selectedCountry = countriesComboBox.options[countriesComboBox.selectedIndex].text
-
-//        for (var i = 0; i < citiesComboBox.length; i++) {
-//            var currCity = citiesComboBox.options[i].text
-//            if (visitedPlaces.has(selectedCountry+","+currCity)) {
-//                citiesComboBox.options[i].disabled = true
-//                citiesComboBox.options[i].style.backgroundColor = 'gray'
-//            }
-//        }
-//    } else {
-//        for (var i = 0; i < citiesComboBox.length; i++) {
-//            citiesComboBox.options[i].disabled = false
-//            citiesComboBox.options[i].style.backgroundColor = 'white'
-//        }
-//    }
-//}
-
-//function loadPrevTrips() {
-//    let xhttp = new XMLHttpRequest();
-//    // server respose
-//    xhttp.onloadend = function () {
-//        if (this.readyState == 4 && this.status == 200) {
-//            jsonResponse = JSON.parse(this.response);
-//            for (i in jsonResponse) {
-//                item = jsonResponse[i]
-//                // should be country and city !@@@@@@@@@@@@@@@@@@@@@@@@@
-//               // visitedPlaces.add(item.country+","+item.city)
-//                visitedPlaces.add("France,Abbaretz")
-//                visitedPlaces.add("France,Paris")
-//            }
-//        }
-//        else {
-//            alert(this.response);
-//        }
-//    };
-//    // ask the server for prev trips that the user already plan
-//    xhttp.open("GET", "/api/Trips/user?user_name=" + user_name);
-//    xhttp.send();
-//}
+function loadChosenTrip() {
+    if (selectedCountry === "" || selectedCity === "") {
+        alert("Please select a trip")
+        return
+    }
+    localStorage.setItem("country", selectedCountry);
+    localStorage.setItem("city", selectedCity);
+    localStorage.setItem("loadedTrip", loadedTrip);
+    window.location.assign("plan_trip.html");
+}
 
 function tripHistoryClicked() {
     if (!historyLoaded) {
-        let userTrips = askForTripHistory(user_name)
+        askForTripHistory(user_name)
         historyLoaded = true;
     }
+}
 
+function tripHistoryLoaded() {
+    for (let item of userTrips) {
+        let country = item.country
+        let city = item.city
+        let time = item.time
+        var option = document.createElement("option")
+        option.text = "country: "+country + ", city: " + city+", time: "+time
+        option.value = JSON.stringify(item)
+        tripsList.add(option, tripsList[0]);
+        option.style ="font-size:30px"
+        option.onclick = function (){
+            valueJSON = JSON.parse(this.value)
+            //document.getElementById("tripDetails").innerHTML = valueJSON
+            showDetails(valueJSON)
+        }
+    }
+}
+
+function showDetails(valueJSON) {
+    loadedTrip = valueJSON
+    selectedCountry = valueJSON.country
+    selectedCity = valueJSON.city
+    tripDetails = "<b>country:</b> " + selectedCountry + ", <b>city:</b> " + selectedCity + ", <b>time:</b> " + valueJSON.time 
+    tripDetails += "<br><br><b>Accommodations: </b>"
+    acco = valueJSON.accommodation
+    accos = ""
+    for (i in acco) {
+        accos += acco[i].name+", "
+    }
+    if (accos.length !== 0) {
+        accos= accos.slice(0, -2)
+    }
+    tripDetails += accos
+    tripDetails += "<br><br><b>Restaurants: </b>"
+    rest = valueJSON.restaurants
+    rests = ""
+    for (i in rest) {
+        rests += rest[i].name + ", "
+    }
+    if (rests.length !== 0) {
+        rests = rests.slice(0, -2)
+    }
+    tripDetails += rests
+    tripDetails += "<br><br><b>Attractions: </b> "
+    att = valueJSON.attractions
+    atts = ""
+    for (i in att) {
+        atts += att[i].name + ", "
+    }
+    if (atts.length !== 0) {
+        atts = atts.slice(0, -2)
+    }
+    tripDetails += atts
+    document.getElementById("tripDetails").innerHTML = tripDetails
 
 }
+
 function askForTripHistory(username) {
     let xhttp = new XMLHttpRequest();
     // server respose
     xhttp.onloadend = function () {
         if (this.readyState == 4 && this.status == 200) {
-            jsonResponse = JSON.parse(this.response);
-            // find all countries
+            jsonResponse =  JSON.parse(this.response);
             for (i in jsonResponse) {
-                //let country = jsonResponse[i].country;
-                //let city = jsonResponse[i].city;
-                //countriesCitiesSet.add([city, country])
-                //countriesSet.add(country);
+                userTrips.add(jsonResponse[i])
             }
-            //initCountriesComboBox();
-            //initCitiesComboBox();
-            //document.getElementById("mainDiv").classList.remove("d-none")
-            //document.getElementById("loader").remove()
+            tripHistoryLoaded()
         }
         else {
             alert(this.response);
@@ -78,10 +96,7 @@ function askForTripHistory(username) {
 function hideModal(){
     modal.style.display = "none";
 }
-function loadCountriesAndCities() {
-    countriesComboBox = document.getElementById('countriesId');
-    citiesComboBox = document.getElementById('citiesId');
-
+function loadCountries() {
     let xhttp = new XMLHttpRequest();
     // server respose
     xhttp.onloadend = function () {
@@ -90,12 +105,10 @@ function loadCountriesAndCities() {
             // find all countries
             for (i in jsonResponse) {
                 let country = jsonResponse[i].country;
-                let city = jsonResponse[i].city;
-                countriesCitiesSet.add([city, country])
-                countriesSet.add(country);
+                countriesSet.add(country)
             }
-            initCountriesComboBox();
-            initCitiesComboBox();
+            initCountriesComboBox()
+            askForCities()
             document.getElementById("mainDiv").classList.remove("d-none")
             document.getElementById("loader").remove()
         }
@@ -103,7 +116,7 @@ function loadCountriesAndCities() {
             alert('Error occure while getting regions from server');
         }
     };
-    // ask the server for countries & cities list
+    // ask the server for countries 
     xhttp.open("GET", "/api/Region");
     xhttp.send();
 }
@@ -119,24 +132,35 @@ function initCountriesComboBox() {
         countriesComboBox.options[countriesComboBox.options.length] = new Option(country, 0);
     }
 }
-
-function initCitiesComboBox() {
-    if (countriesComboBox === null) {
-        return;
-    }
-    $("#citiesId").empty();
-    let selectedCountry = countriesComboBox.options[countriesComboBox.selectedIndex].text;
-    let countriesCitiesArr = Array.from(countriesCitiesSet)
-    for (let i = 0; i < countriesCitiesArr.length; i++) {
-        let currCity = countriesCitiesArr[i][0];
-        let currCountry = countriesCitiesArr[i][1];
-        if (currCountry === selectedCountry) {
-            citiesComboBox.options[citiesComboBox.options.length] = new Option(currCity, 0);
+function askForCities() {
+    let xhttp = new XMLHttpRequest();
+    // server respose
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            citiesSet = new Set()
+            jsonResponse = JSON.parse(this.response);
+            // find all countries
+            for (i in jsonResponse) {
+                let country = jsonResponse[i].city;
+                citiesSet.add(country)
+            }
+            initCitiesComboBox(citiesSet)
         }
+        else {
+            alert(this.response);
+        }
+    };
+    // ask the server for countries 
+    selectedCountry = countriesComboBox.options[countriesComboBox.selectedIndex].text
+    xhttp.open("GET", "/api/Region/country?country=" + selectedCountry);
+    xhttp.send();
+}
+
+function initCitiesComboBox(citiesSet) {
+    $("#citiesId").empty();
+    for (let item of citiesSet) {
+        citiesComboBox.options[citiesComboBox.options.length] = new Option(item, 0);
     }
-    //if (document.getElementById('newPlacesID').checked) {
-    //    newPlacesClicked()
-    //}
 }
 
 function planTripClicked() {
@@ -146,17 +170,22 @@ function planTripClicked() {
     window.location.assign("plan_trip.html");
 }
 
-
+var loadedTrip 
+var userTrips = new Set()
 var historyLoaded = false
 var loginUser = "";
 var countriesComboBox;
 var citiesComboBox;
-//var visitedPlaces = new Set();
+var selectedCountry = ""
+var selectedCity = ""
+
 var countriesSet = new Set();
-var countriesCitiesSet = new Set();
 var user_name = localStorage.getItem("user");
-// Get the modal
+
+countriesComboBox = document.getElementById('countriesId');
+citiesComboBox = document.getElementById('citiesId');
 var modal = document.getElementById("myModal");
+var tripsList = document.getElementById("historyTrips");
 
 // Get the button that opens the modal
 var btn = document.getElementById("historyBtn");
@@ -183,6 +212,7 @@ window.onclick = function (event) {
 }
 window.onload = function () {
     document.getElementById('helloId').innerHTML = "Hello " + user_name;
-    loadCountriesAndCities();
-
+    loadCountries();
 }
+
+
