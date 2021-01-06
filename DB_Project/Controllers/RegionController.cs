@@ -47,7 +47,7 @@ namespace DB_Project.Controllers
 
         /* This function returns all of the cities inside the a certain country
          */
-        [HttpGet("{country}")]
+        [HttpGet("country")]
         public ActionResult<List<Region>> Get_Cities_In_Country(string country)
         {
             List<Region> region_list;
