@@ -23,7 +23,18 @@ namespace DB_Project.Models.Data_Class
             get;
             set;
         }
+        
+        public string Country
+        {
+            get;
+            set;
+        }
 
+        public string City
+        {
+            get;
+            set;
+        }
         public List<Attraction> Attractions
         {
             get;
