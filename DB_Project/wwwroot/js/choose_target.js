@@ -1,3 +1,46 @@
+//function newPlacesClicked() {
+//    if (document.getElementById('newPlacesID').checked) {
+//        var selectedCountry = countriesComboBox.options[countriesComboBox.selectedIndex].text
+
+//        for (var i = 0; i < citiesComboBox.length; i++) {
+//            var currCity = citiesComboBox.options[i].text
+//            if (visitedPlaces.has(selectedCountry+","+currCity)) {
+//                citiesComboBox.options[i].disabled = true
+//                citiesComboBox.options[i].style.backgroundColor = 'gray'
+//            }
+//        }
+//    } else {
+//        for (var i = 0; i < citiesComboBox.length; i++) {
+//            citiesComboBox.options[i].disabled = false
+//            citiesComboBox.options[i].style.backgroundColor = 'white'
+//        }
+//    }
+//}
+
+//function loadPrevTrips() {
+//    let xhttp = new XMLHttpRequest();
+//    // server respose
+//    xhttp.onloadend = function () {
+//        if (this.readyState == 4 && this.status == 200) {
+//            jsonResponse = JSON.parse(this.response);
+//            for (i in jsonResponse) {
+//                item = jsonResponse[i]
+//                // should be country and city !@@@@@@@@@@@@@@@@@@@@@@@@@
+//               // visitedPlaces.add(item.country+","+item.city)
+//                visitedPlaces.add("France,Abbaretz")
+//                visitedPlaces.add("France,Paris")
+//            }
+//        }
+//        else {
+//            alert(this.response);
+//        }
+//    };
+//    // ask the server for prev trips that the user already plan
+//    xhttp.open("GET", "/api/Trips/user?user_name=" + user_name);
+//    xhttp.send();
+//}
+
+
 function loadCountriesAndCities() {
     countriesComboBox = document.getElementById('countriesId');
     citiesComboBox = document.getElementById('citiesId');
@@ -54,16 +97,15 @@ function initCitiesComboBox() {
             citiesComboBox.options[citiesComboBox.options.length] = new Option(currCity, 0);
         }
     }
+    //if (document.getElementById('newPlacesID').checked) {
+    //    newPlacesClicked()
+    //}
 }
 
 function planTripClicked() {
     localStorage.setItem("country", countriesComboBox.options[countriesComboBox.selectedIndex].text);
     localStorage.setItem("city", citiesComboBox.options[citiesComboBox.selectedIndex].text);
-    if (document.getElementById('newPlacesID').checked == true) {
-        localStorage.setItem("newPlaces", true)
-    } else {
-        localStorage.setItem("newPlaces", false)
-    }
+    localStorage.setItem("newPlaces", document.getElementById('newPlacesID').checked)
     window.location.assign("plan_trip.html");
 }
 
@@ -72,10 +114,12 @@ function planTripClicked() {
 var loginUser = "";
 var countriesComboBox;
 var citiesComboBox;
+//var visitedPlaces = new Set();
 var countriesSet = new Set();
 var countriesCitiesSet = new Set();
-
+var user_name = localStorage.getItem("user");
 window.onload = function () {
-    document.getElementById('helloId').innerHTML = "Hello " + localStorage.getItem("user");
+    document.getElementById('helloId').innerHTML = "Hello " + user_name;
+    //loadPrevTrips();
     loadCountriesAndCities();
 }
