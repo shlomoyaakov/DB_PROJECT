@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DB_Project.Models;
-
+using DB_Project.Models.Data_Class;
 
 namespace DB_Project.Controllers
 {
@@ -35,7 +35,7 @@ namespace DB_Project.Controllers
             List<Region> region_list;
             try
             {
-                region_list = context.GetAllRegions();
+                region_list = context.Get_All_Countries();
             }
             catch (Exception e)
             {
@@ -47,7 +47,7 @@ namespace DB_Project.Controllers
 
         /* This function returns all of the cities inside the a certain country
          */
-        [HttpGet("{country}")]
+        [HttpGet("country")]
         public ActionResult<List<Region>> Get_Cities_In_Country(string country)
         {
             List<Region> region_list;
@@ -62,23 +62,12 @@ namespace DB_Project.Controllers
             return region_list;
         }
 
-        /// <summary>
-        /// This fuction gets us the amount of travelers in each country or each city in certain country
-        /// </summary>
-        /// 
-        /// <param name="country"> the name of the country that we want to get the amount of travelers per
-        /// city from </param>
-        /// 
-        /// <returns> A sorted list that consist of KeyValuePair<string, Int64> where string is
-        /// the name of the country/city and int64 is tha amount of travelers </returns>
-        [HttpGet("travelers_by_region")]
-        public ActionResult<List<KeyValuePair<string, Int64>>> Get_Travelers_Amount_By_Region(string country=null)
+        [HttpGet("stats_per_region")]
+        public ActionResult<List<Stats>> Get_Attractions_Amount_Per_Region(string country)
         {
             try
             {
-                if (country!=null)
-                    return Ok(context.Get_Amount_By_City(country));
-                return Ok(context.Get_Amount_By_Country());
+                return Ok(context.Get_Stats_Per_Region(country));
             }
             catch (Exception e)
             {

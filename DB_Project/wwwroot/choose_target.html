@@ -59,6 +59,46 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; /* 15% from the top and centered */
+            padding: 15px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            height: 70%;
+        
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
     </style>
 </head>
 <body>
@@ -79,7 +119,8 @@
                         </span>
 
                         <div class="wrap-input100 rs1-wrap-input100 m-b-20">
-                            <select id="countriesId" onchange="initCitiesComboBox()" style="height:50px" class="input100" placeholder="User name">
+                            <select id="countriesId" onchange="askForCities()" style="height: 50px
+" class="input100" placeholder="User name">
                             </select>
                         </div>
 
@@ -91,17 +132,23 @@
 
 
                         <div>
-                            <input type="checkbox" id="newPlacesID" name="newPlacesID"  style="height:20px; width:20px;" > 
-                            <label style="font-size:23px;margin-left:10px"for="newPlacesID">New places only</label>
+                            <input type="checkbox" id="newPlacesID" name="newPlacesID" style="height:20px; width:20px;">
+                            <label style="font-size:23px;margin-left:10px;margin-bottom :15px" for="newPlacesID">New places only</label>
                         </div>
 
 
                         <div class="container-login100-form-btn">
-                            <button style="margin-bottom :250px" onclick="planTripClicked()" class="login100-form-btn">
-                                Plan Trip!
+                            <button style="margin-bottom :5px" onclick="planTripClicked()" class="login100-form-btn">
+                                Plan Trip
                             </button>
                         </div>
 
+
+                        <div class="container-login100-form-btn">
+                            <button id ="historyBtn" class="login100-form-btn2">
+                                View Trip History
+                            </button>
+                        </div>
                     </div>
 
                     <div class="login100-more" style="background-image: url('images/bg-01.jpg');"></div>
@@ -132,11 +179,44 @@
 
     <script src="vendor/daterangepicker/moment.min.js"></script>
     <script src="vendor/daterangepicker/daterangepicker.js"></script>
-
-
     <script src="vendor/countdowntime/countdowntime.js"></script>
 
-    <script src="js/choose_target.js"></script>
 
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content" >
+            <span class="close" >&times;</span>
+                <div class="row" style="width:100%;height:91%">
+                    <div class="col-6">
+                        <h1 style="margin-top:10px;font-family:'Agency FB';margin-bottom:20px">Trips you have planned:</h1>
+                        <select id="historyTrips" multiple style="width:100%;height:80%">
+                        </select>   
+                    </div>
+                    <div class="col-6">
+                        <h1 style="margin-top:10px;margin-bottom:20px;font-family:'Agency FB'">Details:</h1>
+                        <div>
+                            <p id="tripDetails" style="font-size:20px; overflow: auto">
+                               Please choose a trip to view its details
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px;width:100%;height:7%; display: flex;justify-content:center;position: absolute; bottom: 15px;">
+                    <button style="margin-right: 30px;" onclick="hideModal()" class="login100-form-btn2">
+                        Plan new trip
+                    </button>
+                    <button style="margin-right: 30px" onclick="loadChosenTrip()" class="login100-form-btn">
+                        Load Trip
+                    </button>
+                </div>
+        </div>
+
+    </div>
+
+
+    <script src="js/choose_target.js"></script>
 </body>
 </html>

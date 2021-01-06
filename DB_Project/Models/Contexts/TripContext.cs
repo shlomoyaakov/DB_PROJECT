@@ -32,7 +32,9 @@ namespace DB_Project.Models.Contexts
                         {
                             ID = id,
                             Time = (reader["date"].ToString()),
-                            User_Name = reader["user_name"].ToString()
+                            User_Name = reader["user_name"].ToString(),
+                            Country = reader["country"].ToString(),
+                            City = reader["city"].ToString()
                         };
                     }
                     trip_map[id].Accommodation.Add(new Accommodation()
@@ -67,7 +69,9 @@ namespace DB_Project.Models.Contexts
                         {
                             ID = id,
                             Time = (reader["date"].ToString()),
-                            User_Name = reader["user_name"].ToString()
+                            User_Name = reader["user_name"].ToString(),
+                            Country = reader["country"].ToString(),
+                            City = reader["city"].ToString()
                         };
                     }
                     trip_map[id].Attractions.Add(new Attraction()
@@ -99,7 +103,9 @@ namespace DB_Project.Models.Contexts
                         trip_map[id] = new Trip()
                         {   ID = id,
                             Time =(reader["date"].ToString()),
-                            User_Name = reader["user_name"].ToString()
+                            User_Name = reader["user_name"].ToString(),
+                            Country = reader["country"].ToString(),
+                            City = reader["city"].ToString()
                         };
                     }
                     trip_map[id].Restaurants.Add(new Restaurant()

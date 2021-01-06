@@ -199,7 +199,6 @@
             <div class="row">
                 <h1 id="travelId" class="col-sm" style="text-align:center">You choose to travel to: </h1>
             </div>
-
             <div class="row">
                 <div style=" margin-top:10px;" class="col-sm">
                     <button onclick="goBack()" style="float:right;color:green;display: block;">change</button>
@@ -210,6 +209,9 @@
                 <div style="margin-top:10px;" class="col-sm d-none admin-only">
                     <button onclick="alert('not yet')" style="color:green;display: block;">add new place</button>
                 </div>
+            </div>
+            <div class="row">
+                <button onclick="goBack()" style="font-size:30px;margin-left: 48%;color:green;display: block;">change</button>
             </div>
         </div>
         <div class="row" style="margin: 7% 5%;">
@@ -286,7 +288,7 @@
                 <p>Would you like to continue?</p>
             </div>
             <div class="modal-footer">
-                <button style="  padding: 5px 10px 5px 10px;" class="btn-success" type="button" onclick="saveTrip()">
+                <button style="padding: 5px 10px 5px 10px;" class="btn-success" type="button" onclick="saveTrip()">
                     YES
                 </button>
                 <button style="padding: 5px 10px 5px 10px;" class="btn-danger" type="button" onclick="closeModal()">
