@@ -116,5 +116,37 @@ namespace DB_Project.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost("update")]
+        public IActionResult Update([FromBody] List<Attraction> att)
+        {
+            if (att.Count() != 0)
+            {
+                return BadRequest("There should be prev and new attractions");
+            }
+            try
+            {
+                context.Update(att[0], att[1]);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IActionResult Delete([FromBody] Attraction att)
+        {
+            try
+            {
+                context.Delete(att);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
     }
 }
