@@ -120,11 +120,15 @@ namespace DB_Project.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update([FromBody] Accommodation prev_acc, [FromBody] Accommodation new_acc)
+        public IActionResult Update([FromBody] List<Accommodation> acc)
         {
+            if (acc.Count() != 0)
+            {
+                return BadRequest("There should be prev and new accommodation");
+            }
             try
             {
-                context.Update(prev_acc, new_acc);
+                context.Update(acc[0], acc[1]);
             }
             catch (Exception e)
             {

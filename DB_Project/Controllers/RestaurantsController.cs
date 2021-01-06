@@ -119,11 +119,15 @@ namespace DB_Project.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update([FromBody] Restaurant prev_ret, [FromBody] Restaurant new_ret)
+        public IActionResult Update([FromBody] List<Restaurant> ret)
         {
+            if (ret.Count() != 0)
+            {
+                return BadRequest("There should be prev and new restaurants");
+            }
             try
             {
-                context.Update(prev_ret, new_ret);
+                context.Update(ret[0], ret[1]);
             }
             catch (Exception e)
             {
