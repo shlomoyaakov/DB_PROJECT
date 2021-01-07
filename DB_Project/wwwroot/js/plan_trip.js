@@ -295,7 +295,11 @@ var saveTrip = function () {
             }
         })
     }
+    if (trip.Attractions.length === 0 && trip.Restaurants.length === 0 && trip.Accommodation.length === 0) { // new
+        alert("please choose some places before saving the trip")
+    } else {
     sendtrip(JSON.stringify(trip))
+    }
     closeModal()
 }
 

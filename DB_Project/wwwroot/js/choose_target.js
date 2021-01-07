@@ -14,6 +14,49 @@ function tripHistoryClicked() {
         historyLoaded = true;
     }
 }
+function askForTripDelete() {
+    let xhttp = new XMLHttpRequest();
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById(selectedTripId).remove()
+            document.getElementById("tripDetails").innerHTML=""
+        }
+        else {
+            alert(this.response);
+        }
+    };
+    if (selectedTripId !== "") {
+        xhttp.open("DELETE", "/api/Trips/id?id=" + selectedTripId);
+        xhttp.send();
+    }
+}
+
+function askForClearTrips() {
+    let xhttp = new XMLHttpRequest();
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            $("#historyTrips").empty();
+            document.getElementById("tripDetails").innerHTML = ""
+        }
+        else {
+            alert(this.response);
+        }
+    };
+
+
+    var user = {};
+    user.User_Name = user_name
+    user.Password = password
+    user.Admin = isAdmin
+    var json = JSON.stringify(user);
+
+    user = JSON.stringify(user)
+    xhttp.open("DELETE", "/api/Trips", true);
+    xhttp.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+    xhttp.send(json);
+}
+
+
 
 function tripHistoryLoaded() {
     for (let item of userTrips) {
@@ -21,9 +64,10 @@ function tripHistoryLoaded() {
         let city = item.city
         let time = item.time
         var option = document.createElement("option")
-        option.text = "country: "+country + ", city: " + city+", time: "+time
+        option.text = time+", country: "+country + ", city: " + city
         option.value = JSON.stringify(item)
         tripsList.add(option, tripsList[0]);
+        option.setAttribute("id", item.id)
         option.style ="font-size:30px"
         option.onclick = function (){
             valueJSON = JSON.parse(this.value)
@@ -35,6 +79,7 @@ function tripHistoryLoaded() {
 
 function showDetails(valueJSON) {
     localStorage.setItem("loadedTrip", JSON.stringify(valueJSON));
+    selectedTripId = valueJSON.id
     selectedCountry = valueJSON.country
     selectedCity = valueJSON.city
     tripDetails = "<b>country:</b> " + selectedCountry + ", <b>city:</b> " + selectedCity + ", <b>time:</b> " + valueJSON.time
@@ -168,18 +213,31 @@ function planTripClicked() {
     localStorage.setItem("loadedTrip", "");
     window.location.assign("plan_trip.html");
 }
-
+function checkIfAdmin() {
+    let xhttp = new XMLHttpRequest();
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            isAdmin = (this.response === "true")
+        }
+        else {
+            alert(this.response);
+        }
+    };
+    xhttp.open("GET", "/api/Users/admin?username=" + user_name + "&password=" + password);
+    xhttp.send();
+}
 var userTrips = new Set()
 var historyLoaded = false
 var loginUser = "";
+var isAdmin= false
 var countriesComboBox;
 var citiesComboBox;
 var selectedCountry = ""
 var selectedCity = ""
-
+var selectedTripId =""
 var countriesSet = new Set();
 var user_name = localStorage.getItem("user");
-
+var password = localStorage.getItem("pass");
 countriesComboBox = document.getElementById('countriesId');
 citiesComboBox = document.getElementById('citiesId');
 var modal = document.getElementById("myModal");
@@ -210,6 +268,7 @@ window.onclick = function (event) {
 }
 window.onload = function () {
     document.getElementById('helloId').innerHTML = "Hello " + user_name;
+    checkIfAdmin()
     loadCountries();
 }
 
