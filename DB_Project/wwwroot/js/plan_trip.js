@@ -611,7 +611,11 @@ function submitPlace() {
     // server respose
     xhttp.onloadend = function () {
         if (this.readyState == 4 && this.status == 200) {
-            alert("New place added successfuly");
+            if (editing === true) {
+                alert("Place updated successfuly");
+            } else {
+                alert("New place added successfuly");
+            }
             window.location.assign("plan_trip.html");
         }
         else {
@@ -626,7 +630,6 @@ function submitPlace() {
 
 function updatePlace() {
     editing = true
-
     showNewPlaceModal()
 }
 
