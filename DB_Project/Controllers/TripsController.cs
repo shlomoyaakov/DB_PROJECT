@@ -70,7 +70,7 @@ namespace DB_Project.Controllers
 
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("id")]
         public ActionResult Delete(int id)
         {
             try
