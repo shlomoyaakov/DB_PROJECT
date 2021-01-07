@@ -268,46 +268,12 @@ namespace DB_Project.Models.Contexts
         {
             try
             {
-                using (MySqlConnection myConnection = GetConnection())
-                {
-                    myConnection.Open();
-                    MySqlCommand myCommand = myConnection.CreateCommand();
-                    MySqlTransaction myTrans;
-                    myTrans = myConnection.BeginTransaction();
-                    myCommand.Connection = myConnection;
-                    myCommand.Transaction = myTrans;
-                    try
-                    {
-                        myCommand.CommandText = "DELETE FROM trip_restaurants as t0 " +
-                                                "WHERE t0.trip_id IN ( " +
-                                                 "SELECT DISTINCT t1.trip_id " +
-                                                $"FROM users_trips as t1 where user_name=\"{user_name}\");";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = "DELETE FROM trip_attractions as t0 " +
-                                                "WHERE t0.trip_id IN ( " +
-                                                 "SELECT DISTINCT t1.trip_id " +
-                                                $"FROM users_trips as t1 where user_name=\"{user_name}\");";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = "DELETE FROM trip_accommodation as t0 " +
-                                                "WHERE t0.trip_id IN ( " +
-                                                 "SELECT DISTINCT t1.trip_id " +
-                                                $"FROM users_trips as t1 where user_name=\"{user_name}\");";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = "DELETE FROM trip_region as t0 " +
-                                                "WHERE t0.trip_id IN ( " +
-                                                 "SELECT DISTINCT t1.trip_id " +
-                                                $"FROM users_trips as t1 where user_name=\"{user_name}\");";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"delete from users_trips where user_name=\"{user_name}\";";
-                        myCommand.ExecuteNonQuery();
-                        myTrans.Commit();
-                    }
-                    catch (MySqlException ex)
-                    {
-                        myTrans.Rollback();
-                        throw ex;
-                    }
-                }
+                using MySqlConnection conn = GetConnection();
+                conn.Open();
+                string request = $"delete from users_trips where user_name=\"{user_name}\";";
+                MySqlCommand cmd = new MySqlCommand(request, conn);
+                cmd.ExecuteNonQuery();
+
             }
             catch (Exception e)
             {
@@ -318,42 +284,19 @@ namespace DB_Project.Models.Contexts
         {
             try
             {
-                using (MySqlConnection myConnection = GetConnection())
-                {
-                    myConnection.Open();
-                    MySqlCommand myCommand = myConnection.CreateCommand();
-                    MySqlTransaction myTrans;
-                    myTrans = myConnection.BeginTransaction();
-                    myCommand.Connection = myConnection;
-                    myCommand.Transaction = myTrans;
-                    try
-                    {
-                        myCommand.CommandText = $"delete from trip_restaurants where trip_id={trip_id};";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"delete from trip_attractions where trip_id={trip_id};";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"delete from trip_accommodation where trip_id={trip_id};";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"delete from trip_region where trip_id={trip_id};";
-                        myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"delete from users_trips where trip_id={trip_id};";
-                        myCommand.ExecuteNonQuery();
-                        myTrans.Commit();
-                    }
-                    catch (MySqlException ex)
-                    {
-                        myTrans.Rollback();
-                        throw ex;
-                    }
-                }
+                using MySqlConnection conn = GetConnection();
+                conn.Open();
+                string request = $"delete from users_trips where trip_id={trip_id};";
+                MySqlCommand cmd = new MySqlCommand(request, conn);
+                cmd.ExecuteNonQuery();
+
             }
             catch (Exception e)
             {
                 throw e;
             }
         }
-
-
+        
         private void Initialize_Base_Request()
         {
             this.base_rest_req = "select distinct t3.user_name,t3.trip_id,t3.date,t1.name, t1.lat, t1.lon, country, city, t1.phone, t1.cuisine " +

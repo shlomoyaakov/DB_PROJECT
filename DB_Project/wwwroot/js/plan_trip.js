@@ -137,7 +137,7 @@ let pageLoaded = function () {
     });
        
 
-    $('option').mousedown(function (e) {
+    $('select[multiple="multiple"] option').mousedown(function (e) {
         e.preventDefault();
         valueJSON = JSON.parse(this.value)
         let location = valueJSON.location.coordinates
@@ -168,10 +168,49 @@ let pageLoaded = function () {
         return false;
     });
 
-    $('select').mousedown(function (e) {
+    $('select[multiple="multiple"]').mousedown(function (e) {
         this.blur();
         e.preventDefault();
-    })
+    });
+
+    //$('#newPlaceName').keydown(function (e) {
+    //    if (this.value.length > 2) {
+    //        $('#newPlaceLatitude').prop('disabled', false)
+    //        $('#newPlaceLongitude').prop('disabled', false)
+    //    } else {
+    //        $('#newPlaceLatitude').prop('disabled', true)
+    //        $('#newPlaceLongitude').prop('disabled', true)
+    //    }
+    //});
+
+    //$('#newPlaceLatitude, #newPlaceLongitude').keydown(function (e) {
+    //    if ($('#newPlaceLatitude').val().length > 2 && $('#newPlaceLongitude').val().length > 2) {
+    //        $('#newPalceType').prop('disabled', false)
+    //    } else {
+    //        $('#newPalceType').prop('disabled', true)
+    //    }
+    //});
+
+    $('#newPlaceType').change(function (e) {
+        $('.form-phone').removeClass('d-none')
+        switch (this.value) {
+            case 'accommodation':
+                $('.form-accommodation').removeClass('d-none')
+                $('.form-restaurant').addClass('d-none')
+                $('.form-attraction').addClass('d-none')
+                break;
+            case 'restaurant':
+                $('.form-accommodation').addClass('d-none')
+                $('.form-restaurant').removeClass('d-none')
+                $('.form-attraction').addClass('d-none')
+                break;
+            case 'attraction':
+                $('.form-accommodation').addClass('d-none')
+                $('.form-restaurant').addClass('d-none')
+                $('.form-attraction').removeClass('d-none')
+                break;
+        }
+    });
 }
 
 
@@ -390,5 +429,64 @@ function checkIfAdmin(username, password) {
 
 function admin() {
     $(".admin-only").removeClass("d-none");
-    document.getElementById("load-trip-button").parentElement.style.textAlign = "-webkit-center"
+}
+
+function closeNewTripModal() {
+    $("#screen-disabler").addClass("d-none");
+    $("#new-place-form").addClass("d-none");
+}
+
+function openNewTripModal() {
+    $("#screen-disabler").removeClass("d-none");
+    $("#new-place-form").removeClass("d-none");
+}
+
+function addNewPlace() {
+    let newPlace = {
+        "Location":
+        {
+            "General_Location": {
+                "Country": localStorage.getItem("country"),
+                "City": localStorage.getItem("city")
+            },
+            "Coordinates": {
+                "Latitude": parseFloat($('#newPlaceLatitude').val()),
+                "Longitude": parseFloat($('#newPlaceLongitude').val())
+            }
+        },
+        "Name": $('#newPlaceName').val(),
+        "Phone": $('#newPlacePhone').val(),
+    };
+    let apiPath
+    switch ($('#newPlaceType').val()) {
+        case 'accommodation':
+            apiPath = "/api/Accommodation"
+            newPlace.Internet = $('#newAccommodationInternet').val()
+            newPlace.Type = $('#newAccommodationType').val()
+            break;
+        case 'restaurant':
+            apiPath = "/api/Restaurants"
+            newPlace.Cuisine = $('#newRestaurantCuisine').val()
+            break;
+        case 'attraction':
+            apiPath = "/api/Attractions"
+            break;
+    }
+    let jsonMsg = JSON.stringify(newPlace)
+    console.log(jsonMsg)
+    let xhttp = new XMLHttpRequest();
+    // server respose
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            alert("New place added successfuly");
+            window.location.assign("plan_trip.html");
+        }
+        else {
+            alert(this.response);
+        }
+    };
+    // generate and send the request to the server of register new account
+    xhttp.open("POST", apiPath);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send(jsonMsg);
 }

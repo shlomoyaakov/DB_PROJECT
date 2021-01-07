@@ -169,5 +169,110 @@ namespace DB_Project.Models.Contexts
             return list;
         }
 
+        public void Delete(Attraction att)
+        {
+            try
+            {
+                using (MySqlConnection myConnection = GetConnection())
+                {
+                    myConnection.Open();
+                    MySqlCommand myCommand = myConnection.CreateCommand();
+                    MySqlTransaction myTrans;
+                    myTrans = myConnection.BeginTransaction();
+                    myCommand.Connection = myConnection;
+                    myCommand.Transaction = myTrans;
+                    try
+                    {
+                        myCommand.CommandText = $"delete from attractions where attraction_id={att.ID};";
+                        myCommand.ExecuteNonQuery();
+                        // in case we updated the location we try to remove the previous location
+                        // if there is no use of the previous location it will be deleted.
+                        myCommand.CommandText = "delete ignore from places where exists (select lat,lon,country,city " +
+                                $"from attractions as t1 join places as t2" +
+                                $"on t1.lat = t2.lat and t2.lon=t1.lon " +
+                                $"where attraction_id={att.ID};";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = "delete ignore from region where exists (select country,city " +
+                                    $"from attractions as t1 join places as t2" +
+                                    $"on t1.lat = t2.lat and t2.lon=t1.lon " +
+                                    $"where attraction_id={att.ID};";
+                        myCommand.ExecuteNonQuery();
+
+                    }
+                    catch (Exception e)
+                    {
+                        myTrans.Rollback();
+                        throw e;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public void Update(Attraction prev_att, Attraction new_att)
+        {
+            int id = prev_att.ID;
+            try
+            {
+                using (MySqlConnection myConnection = GetConnection())
+                {
+                    myConnection.Open();
+                    MySqlCommand myCommand = myConnection.CreateCommand();
+                    MySqlTransaction myTrans;
+                    myTrans = myConnection.BeginTransaction();
+                    myCommand.Connection = myConnection;
+                    myCommand.Transaction = myTrans;
+                    try
+                    {
+                        // in case the update includes new city and country
+                        myCommand.CommandText = $"Insert into region (country, city) VALUES " +
+                            $"(\"{new_att.Location.General_Location.Country}\", " +
+                            $"\"{new_att.Location.General_Location.City}\")" +
+                            $" ON DUPLICATE " +
+                            $" KEY UPDATE city=city,country=country;";
+                        myCommand.ExecuteNonQuery();
+                        // in case the update include new latitude and longiutde
+                        myCommand.CommandText = $"Insert into places (lat, lon, country, city) VALUES" +
+                                    $" ({new_att.Location.Coordinates.Latitude}, {new_att.Location.Coordinates.Longitude}" +
+                                    $", \"{new_att.Location.General_Location.Country}\"," +
+                                    $" \"{new_att.Location.General_Location.City}\")" +
+                                    $"ON DUPLICATE KEY UPDATE city=city,country=country;";
+                        myCommand.ExecuteNonQuery();
+                        //updating the values
+                        myCommand.CommandText = $"UPDATE users_trips SET name = \"{new_att.Name}\"," +
+                                     $"lat = {new_att.Location.Coordinates.Latitude}, lon = {new_att.Location.Coordinates.Longitude}," +
+                                     $"phone = \"{new_att.Phone}\" " +
+                                     $"WHERE attraction_id = {id};";
+                        myCommand.ExecuteNonQuery();
+                        // in case we updated the location we try to remove the previous location
+                        // if there is no use of the previous location it will be deleted.
+                        myCommand.CommandText = "delete ignore from places where exists (select lat,lon,country,city " +
+                                $"from attractions as t1 join places as t2" +
+                                $"on t1.lat = t2.lat and t2.lon=t1.lon " +
+                                $"where attraction_id={id};";
+                        myCommand.ExecuteNonQuery();
+                        myCommand.CommandText = "delete ignore from region where exists (select country,city " +
+                                    $"from attractions as t1 join places as t2" +
+                                    $"on t1.lat = t2.lat and t2.lon=t1.lon " +
+                                    $"where attraction_id={id};";
+                        myCommand.ExecuteNonQuery();
+                        myTrans.Commit();
+                    }
+                    catch (MySqlException ex)
+                    {
+                        myTrans.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
     }
 }

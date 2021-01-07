@@ -117,5 +117,37 @@ namespace DB_Project.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost("update")]
+        public IActionResult Update([FromBody] List<Restaurant> ret)
+        {
+            if (ret.Count() != 0)
+            {
+                return BadRequest("There should be prev and new restaurants");
+            }
+            try
+            {
+                context.Update(ret[0], ret[1]);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IActionResult Delete([FromBody] Restaurant ret)
+        {
+            try
+            {
+                context.Delete(ret);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok();
+        }
     }
 }

@@ -8,9 +8,9 @@ namespace DB_Project.Models.Contexts
 {
     public class UsersContext : BaseContext
     {
-        public UsersContext(string connectionString) : base(connectionString) {}
+        public UsersContext(string connectionString) : base(connectionString) { }
 
-        public Boolean IsExists(User user)
+        private Boolean IsExists_By_Req(string request)
         {
             try
             {
@@ -18,9 +18,7 @@ namespace DB_Project.Models.Contexts
                 using (MySqlConnection conn = GetConnection())
                 {
                     conn.Open();
-                    string req = $"select 1 from users where user_name=\"{user.User_Name}\"" +
-                                 $" and password=\"{user.Password}\";";
-                    MySqlCommand cmd = new MySqlCommand(req, conn);
+                    MySqlCommand cmd = new MySqlCommand(request, conn);
                     using (var reader = cmd.ExecuteReader())
                     {
                         result = reader.HasRows;
@@ -33,17 +31,41 @@ namespace DB_Project.Models.Contexts
                 throw e;
             }
         }
+        public Boolean IsExists(User user)
+        {
+            string req = $"select 1 from users where user_name=\"{user.User_Name}\"" +
+             $" and password=\"{user.Password}\";";
+            try
+            {
+                return IsExists_By_Req(req);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
-        public void Add_User(User user)
+        private void ExecuteNonQuery(string request)
         {
             try
             {
                 using MySqlConnection conn = GetConnection();
                 conn.Open();
-                string req = $"insert into users(user_name,password,admin) values(\"{user.User_Name}\"," +
-                $"\"{user.Password}\",0);";
-                MySqlCommand cmd = new MySqlCommand(req, conn);
+                MySqlCommand cmd = new MySqlCommand(request, conn);
                 cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public void Add_User(User user)
+        {
+            string req = $"insert into users(user_name,password,admin) values(\"{user.User_Name}\"," +
+               $"\"{user.Password}\",0);";
+            try
+            {
+                ExecuteNonQuery(req);
             }
             catch (Exception e)
             {
@@ -53,14 +75,10 @@ namespace DB_Project.Models.Contexts
 
         public void Delete_User(User user)
         {
+            string request = $"delete from users where user_name=\"{user.User_Name}\";";
             try
             {
-                using MySqlConnection conn = GetConnection();
-                conn.Open();
-                string request = $"delete from users where user_name=\"{user.User_Name}\";";
-                MySqlCommand cmd = new MySqlCommand(request, conn);
-                cmd.ExecuteNonQuery();
-
+                ExecuteNonQuery(request);
             }
             catch (Exception e)
             {
@@ -70,26 +88,17 @@ namespace DB_Project.Models.Contexts
 
         public Boolean IsAdmin(User user)
         {
+            string req = $"select 1 from users where user_name=\"{user.User_Name}\"" +
+                $" and password=\"{user.Password}\" and admin=1;";
             try
             {
-                Boolean result = false;
-                using (MySqlConnection conn = GetConnection())
-                {
-                    conn.Open();
-                    string req = $"select 1 from users where user_name=\"{user.User_Name}\"" +
-                                 $" and password=\"{user.Password}\" and admin=1;";
-                    MySqlCommand cmd = new MySqlCommand(req, conn);
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        result = reader.HasRows;
-                    }
-                }
-                return result;
+                return IsExists_By_Req(req);
             }
             catch (Exception e)
             {
                 throw e;
             }
         }
+
     }
 }
