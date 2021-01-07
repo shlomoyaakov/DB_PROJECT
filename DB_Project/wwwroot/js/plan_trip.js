@@ -446,8 +446,8 @@ function addNewPlace() {
                 "City": localStorage.getItem("city")
             },
             "Coordinates": {
-                "Latitude": $('#newPlaceLatitude').val(),
-                "Longitude": $('#newPlaceLongitude').val()
+                "Latitude": parseFloat($('#newPlaceLatitude').val()),
+                "Longitude": parseFloat($('#newPlaceLongitude').val())
             }
         },
         "Name": $('#newPlaceName').val(),
@@ -461,14 +461,15 @@ function addNewPlace() {
             newPlace.Type = $('#newAccommodationType').val()
             break;
         case 'restaurant':
-            apiPath = "/api/Restaurant"
+            apiPath = "/api/Restaurants"
             newPlace.Cuisine = $('#newRestaurantCuisine').val()
             break;
         case 'attraction':
-            apiPath = "/api/Attraction"
+            apiPath = "/api/Attractions"
             break;
     }
     let jsonMsg = JSON.stringify(newPlace)
+    console.log(jsonMsg)
     let xhttp = new XMLHttpRequest();
     // server respose
     xhttp.onloadend = function () {
@@ -484,13 +485,4 @@ function addNewPlace() {
     xhttp.open("POST", apiPath);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(jsonMsg);
-}
-
-function createJson(username, password) {
-    const json = {
-        "User_Name": username,
-        "Password": password
-    };
-    return JSON.stringify(json)
-    return false;
 }

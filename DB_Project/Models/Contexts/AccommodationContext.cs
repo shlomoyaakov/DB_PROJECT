@@ -153,7 +153,7 @@ namespace DB_Project.Models.Contexts
                         myCommand.CommandText = $"Insert into places (lat, lon, country, city) VALUES ({lat}, {lon}, \"{country}\", \"{city}\")" +
                             $"ON DUPLICATE KEY UPDATE city=city,country=country;";
                         myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"Insert into accomodation (name, lat, lon, phone, internet, type) VALUES (\"{accommodation.Name}\", {lat}, {lon}, \"{accommodation.Phone}\", \"{accommodation.Internet}\", \"{accommodation.Type}\");";
+                        myCommand.CommandText = $"Insert into accommodation (name, lat, lon, phone, internet, type) VALUES (\"{accommodation.Name}\", {lat}, {lon}, \"{accommodation.Phone}\", \"{accommodation.Internet}\", \"{accommodation.Type}\");";
                         myCommand.ExecuteNonQuery();
                         myTrans.Commit();
                     }
