@@ -1,3 +1,18 @@
+function infoClicked() {
+    var option = citiesComboBox.options[citiesComboBox.selectedIndex]
+    var stats = JSON.parse(option.value)
+    var country = countriesComboBox.options[countriesComboBox.selectedIndex].text
+    var city = citiesComboBox.options[citiesComboBox.selectedIndex].text
+    var acc = stats.Accommodation
+    var att = stats.Attractions
+    var res = stats.Restaurants
+    var info = city + ", " + country + "<br>Accommodations: " + acc + "<br>Restaurants: " + res + "<br>Attrations: " + att
+    document.getElementById("infoHeader").innerHTML = info
+    document.getElementById("infoModal").style.display = "block";
+}
+function hideInfoModal() {
+    document.getElementById("infoModal").style.display = "none";
+}
 function loadChosenTrip() {
     if (selectedCountry === "" || selectedCity === "") {
         alert("Please select a trip")
@@ -176,6 +191,7 @@ function initCountriesComboBox() {
     }
 }
 function askForCities() {
+    document.getElementById("pleaseWaitModal").style.display = "block";
     let xhttp = new XMLHttpRequest();
     // server respose
     xhttp.onloadend = function () {
@@ -184,26 +200,32 @@ function askForCities() {
             jsonResponse = JSON.parse(this.response);
             // find all countries
             for (i in jsonResponse) {
-                let country = jsonResponse[i].city;
-                citiesSet.add(country)
+                var stats = {}
+                stats.city = jsonResponse[i].general_Location.city;
+                stats.data = jsonResponse[i].data;
+                citiesSet.add(stats)
             }
             initCitiesComboBox(citiesSet)
-        }
+        }   
         else {
             alert(this.response);
         }
     };
     // ask the server for countries 
     selectedCountry = countriesComboBox.options[countriesComboBox.selectedIndex].text
-    xhttp.open("GET", "/api/Region/country?country=" + selectedCountry);
+    xhttp.open("GET", "/api/Region/stats_per_region?country=" + selectedCountry);
     xhttp.send();
 }
 
 function initCitiesComboBox(citiesSet) {
     $("#citiesId").empty();
     for (let item of citiesSet) {
-        citiesComboBox.options[citiesComboBox.options.length] = new Option(item, 0);
+        option = new Option(item.city, 0)
+        option.value = JSON.stringify(item.data)
+        citiesComboBox.options[citiesComboBox.options.length] = option;
+
     }
+    document.getElementById("pleaseWaitModal").style.display = "none";
 }
 
 function planTripClicked() {
@@ -266,10 +288,12 @@ window.onclick = function (event) {
         modal.style.display = "none";
     }
 }
+
 window.onload = function () {
     document.getElementById('helloId').innerHTML = "Hello " + user_name;
     checkIfAdmin()
     loadCountries();
 }
+
 
 

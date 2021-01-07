@@ -81,8 +81,7 @@
             padding: 15px;
             border: 1px solid #888;
             width: 80%; /* Could be more or less, depending on screen size */
-            height: 70%;
-        
+            height: 80%;
         }
 
         /* The Close Button */
@@ -119,8 +118,7 @@
                         </span>
 
                         <div class="wrap-input100 rs1-wrap-input100 m-b-20">
-                            <select id="countriesId" onchange="askForCities()" style="height: 50px
-" class="input100" placeholder="User name">
+                            <select id="countriesId" onchange="askForCities()" style="height: 50px" class="input100" placeholder="User name">
                             </select>
                         </div>
 
@@ -131,10 +129,16 @@
                         </div>
 
 
-                        <div>
-                            <input type="checkbox" id="newPlacesID" name="newPlacesID" style="height:20px; width:20px;">
-                            <label style="font-size:23px;margin-left:10px;margin-bottom :15px" for="newPlacesID">New places only</label>
+                        <div class="row" style="width:100%">
+                            <div class="col-10">
+                                <input type="checkbox" id="newPlacesID" name="newPlacesID" style="height:20px; width:20px;">
+                                <label style="font-size:23px;margin-left:10px;margin-bottom :15px" for="newPlacesID">New places only</label>
+                            </div>
+                            <div class="col-2">
+                                <img style="float:right" src="/images/icons/info.png" width="25" height="25" onclick="infoClicked()" />
+                            </div>
                         </div>
+
 
 
                         <div class="container-login100-form-btn">
@@ -145,7 +149,7 @@
 
 
                         <div class="container-login100-form-btn">
-                            <button id ="historyBtn" class="login100-form-btn2">
+                            <button id="historyBtn" class="login100-form-btn2">
                                 View Trip History
                             </button>
                         </div>
@@ -186,42 +190,62 @@
     <!-- The Modal -->
     <div id="myModal" class="modal">
         <!-- Modal content -->
-        <div class="modal-content" >
-            <span class="close" >&times;</span>
-                <div class="row" style="width:100%;height:91%">
-                    <div class="col-6">
-                        <h1 style="margin-top:10px;font-family:'Agency FB';margin-bottom:20px">Trips you have planned:</h1>
-                        <select id="historyTrips" multiple style="width:100%;height:80%">
-                        </select>   
-                    </div>
-                    <div class="col-6">
-                        <h1 style="margin-top:10px;margin-bottom:20px;font-family:'Agency FB'">Details:</h1>
-                        <div>
-                            <p id="tripDetails" style="font-size:20px; overflow: auto">
-                                Please choose a trip to view its details
-                            </p>
-                            <div style="margin-top:20px;width:100%;height:7%; display: flex;justify-content:center;position: absolute; bottom: 10%;">
-                                <button style="margin-right: 30px;color:orangered;font-size:20px" onclick="askForTripDelete()">
-                                    <b> Delete Trip</b>
-                                </button>
-                                <button style="margin-right: 30px;color:orangered;font-size:20px" onclick="askForClearTrips()">
-                                    <b> Clear All Trips</b>
-                                </button>
-                            </div>
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="row" style="width:100%;height:91%">
+                <div class="col-6">
+                    <h1 style="margin-top:10px;font-family:'Agency FB';margin-bottom:20px">Trips you have planned:</h1>
+                    <select id="historyTrips" multiple style="width:100%;height:80%">
+                    </select>
+                </div>
+                <div class="col-6">
+                    <h1 style="margin-top:10px;margin-bottom:20px;font-family:'Agency FB'">Details:</h1>
+                    <div>
+                        <p id="tripDetails" style="font-size:20px; overflow: auto">
+                            Please choose a trip to view its details
+                        </p>
+                        <div style="margin-top:20px;width:100%;height:7%; display: flex;justify-content:center;position: absolute; bottom: 10%;">
+                            <button style="margin-right: 30px;color:orangered;font-size:20px" onclick="askForTripDelete()">
+                                <b> Delete Trip</b>
+                            </button>
+                            <button style="margin-right: 30px;color:orangered;font-size:20px" onclick="askForClearTrips()">
+                                <b> Clear All Trips</b>
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div style="margin-top:20px;width:100%;height:7%; display: flex;justify-content:center;position: absolute; bottom: 15px;">
-                    <button style="margin-right: 30px;" onclick="hideModal()" class="login100-form-btn2">
-                        Plan new trip
-                    </button>
-                    <button style="margin-right: 30px" onclick="loadChosenTrip()" class="login100-form-btn">
-                        Load Trip
-                    </button>
-                </div>
+            <div style="margin-top:20px;width:100%;height:7%; display: flex;justify-content:center;position: absolute; bottom: 15px;">
+                <button style="margin-right: 30px;" onclick="hideModal()" class="login100-form-btn2">
+                    Plan new trip
+                </button>
+                <button style="margin-right: 30px" onclick="loadChosenTrip()" class="login100-form-btn">
+                    Load Trip
+                </button>
+            </div>
         </div>
 
+    </div>
+
+
+    <div id="pleaseWaitModal" class="modal">
+        <div class="modal-content" style="top:30%;width:40%;height:8%">
+            <div class="row" style="justify-content:center">
+                <h4>Please Wait, Fetching data from server</h4>
+            </div>
+        </div>
+    </div>
+
+    <div id="infoModal" class="modal">
+        <div class="modal-content" style="top:30%;width:30%;height:25%">
+            <div class="row" style="justify-content:center;align-content:center">
+                <h4 style="top:20%" id="infoHeader"></h4>
+            </div>
+            <button style="margin:20px;  background: #00ad5f;color:white; font-family: Montserrat-Bold;" onclick=hideInfoModal()>
+                OK
+            </button>
+        </div>
     </div>
 
 
