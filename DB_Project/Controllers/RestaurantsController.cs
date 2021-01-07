@@ -127,7 +127,7 @@ namespace DB_Project.Controllers
         [HttpPost("update")]
         public IActionResult Update([FromBody] List<Restaurant> ret)
         {
-            if (ret.Count() != 0)
+            if (ret.Count() != 2)
             {
                 return BadRequest("There should be prev and new restaurants");
             }

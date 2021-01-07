@@ -130,7 +130,7 @@ namespace DB_Project.Controllers
         [HttpPost("update")]
         public IActionResult Update([FromBody] List<Accommodation> acc)
         {
-            if (acc.Count() != 0)
+            if (acc.Count() != 2)
             {
                 return BadRequest("There should be prev and new accommodation");
             }

@@ -126,7 +126,7 @@ namespace DB_Project.Controllers
         [HttpPost("update")]
         public IActionResult Update([FromBody] List<Attraction> att)
         {
-            if (att.Count() != 0)
+            if (att.Count() != 2)
             {
                 return BadRequest("There should be prev and new attractions");
             }

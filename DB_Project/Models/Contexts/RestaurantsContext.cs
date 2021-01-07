@@ -146,7 +146,7 @@ namespace DB_Project.Models.Contexts
                         "join trip_restaurants " +
                         "on trip_restaurants.trip_id = trip_region.trip_id " +
                         $"where country = \"{country}\" and city = \"{city}\" " +
-                        "group by restaurants_id " +
+                        "group by restaurant_id " +
                         "ORDER by amount DESC; ";
             try
             {
