@@ -83,7 +83,7 @@ function tripHistoryLoaded() {
         option.value = JSON.stringify(item)
         tripsList.add(option, tripsList[0]);
         option.setAttribute("id", item.id)
-        option.style ="font-size:30px"
+        option.style ="font-size:15px"
         option.onclick = function (){
             valueJSON = JSON.parse(this.value)
             //document.getElementById("tripDetails").innerHTML = valueJSON
