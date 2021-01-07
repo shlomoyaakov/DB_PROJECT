@@ -222,21 +222,20 @@ namespace DB_Project.Models.Contexts
                     myCommand.Transaction = myTrans;
                     try
                     {
-                        myCommand.CommandText = $"delete from accommodation where accommodation_id={acc.ID};";
+                        myCommand.CommandText = $"delete from accommodation where id={acc.ID};";
                         myCommand.ExecuteNonQuery();
                         // in case we updated the location we try to remove the previous location
                         // if there is no use of the previous location it will be deleted.
-                        myCommand.CommandText = "delete ignore from places where exists (select lat,lon,country,city " +
-                                $"from accommodation as t1 join places as t2" +
-                                $"on t1.lat = t2.lat and t2.lon=t1.lon " +
-                                $"where id={acc.ID};";
+                        myCommand.CommandText = "delete ignore from places where " +
+                                            $"lat={acc.Location.Coordinates.Latitude} and " +
+                                            $"lon = {acc.Location.Coordinates.Longitude};";
                         myCommand.ExecuteNonQuery();
                         myCommand.CommandText = "delete ignore from region where exists (select country,city " +
-                                    $"from accommodation as t1 join places as t2" +
+                                    $"from accommodation as t1 join places as t2 " +
                                     $"on t1.lat = t2.lat and t2.lon=t1.lon " +
-                                    $"where id={acc.ID};";
+                                    $"where id={acc.ID});";
                         myCommand.ExecuteNonQuery();
-
+                        myTrans.Commit();
                     }
                     catch(MySqlException e)
                     {
@@ -269,7 +268,7 @@ namespace DB_Project.Models.Contexts
                         // in case the update includes new city and country
                         myCommand.CommandText = $"Insert into region (country, city) VALUES " +
                             $"(\"{new_acc.Location.General_Location.Country}\", " +
-                            $"\"{new_acc.Location.General_Location.City}\")" +
+                            $"\"{new_acc.Location.General_Location.City}\") " +
                             $" ON DUPLICATE " +
                             $" KEY UPDATE city=city,country=country;";
                         myCommand.ExecuteNonQuery();
@@ -277,7 +276,7 @@ namespace DB_Project.Models.Contexts
                         myCommand.CommandText = $"Insert into places (lat, lon, country, city) VALUES" +
                                     $" ({new_acc.Location.Coordinates.Latitude}, {new_acc.Location.Coordinates.Longitude}" +
                                     $", \"{new_acc.Location.General_Location.Country}\"," +
-                                    $" \"{new_acc.Location.General_Location.City}\")" +
+                                    $" \"{new_acc.Location.General_Location.City}\") " +
                                     $"ON DUPLICATE KEY UPDATE city=city,country=country;";
                         myCommand.ExecuteNonQuery();
                         //updating the values
@@ -288,15 +287,14 @@ namespace DB_Project.Models.Contexts
                         myCommand.ExecuteNonQuery();
                         // in case we updated the location, we try to remove the previous location
                         // if there is no use of the previous location it will be deleted.
-                        myCommand.CommandText= "delete ignore from places where exists (select lat,lon,country,city " +
-                                $"from accommodation as t1 join places as t2" +
-                                $"on t1.lat = t2.lat and t2.lon=t1.lon " +
-                                $"where id={id};";
+                        myCommand.CommandText = "delete ignore from places where " +
+                                                $"lat={prev_acc.Location.Coordinates.Latitude} and " +
+                                                $"lon = {prev_acc.Location.Coordinates.Longitude};";
                         myCommand.ExecuteNonQuery();
                         myCommand.CommandText = "delete ignore from region where exists (select country,city " +
-                                    $"from accommodation as t1 join places as t2" +
+                                    $"from accommodation as t1 join places as t2 " +
                                     $"on t1.lat = t2.lat and t2.lon=t1.lon " +
-                                    $"where id={id};";
+                                    $"where id={id});";
                         myCommand.ExecuteNonQuery();
                         myTrans.Commit();
                     }
