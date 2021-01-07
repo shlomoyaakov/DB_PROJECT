@@ -384,7 +384,7 @@ var saveTrip = function () {
 }
 
 function selectLoaded() { 
-    acco = loadedTrip.accommodation
+    acco = loadedTrip.accommodation 
     for (i in acco) {
         let element = document.getElementById(acco[i].name);
         if (element !== null) {
