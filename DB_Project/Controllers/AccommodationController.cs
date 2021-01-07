@@ -136,7 +136,7 @@ namespace DB_Project.Controllers
             }
             if(acc[0].ID != acc[1].ID)
             {
-                return BadRequest("The ID of the previous and the new accommodation do not match");
+                return BadRequest("The IDs of the previous and the new accommodation do not match");
             }
             try
             {

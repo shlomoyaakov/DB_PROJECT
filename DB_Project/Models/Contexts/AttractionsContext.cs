@@ -241,10 +241,10 @@ namespace DB_Project.Models.Contexts
                                     $"ON DUPLICATE KEY UPDATE city=city,country=country;";
                         myCommand.ExecuteNonQuery();
                         //updating the values
-                        myCommand.CommandText = $"UPDATE users_trips SET name = \"{new_att.Name}\"," +
+                        myCommand.CommandText = $"UPDATE attractions SET name = \"{new_att.Name}\"," +
                                      $"lat = {new_att.Location.Coordinates.Latitude}, lon = {new_att.Location.Coordinates.Longitude}," +
                                      $"phone = \"{new_att.Phone}\" " +
-                                     $"WHERE attraction_id = {id};";
+                                     $"WHERE id = {id};";
                         myCommand.ExecuteNonQuery();
                         // in case we updated the location we try to remove the previous location
                         // if there is no use of the previous location it will be deleted.

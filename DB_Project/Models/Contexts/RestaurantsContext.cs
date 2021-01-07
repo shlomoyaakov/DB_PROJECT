@@ -257,10 +257,10 @@ namespace DB_Project.Models.Contexts
                                                 $"lon = {prev_ret.Location.Coordinates.Longitude};";
                         myCommand.ExecuteNonQuery();
                         //updating the values
-                        myCommand.CommandText = $"UPDATE users_trips SET name = \"{new_ret.Name}\"," +
+                        myCommand.CommandText = $"UPDATE restaurants SET name = \"{new_ret.Name}\"," +
                                      $"lat = {new_ret.Location.Coordinates.Latitude}, lon = {new_ret.Location.Coordinates.Longitude}," +
                                      $"phone = \"{new_ret.Phone}\", cuisine =\"{new_ret.Cuisine}\" " +
-                                     $"WHERE Restaurant_id = {id};";
+                                     $"WHERE id = {id};";
                         myCommand.ExecuteNonQuery();
                         // in case we updated the location we try to remove the previous location
                         // if there is no use of the previous location it will be deleted.
