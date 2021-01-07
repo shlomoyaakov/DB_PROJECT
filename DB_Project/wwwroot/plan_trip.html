@@ -238,10 +238,10 @@
 
         <div class="fixedElement" style="background-color:lightgray">
             <div class="row">
-                <h1 id="travelId" class="col-sm" style="text-align:center">You choose to travel to </h1>
+                <h1  id="travelId" class="col-sm" style="text-align:center;font-family:Poppins-Regular;">You choose to travel to </h1>
             </div>
             <div class="row" style="justify-content: center;">
-                <button onclick="goBack()" style="font-size:30px;color:green;display: inline-block;">change</button>
+                <button onclick="goBack()" style="font-size:30px;color:green;display: inline-block;font-family:Poppins-Regular;">change</button>
             </div>
 
         </div>
@@ -249,32 +249,41 @@
             <div class="col-sm">
 
                 <div style="height: 22vh;">
+                    <div class="row" >
                     <h3 style="margin-bottom:10px">Where would you like to sleep?</h3>
+                    <img  id="helpAccId" src="images/icons/help_ico.png" width="20" height="20" style="margin-left:20px" onclick="accHelpClicked()"/>
+                    </div>
                     <h3 class="d-none" style="margin-bottom:50px; color:brown; font-size:15px" id="emptyAccommodations">no sleeping places was found in Database</h3>
-                    <select id="accommodationsList" multiple="multiple" style="height: 80%; width: 70%;">
+                    <select id="accommodationsList" multiple="multiple" style="height: 90%; width: 55%;">
                     </select>
 
                 </div>
 
                 <div style="margin-top:70px;height: 22vh;">
-                    <h3 style="margin-bottom:10px">Where would you like to eat?</h3>
+                    <div class="row">
+                        <h3 style="margin-bottom:10px">Where would you like to eat?</h3>
+                        <img  id="helpResId" src="images/icons/help_ico.png" width="20" height="20" style="margin-left:20px" onclick="resHelpClicked()" />
+                    </div>
                     <h3 class="d-none" style="margin-bottom:50px; color:brown; font-size:15px" id="emptyRestaurants">no restaurants was found in Database</h3>
-                    <select id="restaurantsList" multiple="multiple" style="height: 80%; width: 70%;">
+                    <select id="restaurantsList" multiple="multiple" style="height: 90%; width: 55%;">
                     </select>
                 </div>
 
                 <div style="margin-top:70px;height: 22vh;">
-                    <h3 style="margin-bottom:10px">What attractions do you want to do?</h3>
+                    <div class="row">
+                        <h3 style="margin-bottom:10px">What attractions do you want to do?</h3>
+                        <img id="helpAttId" src="images/icons/help_ico.png" width="20" height="20" style="margin-left:20px" onclick="attHelpClicked()"/>
+                    </div>
                     <h3 class="d-none" style="margin-bottom: 50px; color:brown; font-size:15px" id="emptyAttractions">
                         no attractions was found in Database
                     </h3>
-                    <select id="attractionsList" multiple="multiple" style="height: 80%; width: 70%;">
+                    <select id="attractionsList" multiple="multiple" style="height: 90%; width: 55%;">
                     </select>
                 </div>
             </div>
 
             <div class="col-sm">
-                <div style="height: 25vh;">
+                <div style="height: 30vh;">
                     <h3>Details</h3>
                     <div style="left: 4px;">
                         <h4 style="margin-top:20px" id="hoverlabel"></h4>
@@ -292,7 +301,7 @@
                     </div>
                 </div>
                 <div style="background:white; margin-top: 10px;">
-                    <div id="map" style="height: 450px; width: 100%;"></div>
+                    <div id="map" style="height: 350px; width: 100%;"></div>
                 </div>
 
 
