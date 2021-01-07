@@ -63,7 +63,7 @@ namespace DB_Project.Controllers
         }
 
         [HttpGet("stats_per_region")]
-        public ActionResult<List<Stats>> Get_Attractions_Amount_Per_Region(string country)
+        public ActionResult<List<Stats>> Get_Stats_Per_Region(string country)
         {
             try
             {

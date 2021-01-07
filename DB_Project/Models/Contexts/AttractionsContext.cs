@@ -190,16 +190,16 @@ namespace DB_Project.Models.Contexts
                         myCommand.CommandText = "delete ignore from places where exists (select lat,lon,country,city " +
                                 $"from attractions as t1 join places as t2" +
                                 $"on t1.lat = t2.lat and t2.lon=t1.lon " +
-                                $"where attraction_id={att.ID};";
+                                $"where id={att.ID};";
                         myCommand.ExecuteNonQuery();
                         myCommand.CommandText = "delete ignore from region where exists (select country,city " +
                                     $"from attractions as t1 join places as t2" +
                                     $"on t1.lat = t2.lat and t2.lon=t1.lon " +
-                                    $"where attraction_id={att.ID};";
+                                    $"where id={att.ID};";
                         myCommand.ExecuteNonQuery();
 
                     }
-                    catch (Exception e)
+                    catch (MySqlException e)
                     {
                         myTrans.Rollback();
                         throw e;
@@ -252,12 +252,12 @@ namespace DB_Project.Models.Contexts
                         myCommand.CommandText = "delete ignore from places where exists (select lat,lon,country,city " +
                                 $"from attractions as t1 join places as t2" +
                                 $"on t1.lat = t2.lat and t2.lon=t1.lon " +
-                                $"where attraction_id={id};";
+                                $"where id={id};";
                         myCommand.ExecuteNonQuery();
                         myCommand.CommandText = "delete ignore from region where exists (select country,city " +
                                     $"from attractions as t1 join places as t2" +
                                     $"on t1.lat = t2.lat and t2.lon=t1.lon " +
-                                    $"where attraction_id={id};";
+                                    $"where id={id};";
                         myCommand.ExecuteNonQuery();
                         myTrans.Commit();
                     }

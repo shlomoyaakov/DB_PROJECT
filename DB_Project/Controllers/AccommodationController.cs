@@ -120,12 +120,23 @@ namespace DB_Project.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="acc": a list that contains two accommdation the previous one and the
+        /// new one with the updated values></param>
+        /// <returns>status ok if the values were updated succsefuly</returns>
         [HttpPost("update")]
         public IActionResult Update([FromBody] List<Accommodation> acc)
         {
             if (acc.Count() != 0)
             {
                 return BadRequest("There should be prev and new accommodation");
+            }
+            if(acc[0].ID != acc[1].ID)
+            {
+                return BadRequest("The ID of the previous and the new accommodation do not match");
             }
             try
             {
@@ -138,6 +149,11 @@ namespace DB_Project.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Api for deletion a specific accommodation
+        /// </summary>
+        /// <param name="acc"> the accommodation that we want to delete </param>
+        /// <returns> status ok if the deletion went succsefuly otherwise badrequest</returns>
         [HttpDelete]
         public IActionResult Delete([FromBody] Accommodation acc)
         {
