@@ -117,6 +117,12 @@ namespace DB_Project.Controllers
             }
         }
 
+        /// <summary>
+        /// API for updating a specific Attraction in the database
+        /// </summary>
+        /// <param name="att": a list that contains two Attraction the previous one and the
+        /// new one with the updated values></param>
+        /// <returns>status ok if the values were updated succsefuly</returns>
         [HttpPost("update")]
         public IActionResult Update([FromBody] List<Attraction> att)
         {
@@ -135,6 +141,11 @@ namespace DB_Project.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Api for deletion a specific attraction
+        /// </summary>
+        /// <param name="acc"> the attraction that we want to delete </param>
+        /// <returns> status ok if the deletion went succsefuly otherwise badrequest</returns>
         [HttpDelete]
         public IActionResult Delete([FromBody] Attraction att)
         {

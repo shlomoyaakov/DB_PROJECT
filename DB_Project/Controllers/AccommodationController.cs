@@ -122,7 +122,7 @@ namespace DB_Project.Controllers
 
 
         /// <summary>
-        /// 
+        /// API for updating a specific accommodation in the database
         /// </summary>
         /// <param name="acc": a list that contains two accommdation the previous one and the
         /// new one with the updated values></param>

@@ -62,6 +62,12 @@ namespace DB_Project.Controllers
             return region_list;
         }
 
+        /// <summary>
+        /// Get stats per each city and country that includes the amount of trips/accommodation/
+        /// /restauratns/attractions in that region.
+        /// </summary>
+        /// <param name="country"></param>
+        /// <returns></returns>
         [HttpGet("stats_per_region")]
         public ActionResult<List<Stats>> Get_Stats_Per_Region(string country)
         {

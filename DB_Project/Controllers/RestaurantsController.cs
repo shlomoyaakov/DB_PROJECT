@@ -118,6 +118,12 @@ namespace DB_Project.Controllers
             }
         }
 
+        /// <summary>
+        /// API for updating a specific Restaurant in the database
+        /// </summary>
+        /// <param name="acc": a list that contains two Restaurant the previous one and the
+        /// new one with the updated values></param>
+        /// <returns>status ok if the values were updated succsefuly</returns>
         [HttpPost("update")]
         public IActionResult Update([FromBody] List<Restaurant> ret)
         {
@@ -135,7 +141,11 @@ namespace DB_Project.Controllers
             }
             return Ok();
         }
-
+        /// <summary>
+        /// Api for deletion a specific restaurants
+        /// </summary>
+        /// <param name="ret"> the restaurants that we want to delete </param>
+        /// <returns> status ok if the deletion went succsefuly otherwise badrequest</returns>
         [HttpDelete]
         public IActionResult Delete([FromBody] Restaurant ret)
         {
