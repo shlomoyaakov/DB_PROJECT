@@ -1,3 +1,35 @@
+function attHelpClicked() {
+    if (attTravelsMap.size===0) {
+        return
+    }
+    let maxVisitorsAttId = ([...attTravelsMap.entries()].reduce((a, e) => e[1] > a[1] ? e : a))[0]
+    let maxVisitorsAttName = attIdNameMap.get(maxVisitorsAttId)
+    let maxVisitorsAttOption = document.getElementById(maxVisitorsAttName)
+    maxVisitorsAttOption.selected = "selected";
+    showDetails(maxVisitorsAttOption.label,JSON.parse(maxVisitorsAttOption.value), "attractionsList")
+}
+function resHelpClicked() {
+    if (resTravelsMap === 0) {
+        return
+    }
+    let maxVisitorsResId = ([...resTravelsMap.entries()].reduce((a, e) => e[1] > a[1] ? e : a))[0]
+    let maxVisitorsResName = resIdNameMap.get(maxVisitorsResId)
+    let maxVisitorsResOption = document.getElementById(maxVisitorsResName)
+    maxVisitorsResOption.selected = "selected";
+    showDetails(maxVisitorsResOption.label, JSON.parse(maxVisitorsResOption.value), "restaurantsList")
+}
+function accHelpClicked() {
+    if (accTravelsMap === 0) {
+        return
+    }
+    let maxVisitorsAccId = ([...accTravelsMap.entries()].reduce((a, e) => e[1] > a[1] ? e : a))[0]
+    let maxVisitorsAccName = accIdNameMap.get(maxVisitorsAccId)
+    let maxVisitorsAccOption = document.getElementById(maxVisitorsAccName)
+    maxVisitorsAccOption.selected = "selected";
+    showDetails(maxVisitorsAccOption.label, JSON.parse(maxVisitorsAccOption.value), "accommodationsList")
+}
+
+
 function goBack() {
     window.history.back();
 }
@@ -10,6 +42,7 @@ function showAccommodations() {
             jsonResponse = JSON.parse(this.response);
             if (jsonResponse.length == 0) {
                 document.getElementById("emptyAccommodations").classList.remove("d-none")
+                document.getElementById("helpAccId").remove()
                 accommodationsList.remove();
             }
             else {
@@ -20,14 +53,16 @@ function showAccommodations() {
                     option.setAttribute("id", name)
                     option.value = JSON.stringify(jsonResponse[i])
                     accommodationsList.add(option, accommodationsList[0]);
+                    accIdNameMap.set(jsonResponse[i].id, name)
                 }
             }
         }
         else {
             document.getElementById("emptyAccommodations").classList.remove("d-none")
+            document.getElementById("helpAccId").remove()
             accommodationsList.remove();
         }
-        if (responses < 2) {
+        if (responses < 5) {
             responses++
         } else {
             pageLoaded()
@@ -50,6 +85,7 @@ function showRestaurants() {
             jsonResponse = JSON.parse(this.response);
             if (jsonResponse.length == 0) {
                 document.getElementById("emptyRestaurants").classList.remove("d-none")
+                document.getElementById("helpResId").remove()
                 restaurantsList.remove();
             }
             else {
@@ -60,14 +96,16 @@ function showRestaurants() {
                     option.setAttribute("id", name)
                     option.value = JSON.stringify(jsonResponse[i])
                     restaurantsList.add(option, restaurantsList[0]);
+                    resIdNameMap.set(jsonResponse[i].id, name)
                 }
             }
         }
         else {
             document.getElementById("emptyRestaurants").textContent = 'Error occure while getting restaurants from server'
+            document.getElementById("helpResId").remove()
             restaurantsList.remove();
         }
-        if (responses < 2) {
+        if (responses < 5) {
             responses++
         } else {
             pageLoaded()
@@ -92,6 +130,7 @@ function showAttractions() {
             jsonResponse = JSON.parse(this.response);
             if (jsonResponse.length == 0) {
                 document.getElementById("emptyAttractions").classList.remove("d-none")
+                document.getElementById("helpAttId").remove()
                 attractionsList.remove();
             }
             else {
@@ -102,14 +141,16 @@ function showAttractions() {
                     option.setAttribute("id", name)
                     option.value = JSON.stringify(jsonResponse[i])
                     attractionsList.add(option, attractionsList[0]);
+                    attIdNameMap.set(jsonResponse[i].id,name)
                 }
             }
         }
         else {
             document.getElementById("emptyAttractions").textContent = 'Error occure while getting attractions from server';
+            document.getElementById("helpAttId").remove()
             attractionsList.remove();
         }
-        if (responses < 2) {
+        if (responses < 5) {
             responses++
         } else {
             pageLoaded()
@@ -140,34 +181,12 @@ let pageLoaded = function () {
     $('select[multiple="multiple"] option').mousedown(function (e) {
         e.preventDefault();
         selectedPlace = valueJSON = JSON.parse(this.value)
-        let location = valueJSON.location.coordinates
-        let phone = valueJSON.phone        
-        switch (this.parentElement.id) {
-            case 'accommodationsList':
-                selectedPlaceType = 'accommodation'
-                let internet = valueJSON.internet
-                let type = valueJSON.type
-                detailsString = "Internet: " + internet + "<br>Location: lat " + location.latitude + ", lng " + location.longitude + "<br>Phone: " + phone + "<br>Type: " + type
-                break;
-            case 'restaurantsList':
-                selectedPlaceType = 'restaurant'
-                let cuisine = valueJSON.cuisine.replaceAll(";", ", ")
-                detailsString = "Cuisine: " + cuisine + "<br>Location: lat " + location.latitude + ", lng " + location.longitude + "<br>Phone: " + phone 
-                break;
-            case 'attractionsList':
-                selectedPlaceType = 'attraction'
-                detailsString = "Location: lat " + location.latitude + ", lng " + location.longitude + "<br>Phone: " + phone
-                break;
-            default:
-                break;
-        }
+        showDetails($(this).prop('label'),valueJSON, this.parentElement.id)
         var st = this.parentElement.scrollTop
         $(this).prop('selected', !$(this).prop('selected'));
         setTimeout(() => this.parentElement.scrollTop = st, 0);
         var coordinets = getConstLocation(detailsString)
         setMarker(coordinets)
-        $('#hoverlabel').text($(this).prop('label'))
-        document.getElementById("hovervalue").innerHTML = detailsString
         $('#updatePlaceButton, #deletePlaceButton').prop('disabled', false)
         return false;
     });
@@ -177,23 +196,6 @@ let pageLoaded = function () {
         e.preventDefault();
     });
 
-    //$('#newPlaceName').keydown(function (e) {
-    //    if (this.value.length > 2) {
-    //        $('#newPlaceLatitude').prop('disabled', false)
-    //        $('#newPlaceLongitude').prop('disabled', false)
-    //    } else {
-    //        $('#newPlaceLatitude').prop('disabled', true)
-    //        $('#newPlaceLongitude').prop('disabled', true)
-    //    }
-    //});
-
-    //$('#newPlaceLatitude, #newPlaceLongitude').keydown(function (e) {
-    //    if ($('#newPlaceLatitude').val().length > 2 && $('#newPlaceLongitude').val().length > 2) {
-    //        $('#newPalceType').prop('disabled', false)
-    //    } else {
-    //        $('#newPalceType').prop('disabled', true)
-    //    }
-    //});
 
     $('#newPlaceType').change(function (e) {
         $('.form-phone').removeClass('d-none')
@@ -217,7 +219,42 @@ let pageLoaded = function () {
     });
 }
 
+function showDetails(title, valueJSON, parentElement) {
+    $('#hoverlabel').text(title)
+    let location = valueJSON.location.coordinates
+    let phone = valueJSON.phone
+    let visitors
+    switch (parentElement) {
+        case 'accommodationsList':
+            selectedPlaceType = 'accommodation'
+            let internet = valueJSON.internet
+            let type = valueJSON.type
+            detailsString = "<b>Internet:</b> " + internet + "<br><b>Location:</b> lat " + location.latitude + ", lng " + location.longitude + "<br><b>Phone:</b> " + phone + "<br><b>Type:</b> " + type
+            visitors = accTravelsMap.get(valueJSON.id)
+            break;
+        case 'restaurantsList':
+            selectedPlaceType = 'restaurant'
+            let cuisine = valueJSON.cuisine.replaceAll(";", ", ")
+            detailsString = "<b>Cuisine:</b> " + cuisine + "<br><b>Location:</b> lat " + location.latitude + ", lng " + location.longitude + "<br><b>Phone:</b> " + phone
+            visitors = resTravelsMap.get(valueJSON.id)
 
+            break;
+        case 'attractionsList':
+            selectedPlaceType = 'attraction'
+            detailsString = "<b>Location:</b> lat " + location.latitude + ", lng " + location.longitude + "<br><b>Phone:</b> " + phone
+            visitors = attTravelsMap.get(valueJSON.id)
+
+            break;
+        default:
+            break;
+    }
+    if (visitors !== undefined) {
+        detailsString += "<br><b>Visitors:</b> " + visitors
+    } else {
+        detailsString += "<br><b>Visitors:</b> 0"
+    }
+    document.getElementById("hovervalue").innerHTML = detailsString
+}
 function initMap() {
     let options = {
         zoom: 3,
@@ -228,7 +265,7 @@ function initMap() {
 function getConstLocation(value) {
    //"Internet: N/A<br>Location: 48.8824615, 2.3498469<br>Phone: N/A<br>Type: hotel"
     var latitude = value.match("lat (.*),")[1];
-    var longitude = value.match("lng (.*)<br>P")[1];
+    var longitude = value.match("lng (.*)<br><b>P")[1];
 
     const myLatLng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
     return myLatLng
@@ -347,7 +384,7 @@ var saveTrip = function () {
 }
 
 function selectLoaded() { 
-    acco = loadedTrip.accommodation
+    acco = loadedTrip.accommodation 
     for (i in acco) {
         let element = document.getElementById(acco[i].name);
         if (element !== null) {
@@ -375,6 +412,7 @@ function sendtrip(trip) {
     xhttp.onloadend = function () {
         if (this.readyState == 4 && this.status == 200) {
             alert("Trip successfully saved");
+            closeModal()
         }
         else {
             alert(this.response);
@@ -406,14 +444,94 @@ if (loadedTrip !== "") {
 var selectedPlace = null
 var selectedPlaceType = null
 var editing = false
-
-
+var attTravelsMap = new Map()
+var resTravelsMap = new Map()
+var accTravelsMap = new Map()
+var attIdNameMap = new Map()
+var resIdNameMap = new Map()
+var accIdNameMap = new Map()
 window.onload = function () {
     showAccommodations();
     showRestaurants();
     showAttractions();
+    askForAccTravelsMap();
+    askForResTravelsMap();
+    askForAttTravelsMap();
     initMap()
 }
+
+function askForAccTravelsMap() {
+    let xhttp = new XMLHttpRequest();
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            jsonResponse = JSON.parse(this.response);
+            for (i in jsonResponse) {
+                let key = jsonResponse[i].Key
+                let value = jsonResponse[i].Value
+                accTravelsMap.set(key,value)
+            }
+        }
+        else {
+            alert(this.response);
+        }
+        if (responses < 5) {
+            responses++
+        } else {
+            pageLoaded()
+        }
+    };
+    xhttp.open("GET", "/api/Accommodation/travelers_by_region?country=" + country + "&city=" + city);
+    xhttp.send();
+}
+function askForResTravelsMap() {
+    let xhttp = new XMLHttpRequest();
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            jsonResponse = JSON.parse(this.response);
+            for (i in jsonResponse) {
+                let key = jsonResponse[i].Key
+                let value = jsonResponse[i].Value
+                resTravelsMap.set(key, value)
+            }
+        }
+        else {
+            alert(this.response);
+        }
+        if (responses < 5) {
+            responses++
+        } else {
+            pageLoaded()
+        }
+    };
+    xhttp.open("GET", "/api/Restaurants/travelers_by_region?country=" + country + "&city=" + city);
+    xhttp.send();
+}
+
+function askForAttTravelsMap() {
+    let xhttp = new XMLHttpRequest();
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            jsonResponse = JSON.parse(this.response);
+            for (i in jsonResponse) {
+                let key = jsonResponse[i].Key
+                let value = jsonResponse[i].Value
+                attTravelsMap.set(key, value)
+            }
+        }
+        else {
+            alert(this.response);
+        }
+        if (responses < 5) {
+            responses++
+        } else {
+            pageLoaded()
+        }
+    };
+    xhttp.open("GET", "/api/Attractions/travelers_by_region?country=" + country + "&city=" + city);
+    xhttp.send();
+}
+
+
 
 function checkIfAdmin(username, password) {
     let xhttp = new XMLHttpRequest();

@@ -6,7 +6,8 @@ function infoClicked() {
     var acc = stats.Accommodation
     var att = stats.Attractions
     var res = stats.Restaurants
-    var info = city + ", " + country + "<br>Accommodations: " + acc + "<br>Restaurants: " + res + "<br>Attrations: " + att
+    var trips = stats.Trips
+    var info = city + ", " + country + "<br><br>Trips Planned: " + trips +"<br>Accommodations: " + acc + "<br>Restaurants: " + res + "<br>Attrations: " + att
     document.getElementById("infoHeader").innerHTML = info
     document.getElementById("infoModal").style.display = "block";
 }
