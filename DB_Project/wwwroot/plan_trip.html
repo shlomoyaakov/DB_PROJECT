@@ -292,8 +292,16 @@
                         <p id="hovervalue" style="left: 4px;"></p>
                     </div>
                 </div>
-
-                <div style="height: 25vh; background:white;">
+                <div class="admin-only d-none">
+                    <h3>Admin Options:</h3>
+                    <div style="left: 4px; margin-top: 5px;">
+                        <form>
+                            <button id="updatePlaceButton" type="button" class="btn btn-primary" style="background-color: orange; border-color: orange;" onclick="updatePlace()" disabled>Update Place</button>
+                            <button id="deletePlaceButton" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" onclick="deletePlace()" disabled>Delete Place</button>
+                        </form>
+                    </div>
+                </div>
+                <div style="background:white; margin-top: 10px;">
                     <div id="map" style="height: 450px; width: 100%;"></div>
                 </div>
 

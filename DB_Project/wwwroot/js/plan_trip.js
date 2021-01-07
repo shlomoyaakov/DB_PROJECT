@@ -139,20 +139,23 @@ let pageLoaded = function () {
 
     $('select[multiple="multiple"] option').mousedown(function (e) {
         e.preventDefault();
-        valueJSON = JSON.parse(this.value)
+        selectedPlace = valueJSON = JSON.parse(this.value)
         let location = valueJSON.location.coordinates
-        let phone = valueJSON.phone
+        let phone = valueJSON.phone        
         switch (this.parentElement.id) {
             case 'accommodationsList':
+                selectedPlaceType = 'accommodation'
                 let internet = valueJSON.internet
                 let type = valueJSON.type
                 detailsString = "Internet: " + internet + "<br>Location: lat " + location.latitude + ", lng " + location.longitude + "<br>Phone: " + phone + "<br>Type: " + type
                 break;
             case 'restaurantsList':
+                selectedPlaceType = 'restaurant'
                 let cuisine = valueJSON.cuisine.replaceAll(";", ", ")
                 detailsString = "Cuisine: " + cuisine + "<br>Location: lat " + location.latitude + ", lng " + location.longitude + "<br>Phone: " + phone 
                 break;
             case 'attractionsList':
+                selectedPlaceType = 'attraction'
                 detailsString = "Location: lat " + location.latitude + ", lng " + location.longitude + "<br>Phone: " + phone
                 break;
             default:
@@ -165,6 +168,7 @@ let pageLoaded = function () {
         setMarker(coordinets)
         $('#hoverlabel').text($(this).prop('label'))
         document.getElementById("hovervalue").innerHTML = detailsString
+        $('#updatePlaceButton, #deletePlaceButton').prop('disabled', false)
         return false;
     });
 
@@ -399,6 +403,8 @@ var loadedTrip = localStorage.getItem("loadedTrip")
 if (loadedTrip !== "") {
     loadedTrip = JSON.parse(loadedTrip) 
 }
+var selectedPlace = null
+var selectedPlaceType = null
 
 
 window.onload = function () {
@@ -473,7 +479,6 @@ function addNewPlace() {
             break;
     }
     let jsonMsg = JSON.stringify(newPlace)
-    console.log(jsonMsg)
     let xhttp = new XMLHttpRequest();
     // server respose
     xhttp.onloadend = function () {
@@ -487,6 +492,42 @@ function addNewPlace() {
     };
     // generate and send the request to the server of register new account
     xhttp.open("POST", apiPath);
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send(jsonMsg);
+}
+
+function updatePlace() {
+
+}
+
+function deletePlace() {
+    let apiPath
+    switch (selectedPlaceType) {
+        case 'accommodation':
+            apiPath = '/api/Accommodation'
+            break;
+        case 'restaurant':
+            apiPath = '/api/Restaurants'
+            break;
+        case 'attraction':
+            apiPath = '/api/Attractions'
+            break;
+    }
+    let jsonMsg = JSON.stringify(selectedPlace)
+    console.log(jsonMsg)
+    let xhttp = new XMLHttpRequest();
+    // server respose
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            alert("Place deleted successfuly");
+            window.location.assign("plan_trip.html");
+        }
+        else {
+            alert(this.response);
+        }
+    };
+    // generate and send the request to the server of register new account
+    xhttp.open("DELETE", apiPath);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(jsonMsg);
 }
