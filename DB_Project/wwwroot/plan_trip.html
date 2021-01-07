@@ -192,7 +192,7 @@
         top: 45%
 " class="loader"></div>
     </div>
-    <div id="screen-disabler" class="d-none" style="position:fixed; top:0; left:0; height: 100%; width: 100%; background: black; opacity: 0.7; z-index: 999;" onclick="closeNewTripModal()"></div>
+    <div id="screen-disabler" class="d-none" style="position:fixed; top:0; left:0; height: 100%; width: 100%; background: black; opacity: 0.7; z-index: 999;" onclick="hideNewPlaceModal()"></div>
     <div id="new-place-form" class="d-none" style="position:fixed; top:15%; left:25%; height: auto; width: 50%; background: white; z-index: 1000; border-radius: 5px;">
         <form style="margin: 5%">
             <div class="form-group">
@@ -250,7 +250,6 @@
             </div>
             <div class="row" style="justify-content: center;">
                 <button onclick="goBack()" style="font-size:30px;color:green;display: inline-block;">change</button>
-                <button class="admin-only d-none" onclick="openNewTripModal()" style="font-size:30px;color:blue;display: inline-block; margin-left: 1rem;">add a new place</button>
             </div>
 
         </div>
@@ -296,8 +295,9 @@
                     <h3>Admin Options:</h3>
                     <div style="left: 4px; margin-top: 5px;">
                         <form>
-                            <button id="updatePlaceButton" type="button" class="btn btn-primary" style="background-color: orange; border-color: orange;" onclick="updatePlace()" disabled>Update Place</button>
-                            <button id="deletePlaceButton" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" onclick="deletePlace()" disabled>Delete Place</button>
+                            <button type="button" class="btn btn-primary" onclick="showNewPlaceModal();clearNewPlaceForm();" style="background-color: green; border-color: green;">Add a place</button>
+                            <button id="updatePlaceButton" type="button" class="btn btn-primary" style="background-color: orange; border-color: orange;" onclick="updatePlace()" disabled>Update place</button>
+                            <button id="deletePlaceButton" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" onclick="deletePlace();loadNewPlaceForm();" disabled>Delete place</button>
                         </form>
                     </div>
                 </div>

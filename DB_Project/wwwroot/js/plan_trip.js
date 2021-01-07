@@ -405,6 +405,7 @@ if (loadedTrip !== "") {
 }
 var selectedPlace = null
 var selectedPlaceType = null
+var editing = false
 
 
 window.onload = function () {
@@ -437,12 +438,12 @@ function admin() {
     $(".admin-only").removeClass("d-none");
 }
 
-function closeNewTripModal() {
+function hideNewPlaceModal() {
     $("#screen-disabler").addClass("d-none");
     $("#new-place-form").addClass("d-none");
 }
 
-function openNewTripModal() {
+function showNewPlaceModal() {
     $("#screen-disabler").removeClass("d-none");
     $("#new-place-form").removeClass("d-none");
 }
@@ -479,6 +480,7 @@ function addNewPlace() {
             break;
     }
     let jsonMsg = JSON.stringify(newPlace)
+    console.log(jsonMsg) //Remove!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     let xhttp = new XMLHttpRequest();
     // server respose
     xhttp.onloadend = function () {
@@ -497,7 +499,9 @@ function addNewPlace() {
 }
 
 function updatePlace() {
+    editing = true
 
+    showNewPlaceModal()
 }
 
 function deletePlace() {
@@ -514,7 +518,7 @@ function deletePlace() {
             break;
     }
     let jsonMsg = JSON.stringify(selectedPlace)
-    console.log(jsonMsg)
+    console.log(jsonMsg) //Remove!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     let xhttp = new XMLHttpRequest();
     // server respose
     xhttp.onloadend = function () {
@@ -530,4 +534,10 @@ function deletePlace() {
     xhttp.open("DELETE", apiPath);
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhttp.send(jsonMsg);
+}
+
+function clearNewPlaceForm() {
+    $('#newPlaceName').val("")
+    $('#newPlaceLatitude').val("")
+    $('#newPlaceLongitude').val("")
 }
