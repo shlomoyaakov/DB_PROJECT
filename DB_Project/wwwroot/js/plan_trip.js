@@ -448,8 +448,8 @@ function showNewPlaceModal() {
     $("#new-place-form").removeClass("d-none");
 }
 
-function addNewPlace() {
-    let newPlace = {
+function submitPlace() {
+    let place = {
         "Location":
         {
             "General_Location": {
@@ -468,19 +468,27 @@ function addNewPlace() {
     switch ($('#newPlaceType').val()) {
         case 'accommodation':
             apiPath = "/api/Accommodation"
-            newPlace.Internet = $('#newAccommodationInternet').val()
-            newPlace.Type = $('#newAccommodationType').val()
+            place.Internet = $('#newAccommodationInternet').val()
+            place.Type = $('#newAccommodationType').val()
             break;
         case 'restaurant':
             apiPath = "/api/Restaurants"
-            newPlace.Cuisine = $('#newRestaurantCuisine').val()
+            place.Cuisine = $('#newRestaurantCuisine').val()
             break;
         case 'attraction':
             apiPath = "/api/Attractions"
             break;
     }
-    let jsonMsg = JSON.stringify(newPlace)
-    console.log(jsonMsg) //Remove!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    let jsonMsg
+    if (editing === true) {
+        apiPath = apiPath + "/update"
+        place.id = selectedPlace.id
+        temp = [selectedPlace, place]
+        jsonMsg = JSON.stringify(temp)
+    } else {
+        jsonMsg = JSON.stringify(place)
+    }
+    console.log(jsonMsg) // Remove!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     let xhttp = new XMLHttpRequest();
     // server respose
     xhttp.onloadend = function () {
@@ -518,7 +526,6 @@ function deletePlace() {
             break;
     }
     let jsonMsg = JSON.stringify(selectedPlace)
-    console.log(jsonMsg) //Remove!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     let xhttp = new XMLHttpRequest();
     // server respose
     xhttp.onloadend = function () {
@@ -537,7 +544,44 @@ function deletePlace() {
 }
 
 function clearNewPlaceForm() {
-    $('#newPlaceName').val("")
-    $('#newPlaceLatitude').val("")
-    $('#newPlaceLongitude').val("")
+    editing = false
+    $('#newPlaceName, #newPlaceLatitude, #newPlaceLongitude, #newPlaceType, #newPlacePhone, #newRestaurantCuisine #newAccommodationInternet, #newAccommodationType').val('')
+    $('#newPlaceType').prop('disabled', false)
+    $('.form-phone').addClass('d-none')
+    $('.form-accommodation').addClass('d-none')
+    $('.form-restaurant').addClass('d-none')
+    $('.form-attraction').addClass('d-none')
+}
+
+function loadNewPlaceForm() {
+    editing = true
+    $('#newPlaceName').val(selectedPlace.name)
+    $('#newPlaceLatitude').val(selectedPlace.location.coordinates.latitude)
+    $('#newPlaceLongitude').val(selectedPlace.location.coordinates.longitude)
+    switch (selectedPlaceType) {
+        case 'accommodation':
+            $('#newPlaceType').val('accommodation')
+            $('.form-accommodation').removeClass('d-none')
+            $('.form-restaurant').addClass('d-none')
+            $('.form-attraction').addClass('d-none')
+            $('#newAccommodationInternet').val(selectedPlace.internet)
+            $('#newAccommodationType').val(selectedPlace.type)
+            break;
+        case 'restaurant':
+            $('#newPlaceType').val('restaurant')
+            $('.form-accommodation').addClass('d-none')
+            $('.form-restaurant').removeClass('d-none')
+            $('.form-attraction').addClass('d-none')
+            $('#newRestaurantCuisine').val(selectedPlace.cuisine)
+            break;
+        case 'attraction':
+            $('#newPlaceType').val('attraction')
+            $('.form-accommodation').addClass('d-none')
+            $('.form-restaurant').addClass('d-none')
+            $('.form-attraction').removeClass('d-none')
+            break;
+    }
+    $('#newPlaceType').prop('disabled', true)
+    $('.form-phone').removeClass('d-none')
+    $('#newPlacePhone').val(selectedPlace.phone)
 }

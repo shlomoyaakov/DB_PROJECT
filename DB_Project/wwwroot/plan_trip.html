@@ -199,7 +199,7 @@
                 <label for="newPlaceName">Place Name</label>
                 <input class="form-control" id="newPlaceName" placeholder="Place Name">
             </div>
-            <div class="form-check">
+            <div class="form-group">
                 <label style="width: 100%;">Coordinates</label>
                 <input style="width: 49%; display: inline-block;" class="form-control" id="newPlaceLatitude" placeholder="Latitude">
                 <input style="width: 49%; display: inline-block; margin-left: 1%;" class="form-control" id="newPlaceLongitude" placeholder="Longitude">
@@ -219,26 +219,18 @@
             </div>
             <div class="form-group form-accommodation d-none">
                 <label for="newAccommodationInternet">Internet</label>
-                <select class="form-control" id="newAccommodationInternet">
-                    <option value="N/A">N/A</option>
-                    <option value="yes">Yes</option>
-                    <option value="wlan">Wlan</option>
-                </select>
+                <input class="form-control" id="newAccommodationInternet" placeholder="Internet">
             </div>
             <div class="form-group form-accommodation d-none">
                 <label for="newAccommodationType">Accommodation Type</label>
-                <select class="form-control" id="newAccommodationType">
-                    <option value="hotel">Hotel</option>
-                    <option value="hostel">Hostel</option>
-                    <option value="guest_house">Guest House</option>
-                    <option value="N/A">N/A</option>
-                </select>
+                <input class="form-control" id="newAccommodationType" placeholder="Accommodation Type">
             </div>
             <div class="form-group form-restaurant d-none">
                 <label for="newRestaurantCuisine">Restaurant Cuisine</label>
                 <input class="form-control" id="newRestaurantCuisine" placeholder="Restaurant Cuisine">
             </div>
-            <button type="button" class="btn btn-primary" onclick="addNewPlace()">Submit</button>
+            <button type="button" class="btn btn-primary" style="background-color: green; border-color: green;" onclick="submitPlace()">Submit</button>
+            <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" onclick="hideNewPlaceModal()">Cancel</button>
         </form>
     </div>
     <!-- Showed after the page as finished loading -->
@@ -294,7 +286,7 @@
                     <div style="left: 4px; margin-top: 5px;">
                         <form>
                             <button type="button" class="btn btn-primary" onclick="showNewPlaceModal();clearNewPlaceForm();" style="background-color: green; border-color: green;">Add a place</button>
-                            <button id="updatePlaceButton" type="button" class="btn btn-primary" style="background-color: orange; border-color: orange;" onclick="updatePlace()" disabled>Update place</button>
+                            <button id="updatePlaceButton" type="button" class="btn btn-primary" style="background-color: orange; border-color: orange;" onclick="showNewPlaceModal();loadNewPlaceForm();" disabled>Update place</button>
                             <button id="deletePlaceButton" type="button" class="btn btn-primary" style="background-color: red; border-color: red;" onclick="deletePlace();loadNewPlaceForm();" disabled>Delete place</button>
                         </form>
                     </div>
