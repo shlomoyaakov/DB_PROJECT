@@ -265,8 +265,8 @@ namespace DB_Project.Models.Contexts
                         // in case we updated the location we try to remove the previous location
                         // if there is no use of the previous location it will be deleted.
                         myCommand.CommandText = "delete ignore from places where " +
-                                                $"lat={ret.Location.Coordinates.Latitude} and " +
-                                                $"lon = {ret.Location.Coordinates.Longitude};";
+                                                $"lat={prev_ret.Location.Coordinates.Latitude} and " +
+                                                $"lon = {prev_ret.Location.Coordinates.Longitude};";
                         myCommand.ExecuteNonQuery();
                         myCommand.CommandText = "delete ignore from region where exists (select country,city " +
                                     $"from Restaurants as t1 join places as t2 " +
