@@ -80,6 +80,7 @@ namespace DB_Project.Controllers
             }
             return Ok(acc_list);
         }
+        }
 
         /*
          * With this function we can insert new accommodation to our database,
