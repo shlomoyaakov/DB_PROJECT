@@ -67,6 +67,7 @@
             width: 100%;
             z-index: 100;
         }
+
         body {
             font-family: Arial, Helvetica, sans-serif;
         }
@@ -192,17 +193,19 @@
         top: 45%
 " class="loader"></div>
     </div>
-    <div id="screen-disabler" class="d-none" style="position:fixed; top:0; left:0; height: 100%; width: 100%; background: black; opacity: 0.7; z-index: 999;" onclick="hideNewPlaceModal()"></div>
-    <div id="new-place-form" class="d-none" style="position:fixed; top:15%; left:25%; height: auto; width: 50%; background: white; z-index: 1000; border-radius: 5px;">
-        <form style="margin: 5%">
+    <div id="screen-disabler" class="d-none" style="position:fixed; top:0; left:0; height: 100%; width: 100%; background: black; opacity: 0.7; z-index: 101;" onclick="hideNewPlaceModal()"></div>
+    <div id="new-place-form" class="d-none" style="position:fixed; top:15%; left:25%; height: auto; width: 50%; background: white; z-index: 102; border-radius: 5px;">
+        <form id="newPlaceForm" style="margin: 5%">
             <div class="form-group">
                 <label for="newPlaceName">Place Name</label>
                 <input class="form-control" id="newPlaceName" placeholder="Place Name">
+                <small id="newPlaceNameHelp" class="form-text text-danger">Name must include at least 3 letters and must not include ' or " symbols!</small>
             </div>
             <div class="form-group">
                 <label style="width: 100%;">Coordinates</label>
                 <input style="width: 49%; display: inline-block;" class="form-control" id="newPlaceLatitude" placeholder="Latitude">
                 <input style="width: 49%; display: inline-block; margin-left: 1%;" class="form-control" id="newPlaceLongitude" placeholder="Longitude">
+                <small id="newPlaceCoordinatesHelp" class="form-text text-danger">Coordinates must be numbers!</small>
             </div>
             <div class="form-group">
                 <label for="newPlaceType">Place Type</label>
@@ -212,6 +215,7 @@
                     <option value="restaurant">Restaurant</option>
                     <option value="attraction">Attraction</option>
                 </select>
+                <small id="newPlaceTypeHelp" class="form-text text-danger">Please select place type!</small>
             </div>
             <div class="form-group form-phone d-none">
                 <label for="newPlacePhone">Phone Number</label>
@@ -233,12 +237,19 @@
             <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" onclick="hideNewPlaceModal()">Cancel</button>
         </form>
     </div>
+    <div class="wait-screen d-none" style="position:fixed; top:0; left:0; height: 100%; width: 100%; background: black; opacity: 0.7; z-index: 103;"></div>
+    <div class="wait-screen d-none" style="position:fixed; top:35%; left:35%; height: 30%; width: 30%; background: white; z-index: 104; border-radius: 5px;">
+        <div id="loader" style="align-content:center; justify-content: center; display: flex;width:100%;height:100%">
+            <h3 style="position:absolute;top:5%">Please Wait...</h3>
+            <div style="position: absolute; top: 30%;" class="loader"></div>
+        </div>
+    </div>
     <!-- Showed after the page as finished loading -->
     <div class="d-none" id="main" style="margin:3% 0 0; vertical-align:central;">
 
         <div class="fixedElement" style="background-color:lightgray">
             <div class="row">
-                <h1  id="travelId" class="col-sm" style="text-align:center;font-family:Poppins-Regular;">You choose to travel to </h1>
+                <h1 id="travelId" class="col-sm" style="text-align:center;font-family:Poppins-Regular;">You choose to travel to </h1>
             </div>
             <div class="row" style="justify-content: center;">
                 <button onclick="goBack()" style="font-size:30px;color:green;display: inline-block;font-family:Poppins-Regular;">change</button>
@@ -249,9 +260,9 @@
             <div class="col-sm">
 
                 <div style="height: 22vh;">
-                    <div class="row" >
-                    <h3 style="margin-bottom:10px">Where would you like to sleep?</h3>
-                    <img  id="helpAccId" src="images/icons/help_ico.png" width="20" height="20" style="margin-left:20px" onclick="accHelpClicked()"/>
+                    <div class="row">
+                        <h3 style="margin-bottom:10px">Where would you like to sleep?</h3>
+                        <img id="helpAccId" src="images/icons/help_ico.png" width="20" height="20" style="margin-left:20px" onclick="accHelpClicked()" />
                     </div>
                     <h3 class="d-none" style="margin-bottom:50px; color:brown; font-size:15px" id="emptyAccommodations">no sleeping places was found in Database</h3>
                     <select id="accommodationsList" multiple="multiple" style="height: 90%; width: 55%;">
@@ -262,7 +273,7 @@
                 <div style="margin-top:70px;height: 22vh;">
                     <div class="row">
                         <h3 style="margin-bottom:10px">Where would you like to eat?</h3>
-                        <img  id="helpResId" src="images/icons/help_ico.png" width="20" height="20" style="margin-left:20px" onclick="resHelpClicked()" />
+                        <img id="helpResId" src="images/icons/help_ico.png" width="20" height="20" style="margin-left:20px" onclick="resHelpClicked()" />
                     </div>
                     <h3 class="d-none" style="margin-bottom:50px; color:brown; font-size:15px" id="emptyRestaurants">no restaurants was found in Database</h3>
                     <select id="restaurantsList" multiple="multiple" style="height: 90%; width: 55%;">
@@ -272,7 +283,7 @@
                 <div style="margin-top:70px;height: 22vh;">
                     <div class="row">
                         <h3 style="margin-bottom:10px">What attractions do you want to do?</h3>
-                        <img id="helpAttId" src="images/icons/help_ico.png" width="20" height="20" style="margin-left:20px" onclick="attHelpClicked()"/>
+                        <img id="helpAttId" src="images/icons/help_ico.png" width="20" height="20" style="margin-left:20px" onclick="attHelpClicked()" />
                     </div>
                     <h3 class="d-none" style="margin-bottom: 50px; color:brown; font-size:15px" id="emptyAttractions">
                         no attractions was found in Database
