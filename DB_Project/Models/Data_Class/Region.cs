@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models
 {
+    // A class that represents the region table in the database
     public class Region
     {
 

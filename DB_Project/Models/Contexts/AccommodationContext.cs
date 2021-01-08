@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models.Contexts
 {
+    /// <summary>
+    /// AccommodationContext responsible to the communication with
+    /// the accommodation table in the database.
+    /// </summary>
     public class AccommodationContext : BaseContext
     {
 
@@ -14,10 +18,10 @@ namespace DB_Project.Models.Contexts
         }
 
         /// <summary>
-        /// 
+        /// Gets a list of accommodation according to the  sql request
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">sql query</param>
+        /// <returns>list of accommodation according to request</returns>
         public List<Accommodation> Get_Accommodation_By_Req(string request)
         {
             List<Accommodation> list = new List<Accommodation>();
@@ -31,6 +35,7 @@ namespace DB_Project.Models.Contexts
 
                     using (var reader = cmd.ExecuteReader())
                     {
+                        //Here we add the accommodation that mysql gave us
                         while (reader.Read())
                         {
                             list.Add(new Accommodation()
@@ -55,31 +60,11 @@ namespace DB_Project.Models.Contexts
 
 
         /// <summary>
-        /// 
+        /// Gets the accommodation from a certain city and country
         /// </summary>
-        /// <returns></returns>
-        public List<Accommodation> GetAllAccommodation()
-        {
-            string req = "select distinct id,name,places.lat,places.lon,phone,internet,type" +
-                        ",city,country from accommodation join places on accommodation.lat = " +
-                        "places.lat and accommodation.lon = places.lon;";
-            try
-            {
-                return Get_Accommodation_By_Req(req);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="country"></param>
-        /// <param name="city"></param>
-        /// <returns></returns>
+        /// <param name="country">The country name</param>
+        /// <param name="city">The city name</param>
+        /// <returns>A list of accommodation from city,country</returns>
         public List<Accommodation> Get_Accommodation_By_Region(string country, string city)
         {
             string req = "select distinct id,name,places.lat,places.lon,phone,internet,type" +
@@ -90,20 +75,22 @@ namespace DB_Project.Models.Contexts
             {
                 return Get_Accommodation_By_Req(req);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while trying to recieve accommodation" +
+                    $"from {city} ,{country}");
             }
         }
 
 
         /// <summary>
-        /// 
+        /// Gets all the accommodaton from certain city and country that 
+        /// the user hasent been yet.
         /// </summary>
-        /// <param name="country"></param>
-        /// <param name="city"></param>
-        /// <param name="user_name"></param>
-        /// <returns></returns>
+        /// <param name="country">The country name</param>
+        /// <param name="city">The city name</param>
+        /// <param name="user_name">The user name</param>
+        /// <returns>A list of accommodation from the city,region that user hasn't been yet</returns>
         public List<Accommodation> Get_Accommodation_By_Region_And_User(string country, string city, string user_name)
         {
             string request = "select distinct t4.id,t4.name, t4.lat, t4.lon, country, city, t4.phone, t4.internet, t4.type " +
@@ -117,17 +104,18 @@ namespace DB_Project.Models.Contexts
             {
                 return Get_Accommodation_By_Req(request);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while trying to recieve accommodation" +
+                    $"from {city} ,{country}");
             }
         }
 
 
         /// <summary>
-        /// 
+        /// Add new accommodation to accommodation table
         /// </summary>
-        /// <param name="accommodation"></param>
+        /// <param name="accommodation">The new accommodation that we want to add</param>
         public void Add_Accomodation(Accommodation accommodation)
         {
             string country = accommodation.Location.General_Location.Country;
@@ -136,6 +124,8 @@ namespace DB_Project.Models.Contexts
             double lon = accommodation.Location.Coordinates.Longitude;
             try
             {
+                //We use transaction because we also have to insert values to region and places,
+                // the accommodation parents
                 using (MySqlConnection myConnection = GetConnection())
                 {
                     myConnection.Open();
@@ -146,14 +136,18 @@ namespace DB_Project.Models.Contexts
                     myCommand.Transaction = myTrans;
                     try
                     {
+                        // first we insert values to region in case of new city/country
                         myCommand.CommandText = $"Insert into region (country, city) VALUES (\"{country}\", \"{city}\")" +
                             $" ON DUPLICAT" +
                             $"E KEY UPDATE city=city,country=country;";
                         myCommand.ExecuteNonQuery();
+                        //then we try to insert values to places in case of new coordinates
                         myCommand.CommandText = $"Insert into places (lat, lon, country, city) VALUES ({lat}, {lon}, \"{country}\", \"{city}\")" +
                             $"ON DUPLICATE KEY UPDATE city=city,country=country;";
                         myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"Insert into accommodation (name, lat, lon, phone, internet, type) VALUES (\"{accommodation.Name}\", {lat}, {lon}, \"{accommodation.Phone}\", \"{accommodation.Internet}\", \"{accommodation.Type}\");";
+                        //finally we insert the new values to accommodation table
+                        myCommand.CommandText = $"Insert into accommodation (name, lat, lon, phone, internet, type)" +
+                            $" VALUES (\"{accommodation.Name}\", {lat}, {lon}, \"{accommodation.Phone}\", \"{accommodation.Internet}\", \"{accommodation.Type}\");";
                         myCommand.ExecuteNonQuery();
                         myTrans.Commit();
                     }
@@ -164,22 +158,24 @@ namespace DB_Project.Models.Contexts
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while to add new accommodation");
             }
         }
 
 
         /// <summary>
-        /// 
+        /// Gets the amount of trips that each accommodation was involved
         /// </summary>
-        /// <param name="country"></param>
-        /// <param name="city"></param>
-        /// <returns></returns>
+        /// <param name="country">The country name</param>
+        /// <param name="city">The city name</param>
+        /// <returns>keyvaluepair when the key is the accommodaton id
+        /// and the values is the amount of trips that this accommodation was involved </returns>
         public List<KeyValuePair<int, Int64>> Get_Amount_By_Region(string country, string city)
         {
             List<KeyValuePair<int, Int64>> list = new List<KeyValuePair<int, Int64>>();
+            //the mysql request
             string req = "select accommodation_id, count(accommodation_id) as amount from trip_region " +
                         "join trip_accommodation " +
                         "on trip_accommodation.trip_id = trip_region.trip_id " +
@@ -193,6 +189,7 @@ namespace DB_Project.Models.Contexts
                     conn.Open();
                     MySqlCommand cmd = new MySqlCommand(req, conn);
                     using var reader = cmd.ExecuteReader();
+                    // here we genereate the keyvalue pair for each accommodation
                     while (reader.Read())
                     {
                         KeyValuePair<int, Int64> kv = new KeyValuePair<int, Int64>((int)reader["accommodation_id"]
@@ -201,13 +198,19 @@ namespace DB_Project.Models.Contexts
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was problem while trying to get the amount of trips that" +
+                    "each accommodation was involved");
             }
             return list;
         }
 
+
+        /// <summary>
+        /// Delte a certain accommodation from accommodation table
+        /// </summary>
+        /// <param name="acc"> The accommodation that we want to delete</param>
         public void Delete(Accommodation acc)
         {
             try
@@ -222,6 +225,7 @@ namespace DB_Project.Models.Contexts
                     myCommand.Transaction = myTrans;
                     try
                     {
+                        //deleting the accommodation by its id
                         myCommand.CommandText = $"delete from accommodation where id={acc.ID};";
                         myCommand.ExecuteNonQuery();
                         // in case we updated the location we try to remove the previous location
@@ -244,12 +248,17 @@ namespace DB_Project.Models.Contexts
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while trying to delete the accommodation");
             }
         }
 
+        /// <summary>
+        /// updates the values of a certain accommodation
+        /// </summary>
+        /// <param name="prev_acc">The previous accommodation</param>
+        /// <param name="new_acc">The new accomodation with new values</param>
         public void Update(Accommodation prev_acc,Accommodation new_acc)
         {
             int id = prev_acc.ID;
@@ -305,9 +314,9 @@ namespace DB_Project.Models.Contexts
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while trying to update the accommodation");
             }
         }
     }

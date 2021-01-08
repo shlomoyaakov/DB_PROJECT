@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models
 {
+    //Class the represents the attraction table from the database
     public class Restaurant
     {
         public string Name

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models
 {
+    // coordinates in the world
     public class Coordinates
     {
         public double Latitude

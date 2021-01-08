@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models.Contexts
 {
+    /// <summary>
+    /// AttractionsContext responsible to the communication with
+    /// the attraction table in the database.
+    /// </summary>
     public class AttractionsContext : BaseContext
     {
 
@@ -13,6 +17,11 @@ namespace DB_Project.Models.Contexts
         {
         }
 
+        /// <summary>
+        /// Gets a list of Attraction according to the  sql request
+        /// </summary>
+        /// <param name="request">sql query</param>
+        /// <returns>list of Attraction according to request</returns>
         public List<Attraction> Get_Attractions_By_Req(string request)
         {
             List<Attraction> list = new List<Attraction>();
@@ -24,6 +33,7 @@ namespace DB_Project.Models.Contexts
                     MySqlCommand cmd = new MySqlCommand(request, conn);
                     ReaderConversion convert = new ReaderConversion();
 
+                    //Here we add the accommodation that mysql gave us
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -46,21 +56,12 @@ namespace DB_Project.Models.Contexts
             return list;
         }
 
-        public List<Attraction> GetAllAttractions()
-        {
-            string request = "select distinct id,name,places.lat,places.lon,phone" +
-            ",city,country from attractions join places on attractions.lat = " +
-             "places.lat and attractions.lon = places.lon;";
-            try
-            {
-                return Get_Attractions_By_Req(request);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
+        /// <summary>
+        /// Gets the Attraction from a certain city and country
+        /// </summary>
+        /// <param name="country">The country name</param>
+        /// <param name="city">The city name</param>
+        /// <returns>A list of Attraction from city,country</returns>
         public List<Attraction> Get_Attractions_By_Region(string country,string city)
         {
             string request = "select distinct id,name,places.lat,places.lon,phone" +
@@ -70,13 +71,23 @@ namespace DB_Project.Models.Contexts
             try
             {
                 return Get_Attractions_By_Req(request);
-            }catch(Exception e)
-            {
-                throw e;
             }
-            
+            catch (Exception)
+            {
+                throw new Exception("There was a problem while trying to recieve attraction" +
+                    $"from {city} ,{country}");
+            }
+
         }
 
+        /// <summary>
+        /// Gets all the Attraction from certain city and country that 
+        /// the user hasent been yet.
+        /// </summary>
+        /// <param name="country">The country name</param>
+        /// <param name="city">The city name</param>
+        /// <param name="user_name">The user name</param>
+        /// <returns>A list of Attraction from the city,region that user hasn't been yet</returns>
         public List<Attraction> Get_Attractions_By_Region_And_User(string country, string city, string user_name)
         {
             string request = "select distinct t4.id,t4.name, t4.lat, t4.lon, country, city, t4.phone " +
@@ -90,12 +101,17 @@ namespace DB_Project.Models.Contexts
             {
                 return Get_Attractions_By_Req(request);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while trying to recieve accommodation" +
+                    $"from {city} ,{country}");
             }
         }
 
+        /// <summary>
+        /// Add new Attraction to Attraction table
+        /// </summary>
+        /// <param name="attraction">The new Attraction that we want to add</param>
         public void Add_Attraction(Attraction attraction)
         {
             string country = attraction.Location.General_Location.Country;
@@ -104,6 +120,8 @@ namespace DB_Project.Models.Contexts
             double lon = attraction.Location.Coordinates.Longitude;
             try
             {
+                //We use transaction because we also have to insert values to region and places,
+                // the attractions parents
                 using (MySqlConnection myConnection = GetConnection())
                 {
                     myConnection.Open();
@@ -114,13 +132,16 @@ namespace DB_Project.Models.Contexts
                     myCommand.Transaction = myTrans;
                     try
                     {
+                        // first we insert values to region in case of new city/country
                         myCommand.CommandText = $"Insert into region (country, city) VALUES (\"{country}\", \"{city}\")" +
                             $" ON DUPLICAT" +
                             $"E KEY UPDATE city=city,country=country;";
                         myCommand.ExecuteNonQuery();
+                        //then we try to insert values to places in case of new coordinates
                         myCommand.CommandText = $"Insert into places (lat, lon, country, city) VALUES ({lat}, {lon}, \"{country}\", \"{city}\")" +
                             $"ON DUPLICATE KEY UPDATE city=city,country=country;";
                         myCommand.ExecuteNonQuery();
+                        //finally we insert the new values to attractions table
                         myCommand.CommandText = $"Insert into attractions (name, lat, lon, phone) VALUES (\"{attraction.Name}\", {lat}, {lon}, \"{attraction.Phone}\");";
                         myCommand.ExecuteNonQuery();
                         myTrans.Commit();
@@ -132,12 +153,19 @@ namespace DB_Project.Models.Contexts
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while to add new attraction");
             }
         }
 
+        /// <summary>
+        /// Gets the amount of trips that each attraction was involved
+        /// </summary>
+        /// <param name="country">The country name</param>
+        /// <param name="city">The city name</param>
+        /// <returns>keyvaluepair when the key is the attraction id
+        /// and the values is the amount of trips that this attraction was involved </returns>
         public List<KeyValuePair<int, Int64>> Get_Amount_By_Region(string country, string city)
         {
             List<KeyValuePair<int, Int64>> list = new List<KeyValuePair<int, Int64>>();
@@ -154,6 +182,7 @@ namespace DB_Project.Models.Contexts
                     conn.Open();
                     MySqlCommand cmd = new MySqlCommand(req, conn);
                     using var reader = cmd.ExecuteReader();
+                    // here we genereate the keyvalue pair for each attraction
                     while (reader.Read())
                     {
                         KeyValuePair<int, Int64> kv = new KeyValuePair<int, Int64>((int)reader["attraction_id"]
@@ -162,13 +191,19 @@ namespace DB_Project.Models.Contexts
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was problem while trying to get the amount of trips that" +
+                    "each attraction was involved");
             }
             return list;
         }
 
+
+        /// <summary>
+        /// Delte a certain attraction from Attraction table
+        /// </summary>
+        /// <param name="att"> The attraction that we want to delete</param>
         public void Delete(Attraction att)
         {
             try
@@ -183,6 +218,7 @@ namespace DB_Project.Models.Contexts
                     myCommand.Transaction = myTrans;
                     try
                     {
+                        //deleting the attraction by its id
                         myCommand.CommandText = $"delete from attractions where id={att.ID};";
                         myCommand.ExecuteNonQuery();
                         // in case we updated the location we try to remove the previous location
@@ -205,12 +241,17 @@ namespace DB_Project.Models.Contexts
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while trying to delete the attraction");
             }
         }
 
+        /// <summary>
+        /// updates the values of a certain attraction
+        /// </summary>
+        /// <param name="prev_att">The previous attraction</param>
+        /// <param name="new_att">The new attraction with new values</param>
         public void Update(Attraction prev_att, Attraction new_att)
         {
             int id = prev_att.ID;
@@ -266,9 +307,9 @@ namespace DB_Project.Models.Contexts
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while trying to update the attraction");
             }
         }
 
