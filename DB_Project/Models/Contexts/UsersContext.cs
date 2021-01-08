@@ -98,7 +98,8 @@ namespace DB_Project.Models.Contexts
         }
 
         /// <summary>
-        /// Delete user
+        /// Delete user from the data base with all of his trips
+        /// (because of cascade in the tables)
         /// </summary>
         /// <param name="user"> The user that we want to delete </param>
         public void Delete_User(User user)
