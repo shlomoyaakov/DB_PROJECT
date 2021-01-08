@@ -561,11 +561,16 @@ function hideNewPlaceModal() {
 }
 
 function showNewPlaceModal() {
+    $('#newPlaceForm small').hide()
     $("#screen-disabler").removeClass("d-none");
     $("#new-place-form").removeClass("d-none");
 }
 
 function submitPlace() {
+    $('#newPlaceForm small').hide()
+    if (!formIsValid())
+        return
+    $('.wait-screen').removeClass('d-none');
     let place = {
         "Location":
         {
@@ -605,15 +610,21 @@ function submitPlace() {
     } else {
         jsonMsg = JSON.stringify(place)
     }
-    console.log(jsonMsg) // Remove!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     let xhttp = new XMLHttpRequest();
     // server respose
     xhttp.onloadend = function () {
         if (this.readyState == 4 && this.status == 200) {
-            alert("New place added successfuly");
+            if (editing === true) {
+                $('.wait-screen').addClass('d-none');
+                alert("Place updated successfuly");
+            } else {
+                $('.wait-screen').addClass('d-none');
+                alert("New place added successfuly");
+            }
             window.location.assign("plan_trip.html");
         }
         else {
+            $('.wait-screen').addClass('d-none');
             alert(this.response);
         }
     };
@@ -625,7 +636,6 @@ function submitPlace() {
 
 function updatePlace() {
     editing = true
-
     showNewPlaceModal()
 }
 
@@ -701,4 +711,32 @@ function loadNewPlaceForm() {
     $('#newPlaceType').prop('disabled', true)
     $('.form-phone').removeClass('d-none')
     $('#newPlacePhone').val(selectedPlace.phone)
+}
+
+function showWaitScreen() {
+    $('.wait-screen').removeClass('d-none')
+}
+
+function hideWaitScreen() {
+    $('.wait-screen').addClass('d-none')
+}
+
+function formIsValid() {
+    valid = true
+    placeNameRegex = /^[^'"\t\n\r]{3,}$/g
+    isLatitude = /^-?\d+\.?\d*$/g
+    isLongitude = /^-?\d+\.?\d*$/g
+    if (!placeNameRegex.test($('#newPlaceName').val())) {
+        valid = false;
+        $('#newPlaceNameHelp').show()
+    }
+    if (!(isLatitude.test($('#newPlaceLatitude').val()) && isLongitude.test($('#newPlaceLongitude').val()))) {
+        valid = false;
+        $('#newPlaceCoordinatesHelp').show()
+    }
+    if ($('#newPlaceType').val() === null) {
+        valid = false;
+        $('#newPlaceTypeHelp').show()
+    }
+    return valid
 }
