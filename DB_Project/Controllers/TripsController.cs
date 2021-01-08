@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DB_Project.Controllers
 {
+    /// <summary>
+    ///The trips Controller provides the API for request that involve The trip object.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class TripsController : ControllerBase
@@ -22,13 +25,12 @@ namespace DB_Project.Controllers
             this.context = trip_context;
             this.u_context = usr_context;
         }
-        [HttpGet]
-        public ActionResult<List<Trip>> Get()
-        {
-            return null;
-        }
 
-       
+       /// <summary>
+       /// Gets the trip with the specific id
+       /// </summary>
+       /// <param name="id">The trip id</param>
+       /// <returns>Trip with the specific id</returns>
         [HttpGet("{id}")]
         public ActionResult<Trip> Get(int id)
         {
@@ -42,6 +44,11 @@ namespace DB_Project.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all the trips that certain user has created.
+        /// </summary>
+        /// <param name="user_name">the user name</param>
+        /// <returns>List of trips that the user created</returns>
         [HttpGet("user")]
         public ActionResult<List<Trip>> Get([FromQuery] string user_name)
         {
@@ -55,6 +62,11 @@ namespace DB_Project.Controllers
             }
         }
 
+        /// <summary>
+        /// Add trip to the database
+        /// </summary>
+        /// <param name="trip">The trip that we want to add</param>
+        /// <returns>Ok if could add the trip</returns>
         [HttpPost]
         public IActionResult Post([FromBody] Trip trip)
         {
@@ -70,6 +82,11 @@ namespace DB_Project.Controllers
 
         }
 
+        /// <summary>
+        /// Delete the trip with this id
+        /// </summary>
+        /// <param name="id">the trip id</param>
+        /// <returns></returns>
         [HttpDelete("id")]
         public ActionResult Delete(int id)
         {
@@ -84,6 +101,11 @@ namespace DB_Project.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Delete all trips of certain user
+        /// </summary>
+        /// <param name="user"> the user that we want to delete his trips</param>
+        /// <returns></returns>
         [HttpDelete]
         public IActionResult Delete_By_User([FromBody] User user)
         {

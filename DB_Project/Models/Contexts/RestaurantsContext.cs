@@ -4,8 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
+
 namespace DB_Project.Models.Contexts
 {
+    /// <summary>
+    /// RestaurantsContext responsible to the communication with
+    /// the restaurants table in the database.
+    /// </summary>
     public class RestaurantsContext : BaseContext
     {
 
@@ -14,6 +20,11 @@ namespace DB_Project.Models.Contexts
 
         }
 
+        /// <summary>
+        /// Gets a list of Restaurant according to the  sql request
+        /// </summary>
+        /// <param name="req">sql query</param>
+        /// <returns>list of Restaurant according to request</returns>
         public List<Restaurant> Get_Restaurants_By_Req(string req)
         {
             List<Restaurant> list = new List<Restaurant>();
@@ -27,6 +38,7 @@ namespace DB_Project.Models.Contexts
 
                     using (var reader = cmd.ExecuteReader())
                     {
+                        //Here we add the accommodation that mysql gave us
                         while (reader.Read())
                         {
                             list.Add(new Restaurant()
@@ -47,21 +59,13 @@ namespace DB_Project.Models.Contexts
             }
             return list;
         }
-        public List<Restaurant> GetALLRestaurants()
-        {
-            string req = "select distinct id,name,places.lat,places.lon,phone,cuisine," +
-                        "city,country from restaurants join places on restaurants.lat =" +
-                         " places.lat and restaurants.lon = places.lon;";
-            try
-            {
-                return Get_Restaurants_By_Req(req);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
 
+        /// <summary>
+        /// Gets the restaurants from a certain city and country
+        /// </summary>
+        /// <param name="country">The country name</param>
+        /// <param name="city">The city name</param>
+        /// <returns>A list of Restaurant from city,country</returns>
         public List<Restaurant> Get_Restaurants_By_Region(string country, string city)
         {
             string req = "select distinct t1.id,t1.name,t1.lat,t1.lon, country, city, t1.phone, t1.cuisine" +
@@ -72,12 +76,21 @@ namespace DB_Project.Models.Contexts
             {
                 return Get_Restaurants_By_Req(req);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while trying to recieve restaurants" +
+                    $"from {city} ,{country}");
             }
         }
 
+        /// <summary>
+        /// Gets all the restaurants from certain city and country that 
+        /// the user hasent been yet.
+        /// </summary>
+        /// <param name="country">The country name</param>
+        /// <param name="city">The city name</param>
+        /// <param name="user_name">The user name</param>
+        /// <returns>A list of Restaurant from the city,region that user hasn't been yet</returns>
         public List<Restaurant> Get_Restaurants_By_Region_And_User(string country, string city, string user_name)
         {
             string request = "select distinct t4.id,t4.name, t4.lat, t4.lon, country, city, t4.phone, t4.cuisine " +
@@ -91,12 +104,17 @@ namespace DB_Project.Models.Contexts
             {
                 return Get_Restaurants_By_Req(request);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while trying to recieve accommodation" +
+                    $"from {city} ,{country}");
             }
         }
 
+        /// <summary>
+        /// Add new restaurant to Restaurant table
+        /// </summary>
+        /// <param name="restaurant">The new restaurant that we want to add</param>
         public void Add_Restaurant(Restaurant restaurant)
         {
             string country = restaurant.Location.General_Location.Country;
@@ -105,6 +123,8 @@ namespace DB_Project.Models.Contexts
             double lon = restaurant.Location.Coordinates.Longitude;
             try
             {
+                //We use transaction because we also have to insert values to region and places,
+                // the restaurants parents
                 using (MySqlConnection myConnection = GetConnection())
                 {
                     myConnection.Open();
@@ -115,14 +135,18 @@ namespace DB_Project.Models.Contexts
                     myCommand.Transaction = myTrans;
                     try
                     {
+                        // first we insert values to region in case of new city/country
                         myCommand.CommandText = $"Insert into region (country, city) VALUES (\"{country}\", \"{city}\")" +
                             $" ON DUPLICAT" +
                             $"E KEY UPDATE city=city,country=country;";
                         myCommand.ExecuteNonQuery();
+                        //then we try to insert values to places in case of new coordinates
                         myCommand.CommandText = $"Insert into places (lat, lon, country, city) VALUES ({lat}, {lon}, \"{country}\", \"{city}\")" +
                             $"ON DUPLICATE KEY UPDATE city=city,country=country;";
                         myCommand.ExecuteNonQuery();
-                        myCommand.CommandText = $"Insert into restaurants (name, lat, lon, phone, cuisine) VALUES (\"{restaurant.Name}\", {lat}, {lon}, \"{restaurant.Phone}\", \"{restaurant.Cuisine}\");";
+                        //finally we insert the new values to restaurants table
+                        myCommand.CommandText = $"Insert into restaurants (name, lat, lon, phone, cuisine)" +
+                            $" VALUES (\"{restaurant.Name}\", {lat}, {lon}, \"{restaurant.Phone}\", \"{restaurant.Cuisine}\");";
                         myCommand.ExecuteNonQuery();
                         myTrans.Commit();
                     }
@@ -133,12 +157,20 @@ namespace DB_Project.Models.Contexts
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while to add new restaurants");
             }
         }
 
+
+        /// <summary>
+        /// Gets the amount of trips that each restaurant was involved
+        /// </summary>
+        /// <param name="country">The country name</param>
+        /// <param name="city">The city name</param>
+        /// <returns>keyvaluepair when the key is the restaurant id
+        /// and the values is the amount of trips that this restaurant was involved </returns>
         public List<KeyValuePair<int, Int64>> Get_Amount_By_Region(string country, string city)
         {
             List<KeyValuePair<int, Int64>> list = new List<KeyValuePair<int, Int64>>();
@@ -155,6 +187,7 @@ namespace DB_Project.Models.Contexts
                     conn.Open();
                     MySqlCommand cmd = new MySqlCommand(req, conn);
                     using var reader = cmd.ExecuteReader();
+                    // here we genereate the keyvalue pair for each restaurant
                     while (reader.Read())
                     {
                         KeyValuePair<int, Int64> kv = new KeyValuePair<int, Int64>((int)reader["restaurant_id"]
@@ -163,30 +196,18 @@ namespace DB_Project.Models.Contexts
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was problem while trying to get the amount of trips that" +
+                    "each restaurant was involved");
             }
             return list;
         }
 
-        public void Delete(int id)
-        {
-            try
-            {
-                using MySqlConnection conn = GetConnection();
-                conn.Open();
-                string request = $"delete from restaurants where restaurant_id={id};";
-                MySqlCommand cmd = new MySqlCommand(request, conn);
-                cmd.ExecuteNonQuery();
-
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
+        /// <summary>
+        /// Delte a certain restaurant from Restaurant table
+        /// </summary>
+        /// <param name="ret"> The restaurant that we want to delete</param>
         public void Delete(Restaurant ret)
         {
             try
@@ -201,6 +222,7 @@ namespace DB_Project.Models.Contexts
                     myCommand.Transaction = myTrans;
                     try
                     {
+                        //deleting the restaurants by its id
                         myCommand.CommandText = $"delete from Restaurants where id={ret.ID};";
                         myCommand.ExecuteNonQuery();
                         // in case we updated the location we try to remove the previous location
@@ -223,12 +245,17 @@ namespace DB_Project.Models.Contexts
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while trying to delete the restaurant");
             }
         }
 
+        /// <summary>
+        /// updates the values of a certain restaurant
+        /// </summary>
+        /// <param name="prev_ret">The previous restaurant</param>
+        /// <param name="new_ret">The new restaurant with new values</param>
         public void Update(Restaurant prev_ret, Restaurant new_ret)
         {
             int id = prev_ret.ID;
@@ -282,9 +309,9 @@ namespace DB_Project.Models.Contexts
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw new Exception("There was a problem while trying to update the accommodation");
             }
         }
     }

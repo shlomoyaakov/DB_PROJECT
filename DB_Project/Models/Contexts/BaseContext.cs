@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models.Contexts
 {
+    /// <summary>
+    /// BaseContext that provides the connectionstring
+    /// </summary>
     public abstract class BaseContext
     {
         public string ConnectionString { get; set; }
@@ -15,6 +18,10 @@ namespace DB_Project.Models.Contexts
             this.ConnectionString = connectionString;
         }
 
+        /// <summary>
+        /// Gets the connection string to database
+        /// </summary>
+        /// <returns>The connection string</returns>
         protected MySqlConnection GetConnection()
         {
             try

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models
 {
+    // A class that represents the accommodation class from the database
     public class Accommodation
     {
         public string Name
@@ -31,12 +32,14 @@ namespace DB_Project.Models
             set;
         }
 
+        // hotel/guest_house/ hostels etc..
         public string Type
         {
             get;
             set;
         }
 
+        //an attraction id from the table
         public int ID
         {
             get;

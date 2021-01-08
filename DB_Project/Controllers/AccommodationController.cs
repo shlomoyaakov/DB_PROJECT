@@ -64,22 +64,6 @@ namespace DB_Project.Controllers
             return Ok(acc_list);
         }
 
-        /* This function reuturn all accommodation that we have in database.
-         */
-        [HttpGet]
-        public ActionResult<List<Accommodation>> Get()
-        {
-            List<Accommodation> acc_list;
-            try
-            {
-                acc_list = context.GetAllAccommodation();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok(acc_list);
-        }
         
 
         /*

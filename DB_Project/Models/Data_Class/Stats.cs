@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models.Data_Class
 {
+    // A class that hold stats about certain region
+    //for example the amount of attractions in certain city
     public class Stats
     {
         public Stats()

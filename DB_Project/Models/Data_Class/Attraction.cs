@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models
 {
+    // A class that represents the attractions table from the database
     public class Attraction
     {
         public string Name
@@ -25,6 +26,7 @@ namespace DB_Project.Models
             set;
         }
 
+        // an attraction id from the table
         public int ID
         {
             get;

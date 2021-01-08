@@ -26,22 +26,6 @@ namespace DB_Project.Controllers
             this.context = res_context;
         }
 
-        /* This function reuturn all Restaurants that we have in database.
-         */
-        [HttpGet]
-        public ActionResult<List<Restaurant>> Get()
-        {
-            List<Restaurant> res_list;
-            try
-            {
-                res_list = context.GetALLRestaurants();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok(res_list);
-        }
 
         /*
         * This function return all of the Restaurants in certain city and country.

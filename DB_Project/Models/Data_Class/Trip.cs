@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models.Data_Class
 {
+    // A class that represents the trips tables from the database
     public class Trip
     {
         public Trip()

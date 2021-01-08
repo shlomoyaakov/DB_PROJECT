@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace DB_Project.Models
 {
+    // A class that holds with holds coordinates and its country and city (region)
     public class Location
     {
         public Region General_Location

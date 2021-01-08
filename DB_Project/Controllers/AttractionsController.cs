@@ -26,22 +26,6 @@ namespace DB_Project.Controllers
             this.context = att_context;
         }
 
-        /* This function reuturn all Attractions that we have in database.
-        */
-        [HttpGet]
-        public ActionResult<List<Attraction>> Get()
-        {
-            List<Attraction> att_list;
-            try
-            {
-                att_list = context.GetAllAttractions();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-            return Ok(att_list);
-        }
 
         /*
         * This function return all of the attractions in certain city and country.
