@@ -3,7 +3,8 @@ function signUpClicked() {
     let password = document.getElementById("passwordId").value;
     let repeatPassword = document.getElementById("repeatPasswordId").value;
     // check input validation
-    if (isValidUserName(username) !== "") {
+    let error = isValidUserName(username)
+    if (error !== "") {
         alert(error);
         return;
     }
@@ -46,7 +47,7 @@ function createAccountRequest(username, password) {
     // create json object from input parameters
     let jsonMsg = createJson(username, password);
     let xhttp = new XMLHttpRequest();
-   
+
     // generate and send the request to the server of register new account
     xhttp.open("POST", "/api/Users");
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -59,17 +60,13 @@ function createAccountRequest(username, password) {
         }
         else {
             // account created failed, show message to user
-            if (this.response.includes("Duplicate")) {
-                alert("The username already exists. Please use a different username")
-            } else {
-                alert(this.response);
-            }
+            alert(this.response);
         }
     };
     xhttp.send(jsonMsg);
 }
 
- // create json object from input parameters
+// create json object from input parameters
 function createJson(username, password) {
     const json = {
         "User_Name": username,

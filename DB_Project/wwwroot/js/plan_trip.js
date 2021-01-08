@@ -1,4 +1,3 @@
-
 // when the help sign near the attractions section is clicked
 function attHelpClicked() {
     if (attTravelsMap.size === 0) {
@@ -14,7 +13,7 @@ function attHelpClicked() {
 
 // when the help sign near the restaurants section is clicked
 function resHelpClicked() {
-    if (resTravelsMap === 0) {
+    if (resTravelsMap.size === 0) {
         return
     }
     // find the restaurant with most visitors and set her as selected
@@ -27,7 +26,7 @@ function resHelpClicked() {
 
 // when the help sign near the accommodations section is clicked
 function accHelpClicked() {
-    if (accTravelsMap === 0) {
+    if (accTravelsMap.size === 0) {
         return
     }
     // find the accommodation with most visitors and set her as selected
@@ -176,7 +175,8 @@ function showAttractions() {
 }
 
 let pageLoaded = function () {
-    if (loadedTrip !== "") { // new TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if (loadedTrip !== "") {
+        // in case of loaded trip (from history), select the include places
         selectLoaded()
     }
     // check if the user is an Admin and change the page accordingly
@@ -185,11 +185,7 @@ let pageLoaded = function () {
     loadDiv.remove()
     // show mainDiv
     mainDiv.classList.remove("d-none")
-    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    $(".selection-2").select2({
-        minimumResultsForSearch: 20,
-        dropdownParent: $('#dropDownSelect1')
-    });
+  
 
     // allow multi selection without holding ctrl down and show details and map location of the clicked option
     $('select[multiple="multiple"] option').mousedown(function (e) {
@@ -305,16 +301,16 @@ function setMarker(location) {
 }
 
 // Get the save-trip modal
-var modal = document.getElementById("myModal"); // TODO rename modal to "saveTripModal" or something !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+var saveTripModal = document.getElementById("myModal"); 
 
 // Get the button that opens the save-trip modal
-var btn = document.getElementById("saveBtn");
+var saveBtn = document.getElementById("saveBtn");
 
 // Get the <span> element that closes the save-trip modal
 var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks the save button, load data into the save-trip modal and show him
-btn.onclick = function () {
+saveBtn.onclick = function () {
     var details = document.getElementById("tripDetails")
     var acclist = ""
     var reslist = ""
@@ -344,9 +340,8 @@ btn.onclick = function () {
     }
     attlist = attlist.substring(0, attlist.length - 2)
 
-
     details.innerHTML = "<br><strong>Accommodations: </strong >" + acclist + "<br><strong>Restaurants: </strong>" + reslist + "<br><strong>Attractions: </strong>" + attlist
-    modal.style.display = "block";
+    saveTripModal.style.display = "block";
 }
 
 // When the user clicks on <span> (x), close the modal
@@ -354,13 +349,13 @@ span.onclick = function () {
     closeModal()
 }
 var closeModal = function () {
-    modal.style.display = "none";
+    saveTripModal.style.display = "none";
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+    if (event.target == saveTripModal) {
+        saveTripModal.style.display = "none";
     }
 }
 
@@ -398,7 +393,7 @@ var saveTrip = function () {
             }
         })
     }
-    if (trip.Attractions.length === 0 && trip.Restaurants.length === 0 && trip.Accommodation.length === 0) { // new
+    if (trip.Attractions.length === 0 && trip.Restaurants.length === 0 && trip.Accommodation.length === 0) { 
         alert("please choose some places before saving the trip")
     } else {
         sendtrip(JSON.stringify(trip))
@@ -745,7 +740,6 @@ function formIsValid() {
     }
     return valid
 }
-
 var responses = 0
 var mainDiv = document.getElementById("main")
 var loadDiv = document.getElementById("loader")
@@ -758,11 +752,7 @@ var restaurantsList = document.getElementById("restaurantsList");
 var attractionsList = document.getElementById("attractionsList");
 var map
 var marker = ""
-document.getElementById("travelId").textContent += city + ", " + country;
 var loadedTrip = localStorage.getItem("loadedTrip")
-if (loadedTrip !== "") {
-    loadedTrip = JSON.parse(loadedTrip)
-}
 var selectedPlace = null
 var selectedPlaceType = null
 var editing = false
@@ -772,12 +762,18 @@ var accTravelsMap = new Map()
 var attIdNameMap = new Map()
 var resIdNameMap = new Map()
 var accIdNameMap = new Map()
+document.getElementById("travelId").textContent += city + ", " + country;
 window.onload = function () {
+    if (loadedTrip !== "") {
+        loadedTrip = JSON.parse(loadedTrip)
+    }
+    initMap()
+    // only after the server will return for this 6 requests, the load screen will be gone and the main screem will appear
     showAccommodations();
     showRestaurants();
     showAttractions();
     askForAccTravelsMap();
     askForResTravelsMap();
     askForAttTravelsMap();
-    initMap()
 }
+

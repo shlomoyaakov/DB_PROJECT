@@ -2,133 +2,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="icon" type="image/png" href="images/icons/globe.png" />
-
     <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
-
-
     <title>
         TriPlan
     </title>
-    <style>
-        .loader {
-            border: 16px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 16px solid #3498db;
-            width: 120px;
-            height: 120px;
-            -webkit-animation: spin 2s linear infinite; /* Safari */
-            animation: spin 2s linear infinite;
-        }
 
-        /* Safari */
-        @-webkit-keyframes spin {
-            0% {
-                -webkit-transform: rotate(0deg);
-            }
-
-            100% {
-                -webkit-transform: rotate(360deg);
-            }
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* The Modal (background) */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-        /* Modal Content/Box */
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto; /* 15% from the top and centered */
-            padding: 15px;
-            border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
-            height: 80%;
-        }
-
-        /* The Close Button */
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-            .close:hover,
-            .close:focus {
-                color: black;
-                text-decoration: none;
-                cursor: pointer;
-            }
-    </style>
 </head>
 <body>
+    <!-- Please wait screen modal -->
     <div id="loader" style="align-content:center; justify-content: center; display: flex;width:100%;height:100%">
         <h3 style="position:absolute;top:35%">fetching data from database...</h3>
         <div style="position:absolute;top:45%" class="loader"></div>
     </div>
+
     <div id="mainDiv" class="d-none">
         <div class="limiter">
             <div class="container-style100">
                 <div class="wrap-style100">
                     <div class="style100-form validate-form">
+                        <!-- Hello user title -->
                         <span class="style100-form-title p-b-34" id="helloId">
                             Hello
                         </span>
                         <span class="style100-form-title p-b-34">
                             please Select Country & City
                         </span>
-
+                        <!-- Countries combo box -->
                         <div class="wrap-input100 rs1-wrap-input100 m-b-20">
                             <select id="countriesId" onchange="askForCities()" style="height: 50px" class="input100" placeholder="User name">
                             </select>
                         </div>
 
-
+                        <!-- Cities combo box -->
                         <div class="wrap-input100 rs1-wrap-input100 m-b-20">
                             <select id="citiesId" style="height:50px" class="input100" placeholder="User name">
                             </select>
                         </div>
 
-
+                        <!-- New place only checkbox -->
                         <div class="row" style="width:100%">
                             <div class="col-10">
                                 <input type="checkbox" id="newPlacesID" name="newPlacesID" style="height:20px; width:20px;">
@@ -139,15 +53,14 @@
                             </div>
                         </div>
 
-
-
+                        <!-- Plan trip button -->
                         <div class="container-style100-form-btn">
                             <button style="margin-bottom :5px" onclick="planTripClicked()" class="style100-form-btn">
                                 Plan Trip
                             </button>
                         </div>
 
-
+                        <!-- View trips button -->
                         <div class="container-style100-form-btn">
                             <button id="historyBtn" class="style100-form-btn2">
                                 View Trip History
@@ -155,41 +68,15 @@
                         </div>
                     </div>
 
+                    <!-- Left image -->
                     <div class="style100-more" style="background-image: url('images/bg-01.jpg');"></div>
                 </div>
             </div>
         </div>
     </div>
 
-
-
-    <div id="dropDownSelect1"></div>
-
-
-    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-
-    <script src="vendor/animsition/js/animsition.min.js"></script>
-
-    <script src="vendor/bootstrap/js/popper.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    <script src="vendor/select2/select2.min.js"></script>
-    <script>
-        $(".selection-2").select2({
-            minimumResultsForSearch: 20,
-            dropdownParent: $('#dropDownSelect1')
-        });
-    </script>
-
-    <script src="vendor/daterangepicker/moment.min.js"></script>
-    <script src="vendor/daterangepicker/daterangepicker.js"></script>
-    <script src="vendor/countdowntime/countdowntime.js"></script>
-
-
-
-    <!-- The Modal -->
+    <!-- Trip history modal -->
     <div id="myModal" class="modal">
-        <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span>
             <div class="row" style="width:100%;height:91%">
@@ -228,7 +115,7 @@
 
     </div>
 
-
+    <!-- info modal -->
     <div id="pleaseWaitModal" class="modal">
         <div class="modal-content" style="top:30%;width:40%;height:8%">
             <div class="row" style="justify-content:center">
@@ -237,6 +124,7 @@
         </div>
     </div>
 
+    <!-- info modal -->
     <div id="infoModal" class="modal">
         <div class="modal-content" style="top:30%;width:30%;height:32%">
             <div class="row" style="justify-content:center;align-content:center">
@@ -248,7 +136,7 @@
         </div>
     </div>
 
-
+    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
     <script src="js/choose_target.js"></script>
 </body>
 </html>
