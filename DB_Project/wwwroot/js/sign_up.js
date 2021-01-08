@@ -46,7 +46,7 @@ function createAccountRequest(username, password) {
     // create json object from input parameters
     let jsonMsg = createJson(username, password);
     let xhttp = new XMLHttpRequest();
-   
+
     // generate and send the request to the server of register new account
     xhttp.open("POST", "/api/Users");
     xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -69,7 +69,7 @@ function createAccountRequest(username, password) {
     xhttp.send(jsonMsg);
 }
 
- // create json object from input parameters
+// create json object from input parameters
 function createJson(username, password) {
     const json = {
         "User_Name": username,
