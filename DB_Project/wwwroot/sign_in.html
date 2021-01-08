@@ -2,61 +2,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="icon" type="image/png" href="images/icons/globe.png" />
-
-    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-
-    <link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-
-    <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-
     <link rel="stylesheet" type="text/css" href="css/util.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
-
-
     <title>
         TriPlan
     </title>
-
 </head>
 <body>
-
     <div class="limiter">
-        <div class="container-login100">
-            <div class="wrap-login100">
-                <div class="login100-form validate-form">
-                    <span class="login100-form-title p-b-34">
+        <div class="container-style100">
+            <div class="wrap-style100">
+                <div class="style100-form validate-form">
+                    <!-- Title -->
+                    <span class="style100-form-title p-b-34">
                         Account Login
                     </span>
-
+                    <!-- User name box -->
                     <div class="wrap-input100 rs1-wrap-input100  m-b-20">
                         <input id="usernameId" class="input100" type="text" placeholder="User name">
                         <span class="focus-input100"></span>
                     </div>
+                    <!-- Password box -->
                     <div class="wrap-input100 rs1-wrap-input100  m-b-20">
                         <input id="passwordId" class="input100" type="password" placeholder="Password">
                         <span class="focus-input100"></span>
                     </div>
-
-                    <div class="container-login100-form-btn">
-                        <button href="choose_target.html" onclick="signInClicked()" class="login100-form-btn">
+                    <!-- Sign in button -->
+                    <div class="container-style100-form-btn">
+                        <button href="choose_target.html" onclick="signInClicked()" class="style100-form-btn">
                             Sign in
                         </button>
                     </div>
-
-
-                    <div style="margin-bottom:250px" class="w-full text-center">
+                    <!-- Sign up link -->
+                    <div  class="w-full text-center">
                         <a style="color:grey">
                             Don't have an account yet?
                         </a>
@@ -64,38 +43,13 @@
                             Sign Up
                         </a>
                     </div>
-                </div>
 
-                <div class="login100-more" style="background-image: url('images/bg-01.jpg');"></div>
+                </div>
+                <!-- Left image -->
+                <div class="style100-more" style="background-image: url('images/bg-01.jpg');"></div>
             </div>
         </div>
     </div>
-
-
-
-    <div id="dropDownSelect1"></div>
-
-
-    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-
-    <script src="vendor/animsition/js/animsition.min.js"></script>
-
-    <script src="vendor/bootstrap/js/popper.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    <script src="vendor/select2/select2.min.js"></script>
-    <script>
-        $(".selection-2").select2({
-            minimumResultsForSearch: 20,
-            dropdownParent: $('#dropDownSelect1')
-        });
-    </script>
-
-    <script src="vendor/daterangepicker/moment.min.js"></script>
-    <script src="vendor/daterangepicker/daterangepicker.js"></script>
-
-
-    <script src="vendor/countdowntime/countdowntime.js"></script>
 
     <script src="js/sign_in.js"></script>
 

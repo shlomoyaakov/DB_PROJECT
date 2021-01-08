@@ -277,10 +277,9 @@ function setMarker(location) {
     marker = new google.maps.Marker({
         position: location,
         map,
-        title: "Hello World!",
     });
     map.setCenter(location)
-    map.setZoom(13)
+    map.setZoom(18)
 }
 
 // Get the modal
@@ -412,7 +411,7 @@ function sendtrip(trip) {
     xhttp.onloadend = function () {
         if (this.readyState == 4 && this.status == 200) {
             alert("Trip successfully saved");
-            closeModal()
+            window.location.assign("plan_trip.html");
         }
         else {
             alert(this.response);
