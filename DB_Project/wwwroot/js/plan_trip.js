@@ -1,27 +1,36 @@
+
+// when the help sign near the attractions section is clicked
 function attHelpClicked() {
-    if (attTravelsMap.size===0) {
+    if (attTravelsMap.size === 0) {
         return
     }
+    // find the attraction with most visitors and set her as selected
     let maxVisitorsAttId = ([...attTravelsMap.entries()].reduce((a, e) => e[1] > a[1] ? e : a))[0]
     let maxVisitorsAttName = attIdNameMap.get(maxVisitorsAttId)
     let maxVisitorsAttOption = document.getElementById(maxVisitorsAttName)
     maxVisitorsAttOption.selected = "selected";
-    showDetails(maxVisitorsAttOption.label,JSON.parse(maxVisitorsAttOption.value), "attractionsList")
+    showDetails(maxVisitorsAttOption.label, JSON.parse(maxVisitorsAttOption.value), "attractionsList")
 }
+
+// when the help sign near the restaurants section is clicked
 function resHelpClicked() {
     if (resTravelsMap === 0) {
         return
     }
+    // find the restaurant with most visitors and set her as selected
     let maxVisitorsResId = ([...resTravelsMap.entries()].reduce((a, e) => e[1] > a[1] ? e : a))[0]
     let maxVisitorsResName = resIdNameMap.get(maxVisitorsResId)
     let maxVisitorsResOption = document.getElementById(maxVisitorsResName)
     maxVisitorsResOption.selected = "selected";
     showDetails(maxVisitorsResOption.label, JSON.parse(maxVisitorsResOption.value), "restaurantsList")
 }
+
+// when the help sign near the accommodations section is clicked
 function accHelpClicked() {
     if (accTravelsMap === 0) {
         return
     }
+    // find the accommodation with most visitors and set her as selected
     let maxVisitorsAccId = ([...accTravelsMap.entries()].reduce((a, e) => e[1] > a[1] ? e : a))[0]
     let maxVisitorsAccName = accIdNameMap.get(maxVisitorsAccId)
     let maxVisitorsAccOption = document.getElementById(maxVisitorsAccName)
@@ -29,11 +38,11 @@ function accHelpClicked() {
     showDetails(maxVisitorsAccOption.label, JSON.parse(maxVisitorsAccOption.value), "accommodationsList")
 }
 
-
 function goBack() {
     window.history.back();
 }
 
+// load accommodations from DB into the select element
 function showAccommodations() {
     let xhttp = new XMLHttpRequest();
     // server respose
@@ -77,6 +86,7 @@ function showAccommodations() {
     xhttp.send();
 }
 
+// load restaurants from DB into the select element
 function showRestaurants() {
     let xhttp = new XMLHttpRequest();
     // server respose
@@ -109,7 +119,7 @@ function showRestaurants() {
             responses++
         } else {
             pageLoaded()
-        } 
+        }
     };
     // ask the server for countries & cities list
     if (showNewPlacesOnly === "true") {
@@ -122,6 +132,7 @@ function showRestaurants() {
 
 }
 
+// load attractions from DB into the select element
 function showAttractions() {
     let xhttp = new XMLHttpRequest();
     // server respose
@@ -141,7 +152,7 @@ function showAttractions() {
                     option.setAttribute("id", name)
                     option.value = JSON.stringify(jsonResponse[i])
                     attractionsList.add(option, attractionsList[0]);
-                    attIdNameMap.set(jsonResponse[i].id,name)
+                    attIdNameMap.set(jsonResponse[i].id, name)
                 }
             }
         }
@@ -164,24 +175,27 @@ function showAttractions() {
     xhttp.send();
 }
 
-
 let pageLoaded = function () {
-    if (loadedTrip !== "") { // new
+    if (loadedTrip !== "") { // new TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         selectLoaded()
-    } 
+    }
+    // check if the user is an Admin and change the page accordingly
     checkIfAdmin(localStorage.getItem("user"), localStorage.getItem("pass"))
+    // remove the loading screen
     loadDiv.remove()
+    // show mainDiv
     mainDiv.classList.remove("d-none")
+    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     $(".selection-2").select2({
         minimumResultsForSearch: 20,
         dropdownParent: $('#dropDownSelect1')
     });
-       
 
+    // allow multi selection without holding ctrl down and show details and map location of the clicked option
     $('select[multiple="multiple"] option').mousedown(function (e) {
         e.preventDefault();
         selectedPlace = valueJSON = JSON.parse(this.value)
-        showDetails($(this).prop('label'),valueJSON, this.parentElement.id)
+        showDetails($(this).prop('label'), valueJSON, this.parentElement.id)
         var st = this.parentElement.scrollTop
         $(this).prop('selected', !$(this).prop('selected'));
         setTimeout(() => this.parentElement.scrollTop = st, 0);
@@ -191,12 +205,13 @@ let pageLoaded = function () {
         return false;
     });
 
+    // prevent focus for multi selection select (for esthetics)
     $('select[multiple="multiple"]').mousedown(function (e) {
         this.blur();
         e.preventDefault();
     });
 
-
+    // when place type is selected show relevant form
     $('#newPlaceType').change(function (e) {
         $('.form-phone').removeClass('d-none')
         switch (this.value) {
@@ -219,6 +234,7 @@ let pageLoaded = function () {
     });
 }
 
+// writes a selected option to the details section
 function showDetails(title, valueJSON, parentElement) {
     $('#hoverlabel').text(title)
     let location = valueJSON.location.coordinates
@@ -248,6 +264,7 @@ function showDetails(title, valueJSON, parentElement) {
         default:
             break;
     }
+    // show number of visitors if defined else show 0
     if (visitors !== undefined) {
         detailsString += "<br><b>Visitors:</b> " + visitors
     } else {
@@ -255,6 +272,7 @@ function showDetails(title, valueJSON, parentElement) {
     }
     document.getElementById("hovervalue").innerHTML = detailsString
 }
+
 function initMap() {
     let options = {
         zoom: 3,
@@ -262,14 +280,18 @@ function initMap() {
     }
     map = new google.maps.Map(document.getElementById("map"), options);
 }
+
+// gets a json representing an option and returns his location
 function getConstLocation(value) {
-   //"Internet: N/A<br>Location: 48.8824615, 2.3498469<br>Phone: N/A<br>Type: hotel"
+    //"Internet: N/A<br>Location: 48.8824615, 2.3498469<br>Phone: N/A<br>Type: hotel"
     var latitude = value.match("lat (.*),")[1];
     var longitude = value.match("lng (.*)<br><b>P")[1];
 
     const myLatLng = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
     return myLatLng
 }
+
+// moves the map to a location
 function setMarker(location) {
     if (marker !== "") {
         marker.setMap(null)
@@ -282,29 +304,29 @@ function setMarker(location) {
     map.setZoom(18)
 }
 
-// Get the modal
-var modal = document.getElementById("myModal");
+// Get the save-trip modal
+var modal = document.getElementById("myModal"); // TODO rename modal to "saveTripModal" or something !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-// Get the button that opens the modal
+// Get the button that opens the save-trip modal
 var btn = document.getElementById("saveBtn");
 
-// Get the <span> element that closes the modal
+// Get the <span> element that closes the save-trip modal
 var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks the button, open the modal 
+// When the user clicks the save button, load data into the save-trip modal and show him
 btn.onclick = function () {
     var details = document.getElementById("tripDetails")
-    var acclist= ""
+    var acclist = ""
     var reslist = ""
     var attlist = ""
 
     for (var i = 0, len = accommodationsList.options.length; i < len; i++) {
         opt = accommodationsList.options[i];
         if (opt.selected) {
-            acclist += opt.text+", "
+            acclist += opt.text + ", "
         }
     }
-    acclist = acclist.substring(0, acclist.length-2)
+    acclist = acclist.substring(0, acclist.length - 2)
 
     for (var i = 0, len = restaurantsList.options.length; i < len; i++) {
         opt = restaurantsList.options[i];
@@ -332,7 +354,8 @@ span.onclick = function () {
     closeModal()
 }
 var closeModal = function () {
-    modal.style.display = "none";}
+    modal.style.display = "none";
+}
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function (event) {
@@ -341,10 +364,11 @@ window.onclick = function (event) {
     }
 }
 
+// build an object describing the trip and sand him to the DB
 var saveTrip = function () {
     time = new Date,
         dformat = [time.getFullYear(),
-        time.getMonth()+1,
+        time.getMonth() + 1,
         time.getDate()].join('-') + ' ' +
         [time.getHours(),
         time.getMinutes(),
@@ -377,13 +401,33 @@ var saveTrip = function () {
     if (trip.Attractions.length === 0 && trip.Restaurants.length === 0 && trip.Accommodation.length === 0) { // new
         alert("please choose some places before saving the trip")
     } else {
-    sendtrip(JSON.stringify(trip))
+        sendtrip(JSON.stringify(trip))
     }
     closeModal()
 }
 
-function selectLoaded() { 
-    acco = loadedTrip.accommodation 
+// sends the trip to the DB
+function sendtrip(trip) {
+    let xhttp = new XMLHttpRequest();
+    // server respose
+    xhttp.onloadend = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            alert("Trip successfully saved");
+            window.location.assign("plan_trip.html");
+        }
+        else {
+            alert(this.response);
+        }
+    };
+    // generate and send the request to the server of register new account
+    xhttp.open("POST", "/api/Trips");
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send(trip);
+}
+
+// if loaded trip  select the places that are in the trip
+function selectLoaded() {
+    acco = loadedTrip.accommodation
     for (i in acco) {
         let element = document.getElementById(acco[i].name);
         if (element !== null) {
@@ -405,60 +449,8 @@ function selectLoaded() {
         }
     }
 }
-function sendtrip(trip) {
-    let xhttp = new XMLHttpRequest();
-    // server respose
-    xhttp.onloadend = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            alert("Trip successfully saved");
-            window.location.assign("plan_trip.html");
-        }
-        else {
-            alert(this.response);
-        }
-    };
-    // generate and send the request to the server of register new account
-    xhttp.open("POST", "/api/Trips");
-    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhttp.send(trip);
-}
 
-var responses = 0
-var mainDiv = document.getElementById("main")
-var loadDiv = document.getElementById("loader")
-var username = localStorage.getItem("user");
-var country = localStorage.getItem("country");
-var city = localStorage.getItem("city");
-var showNewPlacesOnly = localStorage.getItem("newPlaces");
-var accommodationsList = document.getElementById("accommodationsList");
-var restaurantsList = document.getElementById("restaurantsList");
-var attractionsList = document.getElementById("attractionsList");
-var map
-var marker = ""
-document.getElementById("travelId").textContent += city + ", " + country;
-var loadedTrip = localStorage.getItem("loadedTrip")
-if (loadedTrip !== "") {
-    loadedTrip = JSON.parse(loadedTrip) 
-}
-var selectedPlace = null
-var selectedPlaceType = null
-var editing = false
-var attTravelsMap = new Map()
-var resTravelsMap = new Map()
-var accTravelsMap = new Map()
-var attIdNameMap = new Map()
-var resIdNameMap = new Map()
-var accIdNameMap = new Map()
-window.onload = function () {
-    showAccommodations();
-    showRestaurants();
-    showAttractions();
-    askForAccTravelsMap();
-    askForResTravelsMap();
-    askForAttTravelsMap();
-    initMap()
-}
-
+// get from DB how many visitors each Accommodation had
 function askForAccTravelsMap() {
     let xhttp = new XMLHttpRequest();
     xhttp.onloadend = function () {
@@ -467,7 +459,7 @@ function askForAccTravelsMap() {
             for (i in jsonResponse) {
                 let key = jsonResponse[i].Key
                 let value = jsonResponse[i].Value
-                accTravelsMap.set(key,value)
+                accTravelsMap.set(key, value)
             }
         }
         else {
@@ -482,6 +474,8 @@ function askForAccTravelsMap() {
     xhttp.open("GET", "/api/Accommodation/travelers_by_region?country=" + country + "&city=" + city);
     xhttp.send();
 }
+
+// get from DB how many visitors each Restaurants had
 function askForResTravelsMap() {
     let xhttp = new XMLHttpRequest();
     xhttp.onloadend = function () {
@@ -506,6 +500,7 @@ function askForResTravelsMap() {
     xhttp.send();
 }
 
+// get from DB how many visitors each Attractions had
 function askForAttTravelsMap() {
     let xhttp = new XMLHttpRequest();
     xhttp.onloadend = function () {
@@ -530,8 +525,7 @@ function askForAttTravelsMap() {
     xhttp.send();
 }
 
-
-
+// check if the user is an Admin and change the page accordingly
 function checkIfAdmin(username, password) {
     let xhttp = new XMLHttpRequest();
     // server respose
@@ -551,6 +545,7 @@ function checkIfAdmin(username, password) {
     xhttp.send();
 }
 
+// add Admin-Only elements to the site
 function admin() {
     $(".admin-only").removeClass("d-none");
 }
@@ -566,10 +561,13 @@ function showNewPlaceModal() {
     $("#new-place-form").removeClass("d-none");
 }
 
+// submit a place to the DB as an update or a new one (determined with the "editing" variable)
 function submitPlace() {
+    // clear the comments from the form
     $('#newPlaceForm small').hide()
     if (!formIsValid())
         return
+    // show the "please wait" screen
     $('.wait-screen').removeClass('d-none');
     let place = {
         "Location":
@@ -634,11 +632,13 @@ function submitPlace() {
     xhttp.send(jsonMsg);
 }
 
+// sets "editing" variable to true and show the new-place modal
 function updatePlace() {
     editing = true
     showNewPlaceModal()
 }
 
+// send a delete request of the selected place to the DB
 function deletePlace() {
     let apiPath
     switch (selectedPlaceType) {
@@ -670,6 +670,7 @@ function deletePlace() {
     xhttp.send(jsonMsg);
 }
 
+// clear the new-place form, usually followed by showNewPlaceModal()
 function clearNewPlaceForm() {
     editing = false
     $('#newPlaceName, #newPlaceLatitude, #newPlaceLongitude, #newPlaceType, #newPlacePhone, #newRestaurantCuisine #newAccommodationInternet, #newAccommodationType').val('')
@@ -680,6 +681,7 @@ function clearNewPlaceForm() {
     $('.form-attraction').addClass('d-none')
 }
 
+// load into the new-place form the selected place, usually followed by showNewPlaceModal()
 function loadNewPlaceForm() {
     editing = true
     $('#newPlaceName').val(selectedPlace.name)
@@ -713,14 +715,17 @@ function loadNewPlaceForm() {
     $('#newPlacePhone').val(selectedPlace.phone)
 }
 
+// show the "please wait" screen
 function showWaitScreen() {
     $('.wait-screen').removeClass('d-none')
 }
 
+// hide the "please wait" screen
 function hideWaitScreen() {
     $('.wait-screen').addClass('d-none')
 }
 
+// check if values in the form are valid before sending to DB, show a help section for invalid values
 function formIsValid() {
     valid = true
     placeNameRegex = /^[^'"\t\n\r]{3,}$/g
@@ -739,4 +744,40 @@ function formIsValid() {
         $('#newPlaceTypeHelp').show()
     }
     return valid
+}
+
+var responses = 0
+var mainDiv = document.getElementById("main")
+var loadDiv = document.getElementById("loader")
+var username = localStorage.getItem("user");
+var country = localStorage.getItem("country");
+var city = localStorage.getItem("city");
+var showNewPlacesOnly = localStorage.getItem("newPlaces");
+var accommodationsList = document.getElementById("accommodationsList");
+var restaurantsList = document.getElementById("restaurantsList");
+var attractionsList = document.getElementById("attractionsList");
+var map
+var marker = ""
+document.getElementById("travelId").textContent += city + ", " + country;
+var loadedTrip = localStorage.getItem("loadedTrip")
+if (loadedTrip !== "") {
+    loadedTrip = JSON.parse(loadedTrip)
+}
+var selectedPlace = null
+var selectedPlaceType = null
+var editing = false
+var attTravelsMap = new Map()
+var resTravelsMap = new Map()
+var accTravelsMap = new Map()
+var attIdNameMap = new Map()
+var resIdNameMap = new Map()
+var accIdNameMap = new Map()
+window.onload = function () {
+    showAccommodations();
+    showRestaurants();
+    showAttractions();
+    askForAccTravelsMap();
+    askForResTravelsMap();
+    askForAttTravelsMap();
+    initMap()
 }
