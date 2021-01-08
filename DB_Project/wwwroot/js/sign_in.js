@@ -1,9 +1,9 @@
 function signInClicked() {
     let username = document.getElementById("usernameId").value;
     let password = document.getElementById("passwordId").value;
-
-    if (isValidUserName(username) !== "") {
-        alert("Invalid user name");
+    let error = isValidUserName(username)
+    if (error !== "") {
+        alert(error);
         return;
     }
 

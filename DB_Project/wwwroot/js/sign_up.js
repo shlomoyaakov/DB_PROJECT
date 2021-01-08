@@ -3,7 +3,8 @@ function signUpClicked() {
     let password = document.getElementById("passwordId").value;
     let repeatPassword = document.getElementById("repeatPasswordId").value;
     // check input validation
-    if (isValidUserName(username) !== "") {
+    let error = isValidUserName(username)
+    if (error !== "") {
         alert(error);
         return;
     }
@@ -59,11 +60,7 @@ function createAccountRequest(username, password) {
         }
         else {
             // account created failed, show message to user
-            if (this.response.includes("Duplicate")) {
-                alert("The username already exists. Please use a different username")
-            } else {
-                alert(this.response);
-            }
+            alert(this.response);
         }
     };
     xhttp.send(jsonMsg);

@@ -38,10 +38,11 @@ function tripHistoryClicked() {
 
 function askForTripDelete() {
     if (selectedTripId !== "") {
+        let xhttp = new XMLHttpRequest();
         // the user ask to delete specific trip
         xhttp.open("DELETE", "/api/Trips/id?id=" + selectedTripId);
         // on server response
-        let xhttp = new XMLHttpRequest();
+    
         xhttp.onloadend = function () {
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById(selectedTripId).remove()
@@ -310,12 +311,6 @@ window.onclick = function (event) {
     }
 }
 
-window.onload = function () {
-    // when the page loaded, ask the server if the user is admin and continue to loadCountries()
-    document.getElementById('helloId').innerHTML = "Hello " + user_name;
-    checkIfAdmin()
-}
-
 var userTrips = new Set()
 var historyLoaded = false
 var loginUser = "";
@@ -330,3 +325,8 @@ var countriesComboBox = document.getElementById('countriesId');
 var citiesComboBox = document.getElementById('citiesId');
 var modal = document.getElementById("myModal");
 var tripsList = document.getElementById("historyTrips");
+window.onload = function () {
+    // when the page loaded, ask the server if the user is admin and continue to loadCountries()
+    document.getElementById('helloId').innerHTML = "Hello " + user_name;
+    checkIfAdmin()
+}
