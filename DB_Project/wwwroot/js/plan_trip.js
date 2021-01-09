@@ -775,5 +775,5 @@ window.onload = function () {
     askForAccTravelsMap();
     askForResTravelsMap();
     askForAttTravelsMap();
-}
+} 
 
